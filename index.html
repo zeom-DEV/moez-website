@@ -1,75 +1,1068 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moez Thabet // High-End Digital Support</title>
+    <title>Moez Thabet | Expert Support Client, SAV & Télévente Freelance</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    animation: {
+                        'aurora-slow': 'aurora 20s infinite alternate',
+                        'aurora-delayed': 'aurora 25s infinite alternate-reverse',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        aurora: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '50%': { transform: 'translate(50px, -80px) scale(1.2)' },
+                            '100%': { transform: 'translate(-30px, 40px) scale(0.9)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .glow { box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.3); }
+        /* Effet Aurora similaire au site Google Gemini */
+        .aurora-bg {
+            background-color: #030014;
+            overflow: hidden;
+        }
+        .aurora-blur-1 {
+            background: radial-gradient(circle, rgba(121,40,202,0.3) 0%, rgba(0,112,243,0) 70%);
+        }
+        .aurora-blur-2 {
+            background: radial-gradient(circle, rgba(0,112,243,0.25) 0%, rgba(255,0,128,0) 70%);
+        }
+        .aurora-blur-3 {
+            background: radial-gradient(circle, rgba(0,242,254,0.15) 0%, rgba(121,40,202,0) 70%);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030014;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #221d47;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #312a66;
+        }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="aurora-bg text-slate-100 min-h-screen relative font-sans antialiased">
 
-    <!-- Background Dynamic Layer -->
-    <div class="fixed inset-0 z-0 opacity-20" id="bg-shader"></div>
+    <!-- ARRIÈRE-PLAN ANIMÉ AURORA STYLE GEMINI -->
+    <div class="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[60vw] h-[60vw] aurora-blur-1 rounded-full filter blur-[120px] animate-aurora-slow opacity-70"></div>
+        <div class="absolute bottom-[20%] right-[-10%] w-[50vw] h-[50vw] aurora-blur-2 rounded-full filter blur-[100px] animate-aurora-delayed opacity-60"></div>
+        <div class="absolute top-[40%] left-[30%] w-[45vw] h-[45vw] aurora-blur-3 rounded-full filter blur-[110px] animate-aurora-slow opacity-50"></div>
+    </div>
 
-    <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
-        <!-- Header -->
-        <header class="flex justify-between items-center py-6 mb-20">
-            <h1 class="text-2xl font-black tracking-tighter">MOEZ<span class="text-blue-500">.</span></h1>
-            <nav class="space-x-8 text-sm font-medium opacity-60">
-                <a href="#" class="hover:text-blue-400">Expertise</a>
-                <a href="#" class="hover:text-blue-400">Impact</a>
-                <a href="mailto:contact@moezthabet.com" class="border-b border-blue-500 pb-1">Me contacter</a>
+    <!-- HEADER / NAVIGATION (GLASSMORPHISM) -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/40 border-b border-white/5 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 p-[1.5px] shadow-lg shadow-purple-500/20">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-blue-400 group-hover:rotate-12 transition-transform duration-300"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-lg font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-slate-400">Moez Thabet</span>
+                    <span class="block text-[10px] text-blue-400 font-semibold tracking-widest uppercase">Expert Relation Client</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#services" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Services</a>
+                <a href="#ai-demo" class="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1">Démo IA ✨</a>
+                <a href="#experience" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Parcours</a>
+                <a href="#tarifs" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Tarifs & Budget</a>
+                <a href="#outils" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Outils</a>
             </nav>
-        </header>
 
-        <!-- Hero -->
-        <section class="min-h-[60vh] flex flex-col justify-center">
-            <div class="max-w-3xl">
-                <h2 class="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-none">
-                    Support <br/> d'Excellence.
-                </h2>
-                <p class="text-xl md:text-2xl text-gray-400 max-w-xl mb-12">
-                    Expertise SAV & Relation Client de haute performance.
-                    Optimisation des processus, rétention client, et support technique niveau 2.
+            <div class="flex items-center gap-4">
+                <span class="hidden lg:inline-flex items-center gap-1.5 px-3 h-8 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 animate-pulse-slow">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    Disponible pour projets
+                </span>
+                <a href="#contact" class="px-5 py-2.5 rounded-full text-xs font-semibold bg-white text-slate-950 hover:bg-slate-200 active:scale-95 transition-all shadow-lg shadow-white/5">
+                    Me Recruter
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="relative z-10">
+        
+        <!-- HERO SECTION -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24 lg:pt-20 lg:pb-32">
+            <div class="text-center max-w-4xl mx-auto">
+                
+                <!-- Badge Gemini Style -->
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-purple-300 mb-8 backdrop-blur-sm">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-400 animate-spin"></i>
+                    <span>Optimisez votre relation client à tarif ultra-compétitif</span>
+                </div>
+
+                <!-- Main Heading -->
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-8">
+                    Une Relation Client d'Exception, <br class="hidden sm:inline" />
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 via-purple-400 to-pink-400">
+                        Propulsée par l'Expertise.
+                    </span>
+                </h1>
+
+                <!-- Subtitle -->
+                <p class="text-lg sm:text-xl text-slate-400 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+                    Bonjour, je suis <strong class="text-white font-medium">Moez Thabet</strong>. Expert en support client, SAV et télévente depuis plus de 3 ans. J'aide les entreprises françaises et tunisiennes à fidéliser leur audience et maximiser leurs conversions.
                 </p>
-                <div class="flex gap-4">
-                    <button class="px-8 py-4 bg-blue-600 rounded-full font-bold text-lg hover:bg-blue-500 transition glow">Démarrer une mission</button>
-                    <button class="px-8 py-4 glass rounded-full font-bold text-lg hover:bg-white/10 transition">Voir la méthodologie</button>
+
+                <!-- Tarifs Callout & CTAs -->
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-16">
+                    <a href="#ai-demo" class="w-full sm:w-auto px-8 py-4 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white hover:opacity-95 shadow-lg shadow-purple-500/25 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-pink-300"></i>
+                        <span>Tester mon expertise (Démo IA)</span>
+                    </a>
+                    <a href="#tarifs" class="w-full sm:w-auto px-8 py-4 rounded-full text-sm font-semibold bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all flex items-center justify-center gap-2 backdrop-blur-sm">
+                        <span>Simuler mon budget</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Quick Stats Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto pt-8 border-t border-white/5">
+                    <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300">5 €</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Tarif horaire unique</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-400">3+ Ans</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">D'expérience solide</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">C1</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Français Bilingue</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-blue-400">100%</div>
+                        <div class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Disponibilité Flexible</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-80 aurora-blur-3 opacity-25 rounded-full pointer-events-none blur-3xl"></div>
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 relative z-10">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Mes Domaines de Spécialité</h2>
+                <p class="text-slate-400 font-light">Une gamme complète de services conçue pour assurer l'excellence opérationnelle et maximiser la valeur de chaque interaction client.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
+                
+                <!-- Service 1 -->
+                <div class="group p-8 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-blue-500/30 hover:bg-slate-900/60 transition-all duration-300 backdrop-blur-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="headset" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Support Client & SAV</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">
+                            Résolution de litiges, diagnostic technique (Fibre/ADSL), traitement des réclamations et gestion globale de votre ticket-flow.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-blue-400 font-semibold uppercase tracking-wider">
+                        <span>Fidélisation active</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Service 2 -->
+                <div class="group p-8 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-purple-500/30 hover:bg-slate-900/60 transition-all duration-300 backdrop-blur-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="phone-call" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Télévente B2B / B2C</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">
+                            Vente consultative, gestion agile des objections, up-selling et fidélisation client à fort taux de conversion.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-purple-400 font-semibold uppercase tracking-wider">
+                        <span>Vente consultative</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Service 3 -->
+                <div class="group p-8 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-pink-500/30 hover:bg-slate-900/60 transition-all duration-300 backdrop-blur-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="filter" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Qualification de Leads</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">
+                            Tri rigoureux, prise de contact, filtrage des besoins et enrichissement des bases de données pour vos forces de vente.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-pink-400 font-semibold uppercase tracking-wider">
+                        <span>Sourcing haut de gamme</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- Service 4 -->
+                <div class="group p-8 rounded-3xl bg-slate-900/40 border border-white/5 hover:border-emerald-500/30 hover:bg-slate-900/60 transition-all duration-300 backdrop-blur-sm flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="users" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-3">Sourcing & Recrutement</h3>
+                        <p class="text-slate-400 text-sm font-light leading-relaxed">
+                            Approche directe via LinkedIn Sales Navigator, tri de CVs, constitution de vivier de talents de haut vol.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-2 text-xs text-emerald-400 font-semibold uppercase tracking-wider">
+                        <span>Approche directe</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- NOUVELLE SECTION INTEGRATION GEMINI API -->
+        <section id="ai-demo" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="absolute inset-x-0 top-10 h-96 aurora-blur-2 opacity-35 rounded-full pointer-events-none filter blur-3xl"></div>
+            
+            <div class="p-[1.5px] rounded-3xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 relative z-10 shadow-2xl shadow-purple-500/10">
+                <div class="bg-slate-950/95 rounded-[22px] p-8 sm:p-12 backdrop-blur-md">
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                        
+                        <!-- Left explanation of the tool -->
+                        <div class="lg:col-span-5">
+                            <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20 text-xs font-semibold mb-6">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+                                Intégration Gemini API de pointe
+                            </span>
+                            
+                            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-6">
+                                Testez mon savoir-faire <br/>
+                                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">en temps réel</span>
+                            </h2>
+                            
+                            <p class="text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                                Choisissez votre secteur d'activité ou spécifiez une objection client typique. L'intelligence artificielle va concevoir un plan d'action d'excellence personnalisé et simuler ma réponse exacte en tant que Moez Thabet.
+                            </p>
+
+                            <!-- Suggestion badges -->
+                            <div class="space-y-3">
+                                <span class="block text-xs text-slate-500 font-semibold uppercase tracking-wider">Suggestions rapides :</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="applyPreset('E-commerce', 'Colis marqué livré mais non reçu, client très en colère.')" class="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 transition-all">
+                                        📦 E-commerce & Colis perdu
+                                    </button>
+                                    <button onclick="applyPreset('SaaS / Tech', 'Le client trouve l\'abonnement trop cher et veut résilier.')" class="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 transition-all">
+                                        💻 SaaS & Tarif élevé
+                                    </button>
+                                    <button onclick="applyPreset('Télécom / ADSL', 'Débit de fibre optique instable depuis 3 jours.')" class="px-3.5 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-xs text-slate-300 transition-all">
+                                        ⚡ Panne Internet
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Form and AI Result Screen -->
+                        <div class="lg:col-span-7 bg-slate-900/60 p-6 sm:p-8 rounded-2xl border border-white/5 relative">
+                            
+                            <div class="space-y-6">
+                                <!-- Sector Inputs -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Secteur / Industrie</label>
+                                        <input id="ai-sector" type="text" placeholder="Ex: E-commerce" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition-colors">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Technologie / CRM visé</label>
+                                        <input id="ai-tech" type="text" placeholder="Ex: Salesforce, Zendesk" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition-colors">
+                                    </div>
+                                </div>
+
+                                <!-- Objection details -->
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-2">Problématique / Objection complexe de votre client</label>
+                                    <textarea id="ai-objection" rows="3" placeholder="Saisissez ici le problème client que je dois résoudre (Ex: Je refuse de payer car mon service est en panne...)" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-blue-500 text-sm transition-colors resize-none"></textarea>
+                                </div>
+
+                                <!-- CTA button trigger -->
+                                <button onclick="triggerAISimulation()" id="ai-generate-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white font-bold text-sm hover:opacity-95 transition-all flex items-center justify-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4 animate-pulse"></i>
+                                    <span>Générer ma stratégie & réponse de Moez ✨</span>
+                                </button>
+                            </div>
+
+                            <!-- Interactive Response Box -->
+                            <div id="ai-loading" class="hidden absolute inset-0 bg-slate-950/90 rounded-2xl flex flex-col items-center justify-center p-8 text-center z-10 transition-opacity duration-300">
+                                <div class="w-12 h-12 rounded-full border-4 border-purple-500/30 border-t-purple-400 animate-spin mb-4"></div>
+                                <h3 class="text-base font-bold text-white mb-1">Moez prépare sa stratégie...</h3>
+                                <p class="text-xs text-slate-400 max-w-xs">Analyse du domaine et modélisation de la solution client optimale grâce à Gemini 2.5.</p>
+                            </div>
+
+                            <div id="ai-result" class="hidden mt-8 p-6 rounded-xl bg-slate-950 border border-white/10 space-y-4 max-h-[380px] overflow-y-auto relative">
+                                <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                                    <span class="text-xs font-bold text-blue-400 tracking-wider uppercase flex items-center gap-1.5">
+                                        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                                        Plan d'action de Moez Thabet
+                                    </span>
+                                    <button onclick="copyGeneratedStrategy()" class="p-1.5 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors" title="Copier la stratégie">
+                                        <i data-lucide="copy" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <div id="ai-result-content" class="text-slate-300 text-sm font-light space-y-4 leading-relaxed">
+                                    <!-- Dynamic response here -->
+                                </div>
+                                <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
+                                    <button onclick="injectIntoContactForm()" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-all flex items-center gap-1.5">
+                                        <i data-lucide="arrow-down" class="w-3.5 h-3.5"></i>
+                                        Utiliser pour me contacter
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- Dynamic Stats Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
-            <div class="glass p-8 rounded-3xl">
-                <div class="text-4xl font-bold mb-2">99.2%</div>
-                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Satisfaction Client</div>
+        <!-- PARCOURS & EXPÉRIENCES -->
+        <section id="experience" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Un Parcours d'Excellence</h2>
+                <p class="text-slate-400 font-light">Ma trajectoire professionnelle au sein de grands comptes et de startups innovantes, forgée par le sens du résultat.</p>
             </div>
-            <div class="glass p-8 rounded-3xl">
-                <div class="text-4xl font-bold mb-2">14K+</div>
-                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Tickets résolus</div>
-            </div>
-            <div class="glass p-8 rounded-3xl">
-                <div class="text-4xl font-bold mb-2">2H</div>
-                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Temps de Réponse</div>
+
+            <!-- Timeline -->
+            <div class="relative border-l border-white/10 ml-4 md:ml-32">
+                
+                <!-- Exp 1 -->
+                <div class="mb-12 relative pl-8 md:pl-12">
+                    <!-- Dot -->
+                    <span class="absolute -left-[11px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-950 border border-purple-500 shadow-sm shadow-purple-500/50">
+                        <span class="h-1.5 w-1.5 rounded-full bg-purple-400"></span>
+                    </span>
+                    <!-- Left Label (Desktop Only) -->
+                    <div class="hidden md:block absolute -left-36 top-1 text-right w-28">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-purple-400">2026 - Présent</span>
+                    </div>
+                    <!-- Card Content -->
+                    <div class="p-6 sm:p-8 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm hover:border-purple-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="block md:hidden text-xs font-semibold uppercase tracking-wider text-purple-400 mb-1">2026 - Présent</span>
+                                <h3 class="text-xl font-bold text-white">Chargé de recherche en recrutement</h3>
+                                <p class="text-sm text-slate-400 font-medium">VEO Worldwide</p>
+                            </div>
+                            <span class="inline-flex self-start sm:self-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                                Sourcing & Talent Acquisition
+                            </span>
+                        </div>
+                        <ul class="space-y-2.5 text-slate-300 text-sm font-light">
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
+                                <span>Qualification et pré-sélection active de profils ciblés via <strong>LinkedIn Sales Navigator</strong> et gestion avec l'ATS <strong>Recruitee</strong>.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
+                                <span>Conduite d'entretiens téléphoniques approfondis de pré-qualification.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
+                                <span>Gestion agile de viviers de talents et de suivi fluide des candidatures.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Exp 2 -->
+                <div class="mb-12 relative pl-8 md:pl-12">
+                    <!-- Dot -->
+                    <span class="absolute -left-[11px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-950 border border-blue-500 shadow-sm shadow-blue-500/50">
+                        <span class="h-1.5 w-1.5 rounded-full bg-blue-400"></span>
+                    </span>
+                    <!-- Left Label -->
+                    <div class="hidden md:block absolute -left-36 top-1 text-right w-28">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-blue-400">2023 - 2024</span>
+                    </div>
+                    <!-- Card Content -->
+                    <div class="p-6 sm:p-8 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm hover:border-blue-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="block md:hidden text-xs font-semibold uppercase tracking-wider text-blue-400 mb-1">2023 - 2024</span>
+                                <h3 class="text-xl font-bold text-white">Assistant technico-commercial</h3>
+                                <p class="text-sm text-slate-400 font-medium">Chifco</p>
+                            </div>
+                            <span class="inline-flex self-start sm:self-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                                Support Technique & Ventes
+                            </span>
+                        </div>
+                        <ul class="space-y-2.5 text-slate-300 text-sm font-light">
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+                                <span>Diagnostic de connectivité avancé (Fibre/ADSL) et résolution proactive d'incidents techniques complexes.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+                                <span>Vente consultative et propositions stratégiques d'<strong>up-selling</strong> sur la gamme de services Internet.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-400 shrink-0 mt-0.5"></i>
+                                <span>Fidélisation client et amélioration constante du taux de satisfaction (CSAT).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Exp 3 -->
+                <div class="mb-12 relative pl-8 md:pl-12">
+                    <!-- Dot -->
+                    <span class="absolute -left-[11px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-950 border border-pink-500 shadow-sm shadow-pink-500/50">
+                        <span class="h-1.5 w-1.5 rounded-full bg-pink-400"></span>
+                    </span>
+                    <!-- Left Label -->
+                    <div class="hidden md:block absolute -left-36 top-1 text-right w-28">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-pink-400">2022 - 2023</span>
+                    </div>
+                    <!-- Card Content -->
+                    <div class="p-6 sm:p-8 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm hover:border-pink-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="block md:hidden text-xs font-semibold uppercase tracking-wider text-pink-400 mb-1">2022 - 2023</span>
+                                <h3 class="text-xl font-bold text-white">Seller & Customer Service Agent</h3>
+                                <p class="text-sm text-slate-400 font-medium">Movinga</p>
+                            </div>
+                            <span class="inline-flex self-start sm:self-center px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-300 border border-pink-500/20">
+                                Inside Sales & Support
+                            </span>
+                        </div>
+                        <ul class="space-y-2.5 text-slate-300 text-sm font-light">
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-pink-400 shrink-0 mt-0.5"></i>
+                                <span>Qualification à chaud et conversion de leads en ventes réelles, par l'élaboration de devis sur mesure.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-pink-400 shrink-0 mt-0.5"></i>
+                                <span>Coordination logistique rigoureuse et suivi opérationnel des déménagements pour garantir le zéro incident.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-pink-400 shrink-0 mt-0.5"></i>
+                                <span>Gestion complète des litiges avec approche orientée "Customer Experience" (CX).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Exp 4 -->
+                <div class="relative pl-8 md:pl-12">
+                    <!-- Dot -->
+                    <span class="absolute -left-[11px] top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-slate-950 border border-emerald-500 shadow-sm shadow-emerald-500/50">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                    </span>
+                    <!-- Left Label -->
+                    <div class="hidden md:block absolute -left-36 top-1 text-right w-28">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">2015 - 2022</span>
+                    </div>
+                    <!-- Card Content -->
+                    <div class="p-6 sm:p-8 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm hover:border-emerald-500/20 transition-all duration-300">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                            <div>
+                                <span class="block md:hidden text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-1">2015 - 2022</span>
+                                <h3 class="text-xl font-bold text-white">Conseiller technico-commercial</h3>
+                                <p class="text-sm text-slate-400 font-medium">Teleperformance (Projet Orange France)</p>
+                            </div>
+                            <span class="inline-flex self-start sm:self-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                                Télévente & SAV Premium
+                            </span>
+                        </div>
+                        <ul class="space-y-2.5 text-slate-300 text-sm font-light">
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Commercialisation et vente des offres Très Haut Débit (Fibre Optique) pour <strong>Orange France</strong>.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Prise en charge intégrale du service après-vente (SAV), gestion des réclamations et traitement expert des objections.</span>
+                            </li>
+                            <li class="flex gap-2.5 items-start">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Contribution directe à la rétention client et à la montée en gamme des offres de services.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </section>
+
+        <!-- TARIFS & ESTIMATEUR DE BUDGET INTERACTIF -->
+        <section id="tarifs" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="absolute inset-x-0 bottom-1/2 h-[350px] aurora-blur-1 opacity-20 pointer-events-none filter blur-3xl"></div>
+            
+            <div class="text-center max-w-3xl mx-auto mb-16 relative z-10">
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-4">Estimez Votre Budget Freelance</h2>
+                <p class="text-slate-400 font-light">Pas de mauvaise surprise. Un tarif unique et transparent de <strong>5 € / heure</strong>. Ajustez la durée de votre projet ci-dessous pour voir la simulation de coût.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative z-10">
+                
+                <!-- Calculateur Form -->
+                <div class="lg:col-span-7 p-8 sm:p-10 rounded-3xl bg-slate-900/50 border border-white/5 backdrop-blur-md flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-8">
+                            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/25 flex items-center justify-center text-purple-400">
+                                <i data-lucide="calculator" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white">Configurateur Intelligent</h3>
+                                <p class="text-xs text-slate-500">Ajustez le volume d'heures requis</p>
+                            </div>
+                        </div>
+
+                        <!-- Range Slider pour les heures -->
+                        <div class="mb-10">
+                            <div class="flex justify-between items-center mb-4">
+                                <label for="hours-slider" class="text-sm font-semibold text-slate-300">Volume horaire (par semaine) :</label>
+                                <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-sm font-bold" id="hours-display">20 heures</span>
+                            </div>
+                            <input type="range" id="hours-slider" min="5" max="45" value="20" step="5" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            <div class="flex justify-between text-[11px] text-slate-600 mt-2 font-medium">
+                                <span>Support Ponctuel (5h)</span>
+                                <span>Mi-Temps (20h)</span>
+                                <span>Temps Plein (35h)</span>
+                                <span>Intensif (45h+)</span>
+                            </div>
+                        </div>
+
+                        <!-- Select Type de Mission -->
+                        <div class="mb-6">
+                            <label for="mission-type" class="block text-sm font-semibold text-slate-300 mb-2">Type de prestation souhaité :</label>
+                            <select id="mission-type" class="w-full px-4 py-3.5 rounded-xl bg-slate-950 border border-white/10 text-slate-300 focus:outline-none focus:border-purple-500 text-sm transition-colors">
+                                <option value="support" selected>Support Client & SAV</option>
+                                <option value="televente">Télévente & Prospection</option>
+                                <option value="qualification">Qualification de Leads</option>
+                                <option value="recrutement">Sourcing & Recrutement</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pt-6 border-t border-white/5 flex gap-4 items-center text-xs text-slate-500">
+                        <i data-lucide="info" class="w-4 h-4 text-purple-400 shrink-0"></i>
+                        <p>Facturation transparente basée sur un reporting d'activité hebdomadaire précis.</p>
+                    </div>
+                </div>
+
+                <!-- Résultat Budget -->
+                <div class="lg:col-span-5 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-slate-900/80 to-purple-950/20 border border-purple-500/20 backdrop-blur-md flex flex-col justify-between shadow-xl shadow-purple-500/5">
+                    <div>
+                        <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold bg-purple-500/10 text-purple-300 border border-purple-500/20 uppercase tracking-widest mb-6">Simulation du coût</span>
+                        
+                        <!-- Rate Display -->
+                        <div class="mb-8">
+                            <span class="text-slate-500 text-sm block">Mon tarif horaire</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="text-4xl font-extrabold text-white">5,00 €</span>
+                                <span class="text-slate-400 text-sm">/ heure</span>
+                            </div>
+                        </div>
+
+                        <!-- Budget Summary Cards -->
+                        <div class="space-y-4 mb-8">
+                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                                <span class="text-slate-400 text-xs">Par Semaine</span>
+                                <span class="text-lg font-bold text-blue-400" id="weekly-total">100,00 €</span>
+                            </div>
+                            <div class="flex justify-between items-center p-3.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                                <span class="text-slate-400 text-xs">Mensuel Estimé (4 sem.)</span>
+                                <span class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400" id="monthly-total">400,00 €</span>
+                            </div>
+                        </div>
+
+                        <!-- Inclus dans l'offre -->
+                        <div class="space-y-2 mb-8">
+                            <div class="flex items-center gap-2.5 text-xs text-slate-400">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span>Rapport quotidien d'activité</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-400">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span>Zéro charges sociales additionnelles</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 text-xs text-slate-400">
+                                <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                                <span>Flexibilité et réactivité totale</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="scrollToContactWithConfig()" class="w-full py-4 rounded-2xl bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/5">
+                        <span>Verrouiller cette estimation</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- OUTILS, LANGUES & COMPÉTENCES -->
+        <section id="outils" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Details -->
+                <div class="lg:col-span-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-blue-300 mb-6 backdrop-blur-sm">
+                        <i data-lucide="brain" class="w-3.5 h-3.5 text-blue-400"></i>
+                        <span>Compétences Validées</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-6">Un Profil Technique & Multilingue</h2>
+                    <p class="text-slate-400 font-light mb-8 leading-relaxed">
+                        Pour garantir un service client de premier ordre, j'exploite les meilleurs outils CRM, outils de ticketing et plateformes de sourcing pour assurer une communication fluide et des reportings d'une clarté irréprochable.
+                    </p>
+
+                    <!-- Langues -->
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-400">Langues de Travail</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="p-3 rounded-xl bg-slate-900/40 border border-white/5 text-center">
+                                <span class="block text-xs text-slate-500">Français</span>
+                                <strong class="text-white text-sm">C1 - Avancé</strong>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900/40 border border-white/5 text-center">
+                                <span class="block text-xs text-slate-500">Arabe</span>
+                                <strong class="text-white text-sm">Maternel</strong>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-900/40 border border-white/5 text-center">
+                                <span class="block text-xs text-slate-500">Anglais</span>
+                                <strong class="text-white text-sm">A2 - Interm.</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Tech Badges & Expertise List -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    
+                    <!-- Card Tech Outils -->
+                    <div class="p-6 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm">
+                        <h3 class="text-base font-bold text-white mb-6 flex items-center gap-2">
+                            <i data-lucide="wrench" class="w-4 h-4 text-purple-400"></i>
+                            <span>Outils & Systèmes</span>
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-white/5">
+                                <span class="text-sm font-medium text-slate-300">Salesforce CRM</span>
+                                <span class="text-xs text-slate-500 uppercase">Maîtrise</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-white/5">
+                                <span class="text-sm font-medium text-slate-300">LinkedIn Sales Nav.</span>
+                                <span class="text-xs text-slate-500 uppercase">Expert</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-white/5">
+                                <span class="text-sm font-medium text-slate-300">ATS Recruitee</span>
+                                <span class="text-xs text-slate-500 uppercase">Maîtrise</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-950/50 border border-white/5">
+                                <span class="text-sm font-medium text-slate-300">Suite Office / Drive</span>
+                                <span class="text-xs text-slate-500 uppercase">Intermédiaire</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Hard Skills -->
+                    <div class="p-6 rounded-3xl bg-slate-900/40 border border-white/5 backdrop-blur-sm">
+                        <h3 class="text-base font-bold text-white mb-6 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-blue-400"></i>
+                            <span>Compétences Clés</span>
+                        </h3>
+                        <div class="space-y-2 text-sm text-slate-300 font-light">
+                            <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                <span>Télévente B2B & B2C</span>
+                            </div>
+                            <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                <span>Qualification avancée de leads</span>
+                            </div>
+                            <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                <span>Gestion agile des objections</span>
+                            </div>
+                            <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                <span>Rétention & SAV technique</span>
+                            </div>
+                            <div class="flex items-center gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+                                <span>Recrutement & Sourcing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
+            <div class="absolute inset-x-0 bottom-[-10%] h-80 aurora-blur-2 opacity-30 rounded-full pointer-events-none filter blur-3xl"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Info Contact Direct -->
+                <div class="lg:col-span-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-pink-300 mb-6 backdrop-blur-sm">
+                        <i data-lucide="mail" class="w-3.5 h-3.5 text-pink-400"></i>
+                        <span>Parlons de votre projet</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-6">Échangeons Ensemble</h2>
+                    <p class="text-slate-400 font-light mb-8 leading-relaxed">
+                        Une question ? Une proposition de projet ? N'hésitez pas à m'écrire directement via le formulaire ou à utiliser mes coordonnées directes ci-dessous.
+                    </p>
+
+                    <!-- Coordonnées Directes -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                            <div class="w-11 h-11 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                                <i data-lucide="phone" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-500">Téléphone / WhatsApp</span>
+                                <a href="tel:+21624909563" class="text-sm font-semibold text-white hover:text-blue-400 transition-colors">+216 24 909 563</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                            <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-500">E-mail de Contact</span>
+                                <a href="mailto:Contact.moezthabet@proton.me" class="text-sm font-semibold text-white hover:text-purple-400 transition-colors">Contact.moezthabet@proton.me</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 backdrop-blur-xs">
+                            <div class="w-11 h-11 rounded-xl bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-500">LinkedIn Professionnel</span>
+                                <a href="https://linkedin.com/in/moezthabet" target="_blank" rel="noopener noreferrer" class="text-sm font-semibold text-white hover:text-pink-400 transition-colors">linkedin.com/in/moezthabet</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulaire Interactive (Glassmorphism) -->
+                <div class="lg:col-span-7 p-8 sm:p-10 rounded-3xl bg-slate-900/50 border border-white/5 backdrop-blur-md relative">
+                    
+                    <!-- Notification Banner (Initialement Masquée) -->
+                    <div id="success-banner" class="hidden absolute inset-0 rounded-3xl bg-slate-950/95 backdrop-blur-md z-20 flex flex-col items-center justify-center text-center p-8 transition-all duration-300">
+                        <div class="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6 animate-bounce">
+                            <i data-lucide="check" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white mb-2">Message Simulé !</h3>
+                        <p class="text-sm text-slate-400 max-w-sm">
+                            Merci beaucoup ! Votre message de simulation a été traité avec succès. Dans un environnement réel, Moez Thabet recevrait votre notification à <strong>Contact.moezthabet@proton.me</strong>.
+                        </p>
+                        <button onclick="resetContactForm()" class="mt-6 px-6 py-2.5 rounded-full text-xs font-semibold bg-white/10 text-white hover:bg-white/20 transition-all">
+                            Envoyer un nouveau message
+                        </button>
+                    </div>
+
+                    <form id="freelance-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="form-name" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Votre Nom ou Entreprise</label>
+                                <input required type="text" id="form-name" placeholder="Ex: SAS Global Support" class="w-full px-4 py-3.5 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-purple-500 text-sm transition-colors">
+                            </div>
+                            <div>
+                                <label for="form-email" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Votre E-mail</label>
+                                <input required type="email" id="form-email" placeholder="client@votreentreprise.com" class="w-full px-4 py-3.5 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-purple-500 text-sm transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="form-subject" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Objet du projet</label>
+                            <input required type="text" id="form-subject" placeholder="Ex: Lancement Support Client / Télévente" class="w-full px-4 py-3.5 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-purple-500 text-sm transition-colors">
+                        </div>
+
+                        <div>
+                            <label for="form-message" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Détails de la mission</label>
+                            <textarea required id="form-message" rows="5" placeholder="Décrivez brièvement vos attentes, la durée estimée et les outils souhaités..." class="w-full px-4 py-3.5 rounded-xl bg-slate-950 border border-white/10 text-slate-200 focus:outline-none focus:border-purple-500 text-sm transition-colors resize-none"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full py-4 rounded-xl bg-white text-slate-950 font-bold text-sm hover:bg-slate-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            <span>Envoyer ma proposition</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
     </main>
 
+    <!-- FOOTER -->
+    <footer class="relative z-10 border-t border-white/5 bg-slate-950/80 backdrop-blur-md py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <!-- Branding -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-purple-600 to-pink-500 p-[1.5px] flex items-center justify-center">
+                        <div class="w-full h-full bg-slate-950 rounded-[7px] flex items-center justify-center">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-blue-400"></i>
+                        </div>
+                    </div>
+                    <span class="text-sm font-semibold text-slate-200">Moez Thabet &copy; 2026. Tous droits réservés.</span>
+                </div>
+
+                <!-- Quick links -->
+                <div class="flex gap-6 text-xs text-slate-500">
+                    <span>Tunisie • Sousse</span>
+                    <span>Français C1 • Anglais A2</span>
+                    <span>Tarif : 5 € / heure</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CALCULATOR & INTERACTIVE LOGIC -->
     <script>
-        // Interactive Background Logic
-        const container = document.getElementById('bg-shader');
-        document.addEventListener('mousemove', (e) => {
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            container.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(37, 99, 235, 0.15), transparent 50%)`;
-        });
+        // Initialisation de Lucide Icons
+        lucide.createIcons();
+
+        // Éléments du Calculateur
+        const slider = document.getElementById('hours-slider');
+        const display = document.getElementById('hours-display');
+        const weeklyTotal = document.getElementById('weekly-total');
+        const monthlyTotal = document.getElementById('monthly-total');
+        const missionSelect = document.getElementById('mission-type');
+        const messageTextarea = document.getElementById('form-message');
+        const subjectInput = document.getElementById('form-subject');
+
+        const ratePerHour = 5;
+
+        // Fonction de formatage monétaire
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+        }
+
+        // Mise à jour des calculs en temps réel
+        function updateBudget() {
+            const hours = parseInt(slider.value, 10);
+            display.innerText = `${hours} heure${hours > 1 ? 's' : ''} par semaine`;
+            
+            const weeklyCost = hours * ratePerHour;
+            const monthlyCost = weeklyCost * 4;
+
+            weeklyTotal.innerText = formatCurrency(weeklyCost);
+            monthlyTotal.innerText = formatCurrency(monthlyCost);
+        }
+
+        // Écouteur d'événement sur le slider
+        slider.addEventListener('input', updateBudget);
+        updateBudget(); // Appel initial
+
+        // Verrouiller la configuration vers le formulaire de contact
+        function scrollToContactWithConfig() {
+            const hours = slider.value;
+            const missionType = missionSelect.options[missionSelect.selectedIndex].text;
+            const weeklyCost = hours * ratePerHour;
+            const monthlyCost = weeklyCost * 4;
+
+            // Pré-remplissage des champs du formulaire
+            subjectInput.value = `Projet Freelance : ${missionType}`;
+            messageTextarea.value = `Bonjour Moez,\n\nJe souhaiterais échanger avec vous concernant une mission de type : "${missionType}".\n\nNous aurions besoin de vos services pour environ ${hours} heures par semaine (budget hebdomadaire estimé : ${formatCurrency(weeklyCost)} / mensuel : ${formatCurrency(monthlyCost)}).`;
+
+            // Scroll fluide vers le formulaire de contact
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Application d'un preset d'exemple pour la démo IA
+        function applyPreset(sector, objection) {
+            document.getElementById('ai-sector').value = sector;
+            document.getElementById('ai-objection').value = objection;
+            document.getElementById('ai-tech').value = (sector === 'E-commerce') ? 'Salesforce, Shopify' : (sector === 'Télécom / ADSL') ? 'Zendesk, Kibana' : 'Intercom, Jira';
+        }
+
+        // Intégration de l'API Gemini LLM pour simuler l'expertise de Moez
+        async function fetchGeminiSimulation(sector, tech, objection) {
+            const apiKey = ""; // L'environnement injecte la clé API à l'exécution.
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const systemPrompt = `Tu es Moez Thabet, un expert freelance en relation client de haut niveau (3+ ans d'expérience, ex-Teleperformance pour Orange France, ex-Movinga, ex-Chifco, ex-VEO Worldwide). Ton tarif est exceptionnellement bas (5€/h) pour une qualité équivalente aux meilleures agences.
+            Rédige un plan d'action d'excellence et une réponse simulée en français à destination d'un client potentiel.
+            Structure impérativement ta réponse avec ces balises HTML épurées de Tailwind :
+            1. Une section "🎯 PLAN D'ACTION IMMÉDIAT" sous forme de 3 étapes clés d'expert.
+            2. Une section "💬 MA RÉPONSE CLIENT PREMIUM" contenant la réponse exacte, ultra-professionnelle, empathique et polie que tu enverrais à ce client énervé ou dubitatif, en désamorçant le conflit.
+            3. Une phrase d'ouverture invitant le recruteur à te contacter pour l'exécuter.
+            Reste très pro, chaleureux et persuasif.`;
+
+            const prompt = `Voici mon secteur : ${sector}. 
+            Les outils que j'utilise ou cible : ${tech}. 
+            Voici le problème ou l'objection client que je rencontre : "${objection}".
+            Mets en valeur ton expertise client pour résoudre cela de manière optimale.`;
+
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            // Algorithme d'Exponential Backoff pour la résilience de l'API (5 tentatives)
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                } catch (e) {
+                    // Retry silently
+                }
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+            throw new Error("Le service de simulation IA est temporairement saturé. Veuillez réessayer dans quelques instants.");
+        }
+
+        // Déclencheur de l'IA
+        async function triggerAISimulation() {
+            const sector = document.getElementById('ai-sector').value.trim();
+            const tech = document.getElementById('ai-tech').value.trim() || 'Salesforce / Suite Office';
+            const objection = document.getElementById('ai-objection').value.trim();
+
+            if (!sector || !objection) {
+                // Remplacement de l'alert navigateur par un affichage élégant
+                const contentBox = document.getElementById('ai-result-content');
+                document.getElementById('ai-result').classList.remove('hidden');
+                contentBox.innerHTML = `<div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs">⚠️ Veuillez renseigner au moins le Secteur d'activité et la Problématique client pour lancer la simulation.</div>`;
+                return;
+            }
+
+            const loader = document.getElementById('ai-loading');
+            const resultBox = document.getElementById('ai-result');
+            const contentBox = document.getElementById('ai-result-content');
+
+            loader.classList.remove('hidden');
+            resultBox.classList.add('hidden');
+
+            try {
+                const data = await fetchGeminiSimulation(sector, tech, objection);
+                const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (generatedText) {
+                    // Convertir les éventuels markdowns basiques en paragraphes pour l'affichage
+                    let formattedText = generatedText
+                        .replace(/\n\n/g, '<br/><br/>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+                    contentBox.innerHTML = `
+                        <div class="space-y-4 text-xs sm:text-sm text-slate-300">
+                            ${formattedText}
+                        </div>
+                    `;
+                } else {
+                    contentBox.innerHTML = `<p class="text-red-400 text-xs">Une erreur s'est produite lors de la génération de la réponse.</p>`;
+                }
+                resultBox.classList.remove('hidden');
+            } catch (error) {
+                contentBox.innerHTML = `<p class="text-red-400 text-xs">⚠️ ${error.message}</p>`;
+                resultBox.classList.remove('hidden');
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+
+        // Copie de la stratégie générée vers le presse-papiers
+        function copyGeneratedStrategy() {
+            const content = document.getElementById('ai-result-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = content;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            
+            // Notification rapide temporaire
+            const btn = document.querySelector('[title="Copier la stratégie"]');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>`;
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                lucide.createIcons();
+            }, 1800);
+        }
+
+        // Injection du résultat dans le formulaire de contact standard
+        function injectIntoContactForm() {
+            const sector = document.getElementById('ai-sector').value;
+            const objection = document.getElementById('ai-objection').value;
+            const generatedContent = document.getElementById('ai-result-content').innerText;
+
+            subjectInput.value = `Intéressé par votre profil (Secteur : ${sector})`;
+            messageTextarea.value = `Bonjour Moez,\n\nJ'ai testé votre simulateur d'expertise IA avec la problématique suivante : "${objection}".\n\nVoici le plan d'action qui a été généré :\n${generatedContent}\n\nJ'aimerais collaborer avec vous pour mettre cela en pratique à votre tarif de 5 € / heure. Parlons-en !`;
+            
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Gestion du formulaire de contact (simulation)
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const banner = document.getElementById('success-banner');
+            banner.classList.remove('hidden');
+        }
+
+        // Réinitialisation du formulaire simulé
+        function resetContactForm() {
+            const banner = document.getElementById('success-banner');
+            const form = document.getElementById('freelance-form');
+            form.reset();
+            banner.classList.add('hidden');
+        }
     </script>
 </body>
-</html> 
+</html>
