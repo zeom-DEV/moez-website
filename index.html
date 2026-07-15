@@ -1,332 +1,458 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- SEO Standard & Balises Meta Cruciales (Optimisation LLM & Google) -->
-    <title>Moez Thabet | Support Client, SAV & Assistance Technique Freelance à 5€/h</title>
-    <meta name="description" content="Moez Thabet, consultant freelance expert en relation client, SAV e-commerce et support technique basé à Sousse, Tunisie. Tarif compétitif de 5 € / heure. Maîtrise Zendesk, Salesforce et Crisp. Français C1.">
-    <meta name="keywords" content="Moez Thabet, support client freelance, SAV e-commerce freelance, support technique Tunisie, freelance francophone 5 euros, relation client Sousse, expert Zendesk, Salesforce, Crisp, service client externe">
-    <meta name="author" content="Moez Thabet">
-    <link rel="canonical" href="https://moezthabet.com">
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph / Facebook (Pour l'indexation sociale et IA) -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://moezthabet.com">
-    <meta property="og:title" content="Moez Thabet | Support Client, SAV & Support Tech Freelance à 5€/h">
-    <meta property="og:description" content="Expert francophone en relation client et support technique. Service de SAV de niveau 1 & 2 à tarif transparent de 5 € par heure. Disponible immédiatement.">
-    <meta property="og:image" content="https://moezthabet.com/logo.png">
-
-    <!-- Twitter Card -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://moezthabet.com">
-    <meta property="twitter:title" content="Moez Thabet | Support Client Freelance à 5€/h">
-    <meta property="twitter:description" content="Bénéficiez d'un support client et SAV de qualité supérieure pour seulement 5 € de l'heure. Maîtrise de Salesforce, Zendesk et Crisp.">
-
-    <!-- Google Fonts: Inter pour un rendu de lecture fluide optimal pour les robots et humains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                },
-            },
+    <title>Moez Thabet | Support Client, SAV & Sourcing Freelance</title>
+    <style>
+        /* Styles Globaux */
+        :root {
+            --primary-color: #0070f3;
+            --secondary-color: #07111e;
+            --text-color: #f3f4f6;
+            --bg-color: #0b1523;
+            --card-bg: #182635;
         }
-    </script>
 
-    <!-- SCHEMA.ORG - Données Structurées JSON-LD (La clé absolue pour remonter dans l'IA et les LLM) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Moez Thabet - Consultant Relation Client & SAV",
-      "image": "https://moezthabet.com/logo.png",
-      "@id": "https://moezthabet.com/#service",
-      "url": "https://moezthabet.com",
-      "telephone": "+21624909563",
-      "priceRange": "5 EUR / hour",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Sousse",
-        "addressCountry": "TN",
-        "addressRegion": "Sousse"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "35.8256",
-        "longitude": "10.6369"
-      },
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday"
-        ],
-        "opens": "08:00",
-        "closes": "18:00"
-      },
-      "sameAs": [
-        "https://linkedin.com/in/moezthabet"
-      ],
-      "knowsAbout": [
-        "Support Client",
-        "Service Après-Vente (SAV)",
-        "Support Technique",
-        "Sourcing RH",
-        "Recrutement & Sourcing",
-        "Zendesk",
-        "Salesforce",
-        "Crisp",
-        "E-commerce SAV"
-      ],
-      "founder": {
-        "@type": "Person",
-        "name": "Moez Thabet",
-        "jobTitle": "Consultant Relation Client, Support Tech & SAV",
-        "email": "contact@moezthabet.com",
-        "telephone": "+21624909563",
-        "knowsLanguage": [
-          {
-            "@type": "Language",
-            "name": "French",
-            "alternateName": "fr"
-          },
-          {
-            "@type": "Language",
-            "name": "Arabic",
-            "alternateName": "ar"
-          }
-        ]
-      }
-    }
-    </script>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        /* Navigation */
+        header {
+            background-color: var(--secondary-color);
+            padding: 1.5rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #1e2d3d;
+        }
+
+        .nav-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        nav {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            max-width: 700px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Sections Générales */
+        section {
+            padding: 4rem 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            color: #fff;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 0.7rem auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* Expériences */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .timeline-item h3 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-item .company {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-item .date {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item ul {
+            list-style-type: none;
+        }
+
+        .timeline-item li {
+            margin-bottom: 0.6rem;
+            position: relative;
+            padding-left: 1.2rem;
+        }
+
+        .timeline-item li::before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Tarifs */
+        .tarifs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .tarif-card {
+            background-color: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #1e2d3d;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .tarif-card.featured {
+            border-color: var(--primary-color);
+            transform: scale(1.03);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 20px;
+        }
+
+        .tarif-card h3 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .tarif-desc {
+            color: #9ca3af;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tarif-card ul {
+            list-style-type: none;
+            text-align: left;
+            margin-top: auto;
+            border-top: 1px solid #1e2d3d;
+            padding-top: 1.5rem;
+        }
+
+        .tarif-card li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+
+        /* Contact */
+        .contact {
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .contact-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-info p {
+            color: #9ca3af;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+            border-top: 1px solid #1e2d3d;
+            margin-top: 4rem;
+        }
+
+        /* Responsive Mobile */
+        @media (max-width: 600px) {
+            .nav-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .tarif-card.featured {
+                transform: none;
+            }
+        }
+    </style>
 </head>
-<body class="bg-[#fcfcfd] text-slate-900 antialiased selection:bg-indigo-600 selection:text-white">
+<body>
 
-    <!-- Navigation -->
-    <header class="fixed top-0 left-0 w-full bg-white/90 backdrop-blur-md border-b border-slate-100 z-50">
-        <div class="max-w-5xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center space-x-3" aria-label="Accueil Moez Thabet">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-indigo-100">
-                    M
-                </div>
-                <div>
-                    <span class="font-bold text-slate-900 text-base tracking-tight block">MOEZ THABET</span>
-                    <span class="text-[11px] text-indigo-600 font-bold tracking-wider uppercase block -mt-1">Support & SAV Externe</span>
-                </div>
-            </a>
-
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-                <a href="#services" class="hover:text-indigo-600 transition-colors">Services</a>
-                <a href="#experience" class="hover:text-indigo-600 transition-colors">Mon Parcours</a>
-                <a href="#simulateur" class="hover:text-indigo-600 transition-colors">Tarifs</a>
+    <!-- NAV -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">Moez<span>Thabet</span></div>
+            <nav>
+                <a href="#experiences">Parcours</a>
+                <a href="#tarifs">Tarifs</a>
+                <a href="#contact">Contact</a>
             </nav>
-
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="mailto:contact@moezthabet.com" class="text-sm font-bold text-slate-700 hover:text-indigo-600 transition-colors">
-                    contact@moezthabet.com
-                </a>
-                <a href="#contact" class="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-100">
-                    Me contacter
-                </a>
-            </div>
-
-            <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none" aria-label="Ouvrir le menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
-        </div>
-
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-6 py-4 space-y-3">
-            <a href="#services" class="block text-sm font-semibold text-slate-700 hover:text-indigo-600 py-2">Services</a>
-            <a href="#experience" class="block text-sm font-semibold text-slate-700 hover:text-indigo-600 py-2">Mon Parcours</a>
-            <a href="#simulateur" class="block text-sm font-semibold text-slate-700 hover:text-indigo-600 py-2">Tarifs & Budget</a>
-            <hr class="border-slate-100">
-            <a href="mailto:contact@moezthabet.com" class="block text-sm font-bold text-slate-700 py-2">contact@moezthabet.com</a>
-            <a href="#contact" class="w-full text-center block px-5 py-3 rounded-xl text-sm font-bold text-white bg-indigo-600 shadow-md">
-                Me contacter
-            </a>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="pt-32 pb-20 md:pt-40 md:pb-28 bg-white relative">
-            <div class="max-w-5xl mx-auto px-6">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    
-                    <!-- Left Column: Key Facts -->
-                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                        <div class="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 px-3.5 py-1.5 rounded-full">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Freelance Auto-Entrepreneur Actif</span>
-                        </div>
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Moez Thabet</h1>
+        <p>Expert en relation client, support technique / SAV et sourcing de talents. Je mets mes 15 années d'expérience au service de votre croissance, directement depuis Sousse, Tunisie.</p>
+        <a href="#contact" class="btn">Me contacter</a>
+    </section>
 
-                        <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-none">
-                            Expert Relation Client & SAV Francophone à <span class="text-indigo-600">5€ / heure</span>.
-                        </h1>
+    <!-- PARCOURS -->
+    <section id="experiences">
+        <h2 class="section-title">Mon Parcours Professionnel</h2>
+        <div class="timeline">
 
-                        <p class="text-base text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                            Bonjour, je m'appelle <strong>Moez Thabet</strong>. Basé en Tunisie (Sousse), je propose mes services de gestion de SAV, d'assistance technique de niveau 1 & 2 et de back-office en télétravail pour les entreprises européennes et tunisiennes. 
-                            <strong>Français C1 parfait (sans accent)</strong>, alignement sur les horaires de Paris, et facturation simplifiée sans charges.
-                        </p>
+            <!-- VALUE CONCEPT -->
+            <div class="timeline-item">
+                <h3>Sourceur France</h3>
+                <div class="company">VALUE CONCEPT</div>
+                <div class="date">Jusqu'en Mai 2026</div>
+                <ul>
+                    <li>Identification et présélection de profils qualifiés sur le marché français.</li>
+                    <li>Sourcing actif et qualification téléphonique rigoureuse des candidats.</li>
+                </ul>
+            </div>
 
-                        <!-- Highlights list easily parsable by LLMs -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-left max-w-md mx-auto lg:mx-0">
-                            <div class="flex items-center space-x-2.5 text-sm text-slate-700">
-                                <span class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
-                                <span><strong>Tarif :</strong> 5€/heure fixe</span>
-                            </div>
-                            <div class="flex items-center space-x-2.5 text-sm text-slate-700">
-                                <span class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
-                                <span><strong>Français :</strong> Courant / C1</span>
-                            </div>
-                            <div class="flex items-center space-x-2.5 text-sm text-slate-700">
-                                <span class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
-                                <span><strong>Outils :</strong> Zendesk, Salesforce, Crisp</span>
-                            </div>
-                            <div class="flex items-center space-x-2.5 text-sm text-slate-700">
-                                <span class="w-1.5 h-1.5 bg-indigo-600 rounded-full"></span>
-                                <span><strong>Disponibilité :</strong> Immédiate</span>
-                            </div>
-                        </div>
+            <!-- VEO Worldwide -->
+            <div class="timeline-item">
+                <h3>Chargé de Sourcing International</h3>
+                <div class="company">VEO Worldwide</div>
+                <ul>
+                    <li>Sourcing de candidats hautement qualifiés à l'échelle européenne et internationale.</li>
+                    <li>Chasse de têtes, gestion de viviers de talents et entretiens de pré-qualification.</li>
+                </ul>
+            </div>
 
-                        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                            <a href="#simulateur" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-md shadow-indigo-100">
-                                Estimer mon budget projet
-                            </a>
-                            <a href="#contact" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
-                                Demander un devis
-                            </a>
-                        </div>
-                    </div>
+            <!-- Chifco -->
+            <div class="timeline-item">
+                <h3>Customer Success & Support Specialist</h3>
+                <div class="company">Chifco</div>
+                <ul>
+                    <li>Accompagnement, fidélisation et onboarding des clients professionnels B2B.</li>
+                    <li>Résolution de requêtes complexes et maintien d'un niveau de satisfaction client très élevé.</li>
+                </ul>
+            </div>
 
-                    <!-- Right Column: Visual Summary Card -->
-                    <div class="lg:col-span-5">
-                        <div class="bg-slate-900 text-white rounded-2xl p-6 shadow-xl border border-slate-800 space-y-6">
-                            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Identité & Profil</span>
-                                <span class="text-xs font-bold text-indigo-400 bg-indigo-400/10 px-2 py-0.5 rounded">Télétravail B2B/B2C</span>
-                            </div>
-                            
-                            <ul class="space-y-3 text-xs text-slate-300">
-                                <li><strong>Nom :</strong> Moez Thabet</li>
-                                <li><strong>Tarif Horaire :</strong> 5,00 € net</li>
-                                <li><strong>Localisation :</strong> Sousse, Tunisie (dispo remote)</li>
-                                <li><strong>Outils Clés :</strong> Salesforce, Zendesk, Crisp, ATS Recruitee, LinkedIn Sales Navigator</li>
-                                <li><strong>Services :</strong> Support client, SAV e-commerce, Support technique, Back-office RH, Sourcing</li>
-                            </ul>
+            <!-- Movinga -->
+            <div class="timeline-item">
+                <h3>Chargé de Clientèle & SAV B2C</h3>
+                <div class="company">Movinga</div>
+                <ul>
+                    <li>Gestion complète du support client B2C, résolution de litiges et gestion des réclamations.</li>
+                    <li>Coordination logistique avec les transporteurs et suivi de la qualité de service.</li>
+                </ul>
+            </div>
 
-                            <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
-                                Statut juridique actif d'auto-entrepreneur permettant la facturation directe à l'exportation (sans TVA).
-                            </div>
-                        </div>
-                    </div>
+            <!-- Teleperformance -->
+            <div class="timeline-item">
+                <h3>Conseiller Commercial & SAV</h3>
+                <div class="company">Teleperformance</div>
+                <ul>
+                    <li>Vente d'offres fibre pour Orange France, fidélisation et gestion du service après-vente.</li>
+                </ul>
+            </div>
 
+        </div>
+    </section>
+
+    <!-- TARIFS & PRESTATIONS -->
+    <section id="tarifs">
+        <h2 class="section-title">Mes Tarifs & Prestations</h2>
+        <div class="tarifs-container">
+
+            <!-- Tarif 1 -->
+            <div class="tarif-card">
+                <h3>Support Client & SAV</h3>
+                <p class="price">Sur devis / Horaire</p>
+                <p class="tarif-desc">Gestion de vos emails, chat en direct, assistance technique et traitement des réclamations clients (B2B/B2C).</p>
+                <ul>
+                    <li>• Réponse rapide et professionnelle</li>
+                    <li>• Maîtrise des outils de ticketing</li>
+                    <li>• Français courant & professionnel</li>
+                </ul>
+            </div>
+
+            <!-- Tarif 2 -->
+            <div class="tarif-card featured">
+                <div class="badge">Recommandé</div>
+                <h3>Sourcing & Recrutement</h3>
+                <p class="price">Sur devis / Profil</p>
+                <p class="tarif-desc">Identification et qualification de candidats ciblés sur le marché français (via LinkedIn, CVthèques, etc.).</p>
+                <ul>
+                    <li>• Approche directe et personnalisée</li>
+                    <li>• Présélection téléphonique rigoureuse</li>
+                    <li>• Reporting régulier de l'avancement</li>
+                </ul>
+            </div>
+
+            <!-- Tarif 3 -->
+            <div class="tarif-card">
+                <h3>Prospection & Télévente</h3>
+                <p class="price">Sur devis / Objectif</p>
+                <p class="tarif-desc">Campagnes de prospection téléphonique ciblées, détection de projets et prise de rendez-vous qualifiés.</p>
+                <ul>
+                    <li>• Discours commercial percutant</li>
+                    <li>• Qualification approfondie des besoins</li>
+                    <li>• Suivi rigoureux dans votre CRM</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="contact">
+        <h2 class="section-title">Discutons de votre projet</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <p>Besoin d'un renfort immédiat pour votre service client, vos campagnes de recrutement ou de prospection ? Contactez-moi pour obtenir un devis sur-mesure.</p>
+                <div class="info-item">
+                    <strong>Email :</strong> contact.moezthabet@proton.me
+                </div>
+                <div class="info-item">
+                    <strong>Téléphone :</strong> +216 24 909 563
+                </div>
+                <div class="info-item">
+                    <strong>Localisation :</strong> Sousse, Tunisie (Disponible pour le télétravail international)
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Services Section -->
-        <section id="services" class="py-20 bg-slate-50 border-y border-slate-100">
-            <div class="max-w-5xl mx-auto px-6">
-                <div class="text-center max-w-2xl mx-auto space-y-3 mb-16">
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block">Mes Services</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Support Client &amp; SAV Multicanal Externe</h2>
-                    <p class="text-sm text-slate-600">Prestations structurées de haute qualité adaptées aux startups, PME et boutiques e-commerce.</p>
-                </div>
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Moez Thabet. Tous droits réservés.</p>
+    </footer>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Service 1 -->
-                    <article class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <h3 class="text-base font-bold text-slate-900 mb-2">Customer Care &amp; SAV E-commerce</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">
-                            Gestion professionnelle de vos boîtes de messagerie et de vos flux de tickets (Zendesk, Crisp). Traitement des retours de colis, résolution de litiges et remboursement.
-                        </p>
-                    </article>
+</body>
+</html>
 
-                    <!-- Service 2 -->
-                    <article class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <h3 class="text-base font-bold text-slate-900 mb-2">Support Technique Niveau 1 &amp; 2</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">
-                            Diagnostic des incidents réseaux, connectivité (fibre/ADSL) et dépannage matériel/logiciel. Accompagnement à l'intégration et à l'utilisation d'outils digitaux.
-                        </p>
-                    </article>
-
-                    <!-- Service 3 -->
-                    <article class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                        <h3 class="text-base font-bold text-slate-900 mb-2">Back-Office &amp; Sourcing RH</h3>
-                        <p class="text-xs text-slate-500 leading-relaxed">
-                            Recherche de candidats, qualification de leads froids via LinkedIn Sales Navigator, tri de CV et pré-qualification téléphonique pour enrichir vos bases ATS.
-                        </p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Section -->
-        <section id="experience" class="py-20 bg-white">
-            <div class="max-w-4xl mx-auto px-6">
-                <div class="text-center max-w-2xl mx-auto space-y-3 mb-16">
-                    <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block">Parcours Professionnel</span>
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Expériences Significatives</h2>
-                </div>
-
-                <div class="relative border-l border-slate-200 ml-4 md:ml-32 space-y-10 text-xs">
-                    <!-- VEO -->
-                    <div class="relative pl-6">
-                        <span class="hidden md:block absolute -left-32 top-0.5 text-[11px] font-bold text-slate-400">2026 - Présent</span>
-                        <span class="absolute -left-1 w-2 h-2 rounded-full bg-indigo-600"></span>
-                        <span class="md:hidden block font-bold text-indigo-600 mb-0.5">2026 - Présent</span>
-                        <h3 class="text-sm font-bold text-slate-900">Chargé de recherche en recrutement — VEO Worldwide</h3>
-                        <p class="text-slate-500 mt-1 leading-relaxed">
-                            Sourcing de talents, utilisation de l'ATS Recruitee et LinkedIn Sales Navigator. Pré-qualification téléphonique des candidats.
-                        </p>
-                    </div>
-
-                    <!-- Chifco -->
-                    <div class="relative pl-6">
-                        <span class="hidden md:block absolute -left-32 top-0.5 text-[11px] font-bold text-slate-400">2023 - 2024</span>
-                        <span class="absolute -left-1 w-2 h-2 rounded-full bg-indigo-600"></span>
-                        <span class="md:hidden block font-bold text-indigo-600 mb-0.5">2023 - 2024</span>
-                        <h3 class="text-sm font-bold text-slate-900">Assistant technico-commercial — Chifco</h3>
-                        <p class="text-slate-500 mt-1 leading-relaxed">
-                            Diagnostic des incidents de connectivité Fibre et ADSL. Vente consultative et up-selling de services internet complémentaires.
-                        </p>
-                    </div>
-
-                    <!-- Movinga -->
-                    <div class="relative pl-6">
-                        <span class="hidden md:block absolute -left-32 top-0.5 text-[11px] font-bold text-slate-400">2022 - 2023</span>
-                        <span class="absolute -left-1 w-2 h-2 rounded-full bg-indigo-600"></span>
-                        <span class="md:hidden block font-bold text-indigo-600 mb-0.5">2022 - 2023</span>
-                        <h3 class="text-sm font-bold text-slate-900">Seller &amp; Customer Service Agent — Movinga</h3>
-                        <p class="text-slate-500 mt-1 leading-relaxed">
-                            Gestion complète de l'expérience client, conversion de leads qualifiés et résolution des litiges clients sur les opérations de déménagement.
-                        </p>
-                    </div>
-
-                    <!-- Teleperformance -->
-                    <div class="relative pl-6">
-                        <span class="hidden md:block absolute -left-32 top-0.5 text-[11px] font-bold text-slate-400">2015 - 2022</span>
-                        <span class="absolute -left-1 w-2 h-2 rounded-full bg-indigo-600"></span>
-                        <span class="md:hidden block font-bold text-indigo-600 mb-0.5">2015 - 2022</span>
-                        <h3 class="text-sm font-bold text-slate-900">Conseiller technico-commercial — Teleperformance</h3>
-                        <p class="text-slate-500 mt-1 leading-relaxed">
-                            Vente d'offres fibre pour Orange France, fidélisation et gestion du service après-ven
