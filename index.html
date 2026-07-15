@@ -1,85 +1,75 @@
-<!DOCTYPE html><html lang="fr" class="scroll-smooth"><head>    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">        <!-- SEO & LLM Generative Engine Optimization (GEO) -->    <title>Moez Thabet | Expert Support Client, SAV & Sourcing Freelance</title>    <meta name="description" content="Moez Thabet, consultant freelance expert en relation client, SAV e-commerce et support technique basé à Sousse, Tunisie. Tarif compétitif de 5 € / heure. Maîtrise Zendesk, Salesforce et Crisp. Français C1.">    <meta name="keywords" content="Moez Thabet, support client freelance, SAV e-commerce freelance, support technique Tunisie, freelance francophone 5 euros, relation client Sousse, expert Zendesk, Salesforce, Crisp, service client externe">    <meta name="author" content="Moez Thabet">    <link rel="canonical" href="https://moezthabet.com">    <meta name="robots" content="index, follow">
-    <!-- Open Graph (Indexation Sociale & IA) -->    <meta property="og:type" content="website">    <meta property="og:url" content="https://moezthabet.com">    <meta property="og:title" content="Moez Thabet | Support Client, SAV & Support Tech Freelance à 5€/h">    <meta property="og:description" content="Expert francophone en relation client et support technique de niveau 1 & 2. Tarif transparent de 5 € par heure. Disponible immédiatement en télétravail.">
-    <style>        /* DESIGN SYSTEM ULTRA-PREMIUM (Pure Vanilla CSS - Garanti Anti-Block) */        :root {            --primary: #3b82f6;            --primary-glow: rgba(59, 130, 246, 0.5);            --primary-light: rgba(59, 130, 246, 0.08);            --bg-main: #030712;            --bg-card: rgba(17, 24, 39, 0.7);            --bg-header: rgba(3, 7, 18, 0.85);            --text-main: #f8fafc;            --text-muted: #94a3b8;            --border: rgba(255, 255, 255, 0.06);            --success: #10b981;            --success-glow: rgba(16, 185, 129, 0.3);        }
-        * {            box-sizing: border-box;            margin: 0;            padding: 0;        }
-        html {            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;            scroll-behavior: smooth;            background-color: var(--bg-main);            color: var(--text-main);        }
-        body {            overflow-x: hidden;            position: relative;        }
-        /* Fluid Interactive Canvas Background */        #fluid-canvas {            position: fixed;            top: 0;            left: 0;            width: 100vw;            height: 100vh;            z-index: -2;            pointer-events: none;            background-color: var(--bg-main);        }
-        .container {            width: 100%;            max-width: 1100px;            margin: 0 auto;            padding: 0 24px;        }
-        /* HEADER & NAVIGATION */        header {            position: fixed;            top: 0;            left: 0;            width: 100%;            background-color: var(--bg-header);            backdrop-filter: blur(16px);            -webkit-backdrop-filter: blur(16px);            border-bottom: 1px solid var(--border);            z-index: 1000;            height: 80px;            display: flex;            align-items: center;        }
-        .header-wrap {            display: flex;            justify-content: space-between;            align-items: center;            width: 100%;        }
-        .logo {            display: flex;            align-items: center;            gap: 12px;            text-decoration: none;            color: var(--text-main);        }
-        .logo-box {            width: 40px;            height: 40px;            background: linear-gradient(135deg, var(--primary) 0%, #06b6d4 100%);            border-radius: 12px;            display: flex;            align-items: center;            justify-content: center;            font-weight: 800;            font-size: 20px;            color: #ffffff;            box-shadow: 0 0 15px var(--primary-glow);        }
-        .logo-text {            display: flex;            flex-direction: column;        }
-        .logo-title {            font-weight: 800;            font-size: 16px;            letter-spacing: -0.025em;        }
-        .logo-subtitle {            font-size: 10px;            color: var(--primary);            font-weight: 700;            text-transform: uppercase;            letter-spacing: 0.05em;        }
-        nav {            display: flex;            align-items: center;            gap: 32px;        }
-        nav a {            text-decoration: none;            color: var(--text-muted);            font-size: 14px;            font-weight: 600;            transition: color 0.2s ease, transform 0.2s ease;        }
-        nav a:hover {            color: var(--text-main);            transform: translateY(-1px);        }
-        .nav-btn {            background-color: var(--primary);            color: #ffffff;            padding: 10px 22px;            border-radius: 10px;            font-size: 14px;            font-weight: 700;            text-decoration: none;            transition: all 0.2s ease;            box-shadow: 0 4px 12px var(--primary-glow);        }
-        .nav-btn:hover {            background-color: var(--primary-hover);            transform: translateY(-1.5px);            box-shadow: 0 6px 18px var(--primary-glow);        }
-        .menu-toggle {            display: none;            background: none;            border: none;            color: var(--text-main);            cursor: pointer;        }
-        /* HERO SECTION */        .hero {            padding: 180px 0 100px 0;            position: relative;        }
-        .hero-grid {            display: grid;            grid-template-columns: 1.15fr 1fr;            gap: 64px;            align-items: center;        }
-        .hero-content {            display: flex;            flex-direction: column;            gap: 24px;            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) both;        }
-        .status-badge {            align-self: flex-start;            display: inline-flex;            align-items: center;            gap: 8px;            background-color: var(--primary-light);            border: 1px solid rgba(59, 130, 246, 0.2);            padding: 6px 14px;            border-radius: 30px;            font-size: 12px;            font-weight: 700;            color: #60a5fa;            box-shadow: 0 0 10px rgba(59, 130, 246, 0.1);        }
-        .status-dot {            width: 8px;            height: 8px;            background-color: var(--success);            border-radius: 50%;            box-shadow: 0 0 10px var(--success-glow);            animation: pulse-glow 2s infinite;        }
-        .hero-content h1 {            font-size: 54px;            font-weight: 900;            line-height: 1.12;            letter-spacing: -0.04em;            color: #ffffff;        }
-        .hero-content h1 span {            background: linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%);            -webkit-background-clip: text;            -webkit-text-fill-color: transparent;        }
-        .hero-content p {            font-size: 18px;            line-height: 1.65;            color: var(--text-muted);        }
-        .hero-actions {            display: flex;            gap: 16px;            margin-top: 12px;        }
-        /* INTERACTIVE 3D GLOBE CONTAINER */        .globe-container {            width: 100%;            height: 380px;            position: relative;            display: flex;            align-items: center;            justify-content: center;            animation: fadeInRight 1s cubic-bezier(0.16, 1, 0.3, 1) both;        }
-        #globe-canvas {            width: 100%;            height: 100%;            max-width: 380px;            max-height: 380px;            cursor: grab;        }
-        #globe-canvas:active {            cursor: grabbing;        }
-        /* LIVE DASHBOARD CARD (10K€ Premium Visual) */        .workspace-card {            background-color: var(--bg-card);            border-radius: 24px;            border: 1px solid var(--border);            padding: 32px;            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);            backdrop-filter: blur(16px);            -webkit-backdrop-filter: blur(16px);            position: relative;            overflow: hidden;            margin-top: 32px;            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;        }
-        .workspace-card::before {            content: '';            position: absolute;            top: 0;            left: 0;            width: 100%;            height: 100%;            border-radius: 24px;            background: linear-gradient(135deg, rgba(59, 130, 246, 0.06) 0%, transparent 100%);            pointer-events: none;        }
-        .workspace-header {            display: flex;            justify-content: space-between;            align-items: center;            border-bottom: 1px solid var(--border);            padding-bottom: 18px;            margin-bottom: 20px;        }
-        .workspace-title {            font-size: 14px;            font-weight: 700;            color: var(--text-main);            display: flex;            align-items: center;            gap: 8px;        }
-        .badge-verified {            background-color: rgba(16, 185, 129, 0.08);            color: var(--success);            padding: 4px 10px;            border-radius: 8px;            font-size: 11px;            font-weight: 700;            border: 1px solid rgba(16, 185, 129, 0.15);        }
-        /* Live Dashboard Stats */        .live-stats {            display: grid;            grid-template-columns: repeat(3, 1fr);            gap: 16px;            margin-bottom: 24px;        }
-        .stat-box {            background: rgba(255, 255, 255, 0.02);            border: 1px solid var(--border);            padding: 16px;            border-radius: 14px;            text-align: center;        }
-        .stat-val {            font-size: 22px;            font-weight: 800;            color: #ffffff;            font-variant-numeric: tabular-nums;        }
-        .stat-lbl {            font-size: 11px;            color: var(--text-muted);            margin-top: 4px;            text-transform: uppercase;            font-weight: 700;        }
-        /* Live Graph inside card */        .live-graph-container {            width: 100%;            height: 100px;            background: rgba(0, 0, 0, 0.2);            border-radius: 12px;            border: 1px solid var(--border);            position: relative;            overflow: hidden;        }
-        #live-chart-canvas {            width: 100%;            height: 100%;        }
-        /* SECTION LAYOUTS */        .section-padding {            padding: 120px 0;        }
-        .bg-light {            background-color: rgba(255, 255, 255, 0.01);            border-top: 1px solid var(--border);            border-bottom: 1px solid var(--border);        }
-        .section-header {            text-align: center;            max-width: 650px;            margin: 0 auto 72px auto;            display: flex;            flex-direction: column;            gap: 16px;        }
-        .section-tag {            font-size: 12px;            font-weight: 800;            color: var(--primary);            text-transform: uppercase;            letter-spacing: 0.12em;        }
-        .section-header h2 {            font-size: 38px;            font-weight: 900;            letter-spacing: -0.025em;            color: #ffffff;        }
-        .section-header p {            font-size: 16px;            color: var(--text-muted);            line-height: 1.65;        }
-        /* SERVICES GRID */        .services-grid {            display: grid;            grid-template-columns: repeat(3, 1fr);            gap: 32px;        }
-        .service-card {            background-color: var(--bg-card);            border: 1px solid var(--border);            border-radius: 22px;            padding: 36px;            display: flex;            flex-direction: column;            gap: 22px;            backdrop-filter: blur(12px);            -webkit-backdrop-filter: blur(12px);            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;        }
-        .service-card:hover {            transform: translateY(-8px);            border-color: rgba(59, 130, 246, 0.3);            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);        }
-        .service-icon {            width: 48px;            height: 48px;            background-color: var(--primary-light);            border-radius: 12px;            display: flex;            align-items: center;            justify-content: center;            color: var(--primary);            font-size: 15px;            font-weight: 800;            border: 1px solid rgba(59, 130, 246, 0.15);        }
-        .service-card h3 {            font-size: 20px;            font-weight: 800;            color: #ffffff;            letter-spacing: -0.01em;        }
-        .service-card p {            font-size: 14px;            color: var(--text-muted);            line-height: 1.65;        }
-        /* TIMELINE PARCOURS */        .timeline {            max-width: 800px;            margin: 0 auto;            position: relative;            padding-left: 36px;        }
-        .timeline::before {            content: '';            position: absolute;            top: 10px;            left: 7px;            width: 2px;            height: calc(100% - 20px);            background-color: var(--border);        }
-        .timeline-item {            position: relative;            margin-bottom: 56px;            opacity: 0;            transform: translateY(20px);            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);        }
-        .timeline-item.visible {            opacity: 1;            transform: translateY(0);        }
-        .timeline-dot {            position: absolute;            left: -36px;            top: 4px;            width: 16px;            height: 16px;            border-radius: 50%;            background-color: var(--bg-main);            border: 3.5px solid var(--primary);            box-shadow: 0 0 10px var(--primary-glow);            z-index: 2;        }
-        .timeline-meta {            display: flex;            align-items: center;            gap: 12px;            margin-bottom: 8px;            flex-wrap: wrap;        }
-        .timeline-date {            font-size: 12px;            font-weight: 800;            color: var(--primary);        }
-        .timeline-company {            font-size: 11px;            font-weight: 700;            color: var(--text-muted);            background-color: rgba(255, 255, 255, 0.02);            padding: 3px 10px;            border-radius: 8px;            border: 1px solid var(--border);        }
-        .timeline-item h3 {            font-size: 20px;            font-weight: 800;            color: #ffffff;            margin-bottom: 12px;            letter-spacing: -0.015em;        }
-        .timeline-desc {            list-style-type: none;            display: flex;            flex-direction: column;            gap: 8px;        }
-        .timeline-desc li {            font-size: 14px;            color: var(--text-muted);            line-height: 1.6;            position: relative;            padding-left: 16px;        }
-        .timeline-desc li::before {            content: "•";            position: absolute;            left: 0;            color: var(--primary);            font-weight: 800;        }
-        /* BUDGET SIMULATOR CARD */        .simulator-box {            background-color: var(--bg-card);            border: 1px solid var(--border);            border-radius: 24px;            padding: 44px;            max-width: 600px;            margin: 0 auto;            backdrop-filter: blur(12px);            -webkit-backdrop-filter: blur(12px);            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);        }
-        .sim-header {            display: flex;            justify-content: space-between;            align-items: center;            margin-bottom: 24px;        }
-        .sim-label {            font-size: 14.5px;            font-weight: 700;            color: var(--text-main);        }
-        .hours-badge {            background-color: var(--primary);            color: #ffffff;            padding: 6px 14px;            border-radius: 8px;            font-size: 13px;            font-weight: 800;            box-shadow: 0 4px 10px var(--primary-glow);        }
-        .range-slider {            width: 100%;            height: 6px;            background: rgba(255, 255, 255, 0.08);            border-radius: 10px;            outline: none;            -webkit-appearance: none;            margin-bottom: 36px;            cursor: pointer;        }
-        .range-slider::-webkit-slider-thumb {            -webkit-appearance: none;            width: 22px;            height: 22px;            border-radius: 50%;            background: var(--text-main);            border: 4px solid var(--primary);            cursor: pointer;            box-shadow: 0 0 15px var(--primary-glow);            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);        }
-        .range-slider::-webkit-slider-thumb:hover {            transform: scale(1.15);        }
-        .calc-output {            border-top: 1px solid var(--border);            padding-top: 32px;            text-align: center;            display: flex;            flex-direction: column;            gap: 10px;        }
-        .calc-subtitle {            font-size: 11px;            font-weight: 800;            color: var(--text-muted);            text-transform: uppercase;            letter-spacing: 0.12em;        }
-        .price-output {            font-size: 48px;            font-weight: 900;            color: #ffffff;            letter-spacing: -0.02em;        }
-        .price-output span {            font-size: 16px;            color: var(--text-muted);            font-weight: 500;        }
-        .monthly-equivalent {            font-size: 14px;            color: var(--primary);            font-weight: 700;            margin-bottom: 24px;        }
-        /* CONTACT FORM */        .contact-box {            background-color: var(--bg-card);            border: 1px solid var(--border);            border-radius: 24px;            padding: 44px;            max-width: 680px;            margin: 0 auto;            backdrop-filter: blur(12px);            -webkit-backdrop-filter: blur(12px);            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.45);        }
-        .form-grid {            display: grid;            grid-template-columns: 1fr 1fr;            gap: 24px;            margin-bottom: 24px;        }
-        .form-group {            display: flex;            flex-direction: column;            gap: 10px;        }
-        .form-group label {            font-size: 11px;            font-weight: 800;            color: var(--text-main);            text-transform: uppercase;            letter-spacing: 0.08em;        }
-        .form-control {            background-color: rgba(255, 255, 255, 0.03);            border: 1px solid var(--border);            border-radius: 12px;            padding: 14px 18px;            color: var(--text-main);  
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moez Thabet // High-End Digital Support</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #050505; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow { box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Background Dynamic Layer -->
+    <div class="fixed inset-0 z-0 opacity-20" id="bg-shader"></div>
+
+    <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        <!-- Header -->
+        <header class="flex justify-between items-center py-6 mb-20">
+            <h1 class="text-2xl font-black tracking-tighter">MOEZ<span class="text-blue-500">.</span></h1>
+            <nav class="space-x-8 text-sm font-medium opacity-60">
+                <a href="#" class="hover:text-blue-400">Expertise</a>
+                <a href="#" class="hover:text-blue-400">Impact</a>
+                <a href="mailto:contact@moezthabet.com" class="border-b border-blue-500 pb-1">Me contacter</a>
+            </nav>
+        </header>
+
+        <!-- Hero -->
+        <section class="min-h-[60vh] flex flex-col justify-center">
+            <div class="max-w-3xl">
+                <h2 class="text-7xl md:text-9xl font-black mb-8 tracking-tighter leading-none">
+                    Support <br/> d'Excellence.
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-400 max-w-xl mb-12">
+                    Expertise SAV & Relation Client de haute performance.
+                    Optimisation des processus, rétention client, et support technique niveau 2.
+                </p>
+                <div class="flex gap-4">
+                    <button class="px-8 py-4 bg-blue-600 rounded-full font-bold text-lg hover:bg-blue-500 transition glow">Démarrer une mission</button>
+                    <button class="px-8 py-4 glass rounded-full font-bold text-lg hover:bg-white/10 transition">Voir la méthodologie</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Stats Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
+            <div class="glass p-8 rounded-3xl">
+                <div class="text-4xl font-bold mb-2">99.2%</div>
+                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Satisfaction Client</div>
+            </div>
+            <div class="glass p-8 rounded-3xl">
+                <div class="text-4xl font-bold mb-2">14K+</div>
+                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Tickets résolus</div>
+            </div>
+            <div class="glass p-8 rounded-3xl">
+                <div class="text-4xl font-bold mb-2">2H</div>
+                <div class="text-blue-400 uppercase tracking-widest text-xs font-bold">Temps de Réponse</div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Interactive Background Logic
+        const container = document.getElementById('bg-shader');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            container.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(37, 99, 235, 0.15), transparent 50%)`;
+        });
+    </script>
+</body>
+</html> 
