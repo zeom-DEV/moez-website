@@ -78,29 +78,6 @@
         </div>
     </div>
 
-    <!-- Modale de Réservation Interne -->
-    <div id="rdv-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white border-2 border-[#111111] w-full max-w-md p-6 shadow-2xl space-y-4 relative">
-            <button onclick="toggleModal(false)" class="absolute top-3 right-3 text-lg font-black text-black">✕</button>
-            <div class="text-center space-y-1">
-                <h3 class="text-xl font-black uppercase">Réserver un créneau</h3>
-                <p class="text-xs text-zinc-600">Entrez vos coordonnées pour planifier votre échange avec Moez.</p>
-            </div>
-            <div class="space-y-3">
-                <input type="text" id="client-name" placeholder="Nom ou Entreprise" class="w-full p-3 border-2 border-[#111111] text-xs font-medium focus:outline-none">
-                <select id="client-slot" class="w-full p-3 border-2 border-[#111111] text-xs font-bold bg-white focus:outline-none">
-                    <option value="Demain à 10:00">Demain à 10:00</option>
-                    <option value="Demain à 14:30">Demain à 14:30</option>
-                    <option value="Jeudi à 11:00">Jeudi à 11:00</option>
-                    <option value="Vendredi à 15:00">Vendredi à 15:00</option>
-                </select>
-                <button onclick="confirmBooking()" class="w-full bg-[#111111] hover:bg-zinc-800 text-white py-3 text-xs font-black uppercase tracking-widest transition-all">
-                    Confirmer le RDV
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Header -->
     <header class="fixed top-0 left-0 right-0 z-40 bg-[#f4f4f0]/95 backdrop-blur-md border-b border-[#111111]/10">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -117,9 +94,9 @@
                 <a href="#avantages" class="hover:opacity-50">Avantages</a>
                 <a href="#experiences" class="hover:opacity-50">Parcours</a>
             </nav>
-            <button onclick="toggleModal(true)" class="bg-[#111111] hover:bg-zinc-800 text-white text-xs font-black uppercase px-4 py-2.5 transition-all shadow-md">
+            <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="bg-[#111111] hover:bg-zinc-800 text-white text-xs font-black uppercase px-4 py-2.5 transition-all shadow-md inline-flex items-center">
                 Prendre RDV
-            </button>
+            </a>
         </div>
     </header>
 
@@ -283,25 +260,6 @@
 
     <!-- Scripts -->
     <script>
-        function toggleModal(open) {
-            const modal = document.getElementById('rdv-modal');
-            if (open) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
-        }
-
-        function confirmBooking() {
-            const name = document.getElementById('client-name').value;
-            const slot = document.getElementById('client-slot').value;
-            if(!name) { alert('Veuillez entrer votre nom.'); return; }
-            toggleModal(false);
-            const toast = document.getElementById('toast');
-            toast.querySelector('h4').innerText = "Rendez-vous Confirmé !";
-            toast.querySelector('p').innerText = `Merci ${name}, RDV planifié pour ${slot}.`;
-            toast.classList.remove('translate-y-28', 'opacity-0');
-            confetti({ particleCount: 80, spread: 70, origin: { y: 0.75 } });
-            setTimeout(() => { toast.classList.add('translate-y-28', 'opacity-0'); }, 4000);
-        }
-
         function revealContact(type) {
             const toast = document.getElementById('toast');
             if (type === 'phone') {
@@ -311,7 +269,7 @@
             } else if (type === 'email') {
                 document.getElementById('email-btn-text').innerText = "Contact.moezthabet@proton.me";
                 toast.querySelector('h4').innerText = "E-mail Révélé";
-                toast.querySelector('p').innerText = "+216 24 909 563 affiché.";
+                toast.querySelector('p').innerText = "Contact.moezthabet@proton.me affiché.";
             }
             toast.classList.remove('translate-y-28', 'opacity-0');
             confetti({ particleCount: 40, spread: 50, origin: { y: 0.85 } });
@@ -320,3 +278,4 @@
     </script>
 </body>
 </html>
+```eof
