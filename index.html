@@ -1,280 +1,726 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moez Thabet — Expert Relation Client & Développement Commercial</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-                    keyframes: {
-                        colorCycle: {
-                            '0%, 25%': { background: '#0a0a0a' },
-                            '26%, 50%': { background: '#1e1b4b' },
-                            '51%, 75%': { background: '#022c22' },
-                            '76%, 100%': { background: '#31101d' }
-                        },
-                        ticker: {
-                            '0%': { transform: 'translateX(0%)' },
-                            '100%': { transform: 'translateX(-50%)' }
-                        }
-                    },
-                    animation: {
-                        'color-cycle': 'colorCycle 12s infinite',
-                        'ticker': 'ticker 20s linear infinite'
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .fast-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            width: 100%;
-            height: 60vh;
-            max-height: 480px;
-        }
-        .fast-cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            overflow: hidden;
-        }
-        .fast-letter {
-            font-size: 26vw;
-            font-weight: 900;
-            line-height: 1;
-            text-transform: uppercase;
-            mix-blend-mode: difference;
-            color: #ffffff;
-            user-select: none;
-        }
-        @media (min-width: 768px) {
-            .fast-letter { font-size: 13vw; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moez Thabet — L'art d'acquérir</title>
+<meta name="description" content="Expert en Acquisition (Business & Talents). Sales B2B, Sourcing & Relation Client — Spécialiste marché francophone. Sousse, Tunisie.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<style>
+:root{
+  --bg:#070A08;--ink:#04060A;
+  --cream:#F2EFE6;--c80:rgba(242,239,230,.82);--c60:rgba(242,239,230,.6);--c40:rgba(242,239,230,.4);--c22:rgba(242,239,230,.22);--c10:rgba(242,239,230,.1);
+  --lime:#D8FF3E;--lime2:#E9FF7A;--gold:#CDA64F;--gold2:#E4C77E;--teal:#34C2A4;
+  --line:rgba(242,239,230,.12);
+  --serif:'Fraunces',serif;--sans:'Space Grotesk',sans-serif;--mono:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{font-family:var(--sans);color:var(--cream);background:var(--bg);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:var(--lime);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+em{font-style:italic}
+img{display:block;max-width:100%}
+
+/* ===== LAYERS ===== */
+#gl{position:fixed;inset:0;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:-50%;z-index:70;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:gr 7s steps(8) infinite}
+@keyframes gr{0%,100%{transform:translate(0,0)}25%{transform:translate(-3%,5%)}50%{transform:translate(4%,-6%)}75%{transform:translate(-5%,-3%)}}
+.scan{position:fixed;inset:0;z-index:71;pointer-events:none;opacity:.4;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px)}
+.content{position:relative;z-index:2}
+
+/* ===== CURSOR ===== */
+.c-dot,.c-ring{position:fixed;top:0;left:0;pointer-events:none;border-radius:50%;z-index:120}
+.c-dot{width:6px;height:6px;background:var(--lime);transform:translate(-50%,-50%)}
+.c-ring{width:42px;height:42px;border:1px solid rgba(216,255,62,.6);transform:translate(-50%,-50%);
+  display:flex;align-items:center;justify-content:center;transition:width .3s,height .3s,background .3s,border-color .3s}
+.c-ring span{font:700 .5rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);opacity:0;transition:opacity .2s}
+body.c-hover .c-ring{width:84px;height:84px;background:var(--lime);border-color:var(--lime)}
+body.c-hover .c-ring span{opacity:1}
+body.c-hover .c-dot{opacity:0}
+@media(hover:none){.c-dot,.c-ring{display:none}body{cursor:auto}}
+@media(hover:hover){body,a,button,input,textarea,.idx-row,.mhead,.terrain{cursor:none}}
+
+/* ===== HOVER REVEAL (index) ===== */
+#reveal{position:fixed;z-index:60;pointer-events:none;width:230px;height:300px;left:0;top:0;
+  transform:translate(-50%,-50%) scale(.4);opacity:0;transition:opacity .35s,transform .5s cubic-bezier(.2,.8,.2,1);
+  background:var(--lime);mix-blend-mode:difference;display:flex;align-items:center;justify-content:center;border-radius:4px;overflow:hidden}
+#reveal.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#reveal b{font:900 2.4rem/1 var(--serif);color:#000;text-align:center;padding:0 1rem;letter-spacing:-.02em}
+
+/* ===== LOADER ===== */
+#loader{position:fixed;inset:0;z-index:300;background:var(--ink);display:flex;flex-direction:column;justify-content:space-between;padding:5vh 5vw}
+.ld-top{display:flex;justify-content:space-between;font:400 .6rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--c40)}
+.ld-mid{font:900 clamp(3rem,15vw,12rem)/.85 var(--serif);letter-spacing:-.04em}
+.ld-mid .ch{display:inline-block;transform:translateY(110%)}
+.ld-mid .dot{color:var(--lime)}
+.ld-bot{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;flex-wrap:wrap}
+.ld-bar{flex:1;min-width:200px;height:1px;background:var(--c10);position:relative}
+.ld-bar span{position:absolute;inset:0 auto 0 0;width:0;background:var(--lime)}
+.ld-pct{font:700 clamp(1rem,3vw,1.6rem)/1 var(--mono);color:var(--lime);min-width:4ch;text-align:right}
+
+/* ===== TOP BAR ===== */
+.progress{position:fixed;top:0;left:0;right:0;height:2px;background:var(--lime);z-index:95;transform:scaleX(0);transform-origin:left}
+.nav{position:fixed;top:0;left:0;right:0;z-index:80;display:flex;justify-content:space-between;align-items:center;padding:1.4rem 5vw;transition:.4s}
+.nav.scrolled{background:rgba(7,10,8,.8);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);padding:1rem 5vw}
+.logo{font:900 1.3rem/1 var(--serif);letter-spacing:-.02em}
+.logo i{font-style:normal;color:var(--lime)}
+.nav-mid{display:flex;gap:2.4rem}
+.nav-mid a{font:500 .66rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c60);position:relative;padding:.4rem 0;transition:color .3s}
+.nav-mid a::after{content:'';position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--lime);transform:scaleX(0);transform-origin:right;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.nav-mid a:hover{color:var(--cream)}.nav-mid a:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;gap:.8rem;padding:1.1rem 2rem;font:700 .7rem/1 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;border-radius:100px;border:none;transition:.35s;will-change:transform;position:relative;overflow:hidden}
+.btn .ar{transition:transform .35s}.btn:hover .ar{transform:translateX(6px)}
+.btn-lime{background:var(--lime);color:var(--ink)}.btn-lime:hover{background:var(--lime2)}
+.btn-ghost{background:transparent;border:1px solid var(--c22);color:var(--cream)}.btn-ghost:hover{border-color:var(--lime);color:var(--lime)}
+.btn-sm{padding:.75rem 1.4rem;font-size:.6rem}
+
+/* ===== MARGINALIA ===== */
+.side-tag{position:absolute;font:400 .58rem/1.4 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--c40);writing-mode:vertical-rl}
+
+/* ===== HERO ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 5vw 5rem;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.4fr .9fr;gap:4rem;align-items:end;max-width:1600px;margin:0 auto;width:100%}
+.eyebrow{display:flex;align-items:center;gap:.8rem;font:400 .64rem/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--c80);margin-bottom:2.4rem;flex-wrap:wrap}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--lime);position:relative;flex-shrink:0}
+.dot-live::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--lime);animation:pls 1.8s ease-out infinite}
+@keyframes pls{0%{transform:scale(.4);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.eyebrow .sep{color:var(--gold)}
+.h1{font:900 clamp(3.2rem,12.5vw,12rem)/.82 var(--serif);letter-spacing:-.045em}
+.h1 .row{display:block;overflow:hidden;padding-bottom:.06em}
+.h1 .row i{display:inline-block;transform:translateY(115%);will-change:transform}
+.h1 em{font-weight:300;font-style:italic;color:var(--gold2)}
+.h1 .dot{color:var(--lime)}
+.h1 .stroke{color:transparent;-webkit-text-stroke:1.5px var(--cream)}
+.hero-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:3rem;margin-top:3.5rem;flex-wrap:wrap}
+.hero-sub{max-width:430px;font:300 1.05rem/1.7 var(--sans);color:var(--c80)}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.8rem}
+.hero-meta{display:flex;flex-direction:column;gap:1.4rem;align-items:flex-end;text-align:right}
+.hero-meta .blk{border-right:1px solid var(--line);padding-right:1.4rem}
+.hero-meta b{font:900 2.2rem/1 var(--serif);color:var(--lime);display:block}
+.hero-meta span{font:400 .58rem/1.5 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c40);display:block;margin-top:.5rem}
+
+/* portrait */
+.portrait{position:relative;aspect-ratio:4/5;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:linear-gradient(150deg,#1d6f5e,#0c2c25);transform-style:preserve-3d}
+.portrait img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2) contrast(1.05);transition:filter .6s,transform .8s}
+.portrait:hover img{filter:grayscale(0) contrast(1.08);transform:scale(1.04)}
+.portrait .mono{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:900 9rem/1 var(--serif);color:rgba(242,239,230,.12)}
+.portrait .p-tag{position:absolute;left:1rem;bottom:1rem;right:1rem;display:flex;justify-content:space-between;align-items:flex-end;font:400 .56rem/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--cream);z-index:3}
+.portrait .p-tag .nm{font:700 .9rem/1 var(--serif);letter-spacing:0;text-transform:none}
+.portrait::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(4,6,10,.7));z-index:2;pointer-events:none}
+.portrait .corner{position:absolute;width:14px;height:14px;border:1px solid var(--lime);z-index:3}
+.portrait .corner.tl{top:10px;left:10px;border-right:0;border-bottom:0}
+.portrait .corner.br{bottom:10px;right:10px;border-left:0;border-top:0}
+/* brand sticker */
+.sticker{position:absolute;top:-14px;right:-10px;z-index:5;background:var(--lime);color:var(--ink);font:700 .62rem/1.2 var(--sans);
+  letter-spacing:.04em;text-transform:uppercase;padding:.7rem .9rem;transform:rotate(6deg);max-width:150px;text-align:center;box-shadow:0 12px 30px -10px rgba(0,0,0,.6)}
+
+.scroll-cue{position:absolute;bottom:2rem;left:5vw;display:flex;align-items:center;gap:1rem;font:400 .56rem/1 var(--mono);letter-spacing:.3em;text-transform:uppercase;color:var(--c40)}
+.scroll-cue i{width:46px;height:1px;background:var(--c22);position:relative;overflow:hidden}
+.scroll-cue i::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:var(--lime);animation:slide 2.2s ease-in-out infinite}
+@keyframes slide{0%{left:-100%}60%,100%{left:100%}}
+
+/* ===== MARQUEE ===== */
+.mq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.mq-track{display:inline-flex;white-space:nowrap;will-change:transform;animation:tk 30s linear infinite}
+.mq:hover .mq-track{animation-play-state:paused}
+@keyframes tk{to{transform:translateX(-50%)}}
+.mq-lime{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.mq-lime .mq-track{animation-duration:26s}
+.mq-lime .mq-track span{font:600 italic 1.1rem/1 var(--serif);padding:.95rem 1.6rem}
+.mq-lime .mq-track b{align-self:center;font-weight:400}
+.mq-ghost .mq-track{animation:tk 50s linear infinite reverse}
+.mq-ghost .mq-track span{font:900 clamp(2rem,5vw,4rem)/1 var(--serif);padding:1.2rem 2rem;color:transparent;-webkit-text-stroke:1px var(--c22);transition:.4s}
+.mq-ghost .mq-track span:hover{color:var(--lime);-webkit-text-stroke:1px var(--lime)}
+.mq-ghost .mq-track b{align-self:center;color:var(--gold);font-size:1.2rem}
+
+/* ===== SECTIONS ===== */
+.sec{padding:9rem 5vw;position:relative}
+.wrap{max-width:1600px;margin:0 auto}
+.kicker{display:flex;align-items:center;gap:1rem;font:400 .62rem/1 var(--mono);letter-spacing:.26em;text-transform:uppercase;color:var(--lime);margin-bottom:2.6rem}
+.kicker::before{content:'';width:40px;height:1px;background:var(--lime)}
+.h2{font:900 clamp(2.4rem,6vw,5.4rem)/.95 var(--serif);letter-spacing:-.03em}
+.h2 em{font-weight:300;font-style:italic;color:var(--gold2)}
+.sl{display:block;overflow:hidden;padding-bottom:.08em}
+.sl i{display:block;transform:translateY(115%);will-change:transform}
+
+/* manifesto */
+.manif{font:400 clamp(1.8rem,4vw,3.6rem)/1.28 var(--serif);max-width:1250px;letter-spacing:-.01em}
+.manif em{font-style:italic;color:var(--lime);font-weight:500}
+.manif .w{display:inline-block;will-change:transform,opacity}
+.manif-foot{margin-top:3rem;display:flex;gap:2.5rem;flex-wrap:wrap;font:400 .62rem/1.6 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--c40)}
+.manif-foot b{color:var(--cream);font-weight:700}
+
+/* ===== INDEX (hover reveal) ===== */
+.index{border-top:1px solid var(--line);margin-top:4rem}
+.idx-row{display:grid;grid-template-columns:80px 1fr auto;align-items:center;gap:2rem;padding:2.2rem 1rem;border-bottom:1px solid var(--line);position:relative;transition:padding .5s cubic-bezier(.2,.8,.2,1)}
+.idx-row:hover{padding-left:2.5rem}
+.idx-row .n{font:400 italic 1rem/1 var(--serif);color:var(--c40);transition:color .4s}
+.idx-row:hover .n{color:var(--lime)}
+.idx-row .t{font:600 clamp(1.7rem,4.5vw,4rem)/1 var(--serif);letter-spacing:-.02em;transition:transform .5s cubic-bezier(.2,.8,.2,1),color .4s}
+.idx-row:hover .t{transform:translateX(20px);color:transparent;-webkit-text-stroke:1px var(--cream)}
+.idx-row .meta{font:400 .6rem/1.5 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c40);text-align:right;max-width:240px}
+.idx-row .plus{position:absolute;right:1rem;top:50%;transform:translateY(-50%) rotate(0);font:400 1.6rem/1 var(--serif);color:var(--lime);opacity:0;transition:.4s}
+.idx-row:hover .plus{opacity:1;transform:translateY(-50%) rotate(90deg)}
+
+/* ===== TERRAINS ===== */
+.terrains{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem}
+.terrain{border:1px solid var(--line);border-radius:6px;padding:2.8rem;min-height:520px;position:relative;overflow:hidden;
+  background:rgba(255,255,255,.015);display:flex;flex-direction:column;transition:border-color .5s,transform .5s}
+.terrain:hover{border-color:rgba(216,255,62,.4);transform:translateY(-6px)}
+.terrain::before{content:'';position:absolute;inset:0;background:radial-gradient(420px 240px at 80% 0%,rgba(216,255,62,.08),transparent);opacity:0;transition:opacity .5s}
+.terrain:hover::before{opacity:1}
+.terrain-top{display:flex;justify-content:space-between;align-items:flex-start}
+.terrain-tag{font:400 .6rem/1.4 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--lime)}
+.terrain-num{font:400 italic 1rem/1 var(--serif);color:var(--c40)}
+.terrain h3{font:900 clamp(2.4rem,5vw,4.4rem)/.9 var(--serif);letter-spacing:-.03em;margin:2.4rem 0 1.4rem}
+.terrain p{font:300 1rem/1.7 var(--sans);color:var(--c80);max-width:420px}
+.terrain ul{list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:.7rem}
+.terrain li{display:flex;align-items:center;gap:.9rem;font:400 .9rem/1.4 var(--sans);color:var(--c60)}
+.terrain li::before{content:'';width:18px;height:1px;background:var(--lime);flex-shrink:0}
+.terrain-foot{margin-top:auto;padding-top:2rem;display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap;border-top:1px solid var(--line)}
+.terrain-co{font:400 .62rem/1.9 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--c40)}
+.terrain-m b{font:900 1.8rem/1 var(--serif);color:var(--lime);display:block}
+.terrain-m span{font:400 .56rem/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c40)}
+
+/* ===== PINNED SYSTEM ===== */
+.sys{position:relative}
+.sys-pin{height:100vh;display:flex;align-items:center;overflow:hidden}
+.sys-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:5rem;max-width:1600px;margin:0 auto;width:100%;padding:0 5vw;align-items:center}
+.sys-left .phase-n{font:900 clamp(7rem,22vw,20rem)/.8 var(--serif);color:transparent;-webkit-text-stroke:1.5px var(--lime);letter-spacing:-.05em}
+.sys-left .phase-k{font:400 .62rem/1 var(--mono);letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-top:1rem}
+.sys-right{position:relative;min-height:300px}
+.sys-step{position:absolute;inset:0;opacity:0;transform:translateY(40px);pointer-events:none}
+.sys-step.on{opacity:1;transform:none;pointer-events:auto;position:relative}
+.sys-step h3{font:700 clamp(2rem,4.5vw,3.6rem)/1 var(--serif);letter-spacing:-.02em;margin-bottom:1.4rem}
+.sys-step h3 em{font-style:italic;color:var(--gold2);font-weight:400}
+.sys-step p{font:300 1.1rem/1.7 var(--sans);color:var(--c80);max-width:520px}
+.sys-step .metric{margin-top:2rem;display:inline-flex;align-items:baseline;gap:.8rem;border:1px solid rgba(216,255,62,.35);padding:1rem 1.5rem;border-radius:4px}
+.sys-step .metric b{font:900 2rem/1 var(--serif);color:var(--lime)}
+.sys-step .metric span{font:400 .6rem/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c40)}
+.sys-dots{position:absolute;right:5vw;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:1rem;z-index:5}
+.sys-dots i{width:8px;height:8px;border-radius:50%;border:1px solid var(--c40);transition:.4s}
+.sys-dots i.on{background:var(--lime);border-color:var(--lime);box-shadow:0 0 14px var(--lime)}
+
+/* ===== STATS ===== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:3.5rem 2rem;border-left:1px solid var(--line)}
+.stat:first-child{border-left:none}
+.stat b{font:900 clamp(2.6rem,5vw,4.6rem)/1 var(--serif);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat b .lime{color:var(--lime)}
+.stat span{display:block;margin-top:1.1rem;font:400 .64rem/1.6 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c40)}
+
+/* ===== TIMELINE ===== */
+.tl{margin-top:4rem;border-top:1px solid var(--line)}
+.tl-row{display:grid;grid-template-columns:160px 1.3fr 1fr auto;gap:2.5rem;align-items:baseline;padding:2.4rem 1rem;border-bottom:1px solid var(--line);transition:background .4s,padding-left .4s}
+.tl-row:hover{background:rgba(216,255,62,.035);padding-left:2rem}
+.tl-when{font:400 italic 1.1rem/1.4 var(--serif);color:var(--gold)}
+.tl-what{font:700 clamp(1.3rem,2.6vw,2.1rem)/1.1 var(--serif);letter-spacing:-.01em}
+.tl-co{font:400 .66rem/1.5 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--c40);margin-top:.6rem}
+.tl-desc{font:300 .92rem/1.7 var(--sans);color:var(--c60)}
+.tl-badge{font:400 .56rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--teal);border:1px solid rgba(52,194,164,.4);padding:.5rem .9rem;border-radius:100px;white-space:nowrap}
+
+/* ===== TESTIMONIALS ===== */
+.t-row{overflow:hidden;margin-top:1.8rem}
+.t-track{display:inline-flex;gap:1.5rem;padding-right:1.5rem;animation:tk 56s linear infinite;will-change:transform}
+.t-row.rev .t-track{animation-direction:reverse}
+.t-row:hover .t-track{animation-play-state:paused}
+.t-card{width:420px;flex-shrink:0;border:1px solid var(--line);border-radius:6px;padding:2.2rem;background:rgba(255,255,255,.02);transition:.4s}
+.t-card:hover{border-color:rgba(216,255,62,.4);transform:translateY(-5px)}
+.t-card q{font:400 italic 1.15rem/1.55 var(--serif);quotes:none;display:block;margin-bottom:1.6rem}
+.t-card q::before{content:'« ';color:var(--lime)}.t-card q::after{content:' »';color:var(--lime)}
+.t-card .nm{font:700 .68rem/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--lime)}
+.t-card .rl{font:400 .72rem/1.4 var(--sans);color:var(--c40);margin-top:.3rem}
+
+/* ===== CLOSING BANNER ===== */
+.banner{background:var(--lime);color:var(--ink);padding:5rem 5vw;text-align:center;position:relative;overflow:hidden}
+.banner h2{font:900 clamp(2.4rem,9vw,8.5rem)/.9 var(--sans);letter-spacing:-.03em;text-transform:uppercase}
+.banner .sign{margin-top:1.5rem;font:700 .7rem/1 var(--mono);letter-spacing:.3em;text-transform:uppercase}
+
+/* ===== CONTACT ===== */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;max-width:1500px;margin:0 auto}
+.c-info{margin-top:3rem;list-style:none}
+.c-info li{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.2rem 0;border-top:1px solid var(--line)}
+.c-info li:last-child{border-bottom:1px solid var(--line)}
+.c-info .k{font:400 .58rem/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--c40)}
+.c-info a,.c-info .v{font:400 .95rem/1.4 var(--sans);color:var(--cream);transition:color .3s}
+.c-info a:hover{color:var(--lime)}
+.field{position:relative;margin-bottom:2.2rem}
+.field input,.field textarea{width:100%;background:none;border:none;outline:none;color:var(--cream);font:400 1.05rem/1.5 var(--sans);padding:1.5rem 0 .9rem;border-bottom:1px solid var(--line);resize:none}
+.field label{position:absolute;top:1.4rem;left:0;font:400 .64rem/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--c40);pointer-events:none;transition:.35s cubic-bezier(.2,.8,.2,1)}
+.field input:focus+label,.field textarea:focus+label,.field input:not(:placeholder-shown)+label,.field textarea:not(:placeholder-shown)+label{top:0;color:var(--lime);font-size:.54rem}
+.field::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;background:var(--lime);transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.field:focus-within::after{transform:scaleX(1)}
+.form-btn{width:100%;justify-content:center}
+.form-btn.sent{background:var(--teal);color:var(--ink);pointer-events:none}
+.form-note{text-align:center;font:400 .62rem/1.4 var(--mono);letter-spacing:.12em;color:var(--c40);margin-top:1.2rem}
+
+/* ===== FOOTER ===== */
+.foot-mq{overflow:hidden;border-top:1px solid var(--line);padding:2.4rem 0}
+.foot-track{display:inline-flex;white-space:nowrap;align-items:center;animation:tk 65s linear infinite}
+.foot-track span{font:900 clamp(3.4rem,9vw,8rem)/1 var(--serif);color:transparent;-webkit-text-stroke:1px var(--c22);padding:0 2rem;transition:.4s}
+.foot-track span:hover{color:var(--lime);-webkit-text-stroke:1px var(--lime)}
+.foot-track i{font-style:normal;color:var(--gold);font-size:1.4rem}
+.foot-bot{display:flex;justify-content:space-between;align-items:center;gap:1.2rem;flex-wrap:wrap;padding:2rem 5vw;border-top:1px solid var(--line);font:400 .66rem/1.4 var(--mono);letter-spacing:.1em;color:var(--c40)}
+.foot-bot .lk{display:flex;gap:2rem}.foot-bot a{transition:color .3s}.foot-bot a:hover{color:var(--lime)}
+.top{display:inline-flex;align-items:center;gap:.5rem;color:var(--cream)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .hero-grid{grid-template-columns:1fr;gap:3rem;align-items:start}
+  .hero-meta{align-items:flex-start;text-align:left;flex-direction:row}
+  .hero-meta .blk{border-right:none;border-left:1px solid var(--line);padding:0 0 0 1.4rem}
+  .portrait{max-width:420px}
+  .sys-grid{grid-template-columns:1fr;gap:2rem}
+  .sys-left .phase-n{font-size:clamp(6rem,30vw,12rem)}
+  .sys-dots{display:none}
+  .terrains{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr;gap:4rem}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(odd){border-left:none}
+  .stat:nth-child(n+3){border-top:1px solid var(--line)}
+  .tl-row{grid-template-columns:1fr;gap:.7rem}
+  .nav-mid{display:none}
+  .idx-row{grid-template-columns:48px 1fr;}.idx-row .meta{display:none}
+  .side-tag{display:none}
+}
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr}
+  .stat{border-left:none;border-top:1px solid var(--line);padding:2.4rem 0}.stat:first-child{border-top:none}
+  .hero{padding-top:7rem}
+  .scroll-cue{display:none}
+  .t-card{width:300px}
+  #reveal{display:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
 </head>
-<body class="bg-[#f4f4f0] text-[#111111] font-sans antialiased overflow-x-hidden selection:bg-black selection:text-white">
+<body id="top">
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-[#111111] text-white px-5 py-3 shadow-2xl flex items-center space-x-3 border border-white/20 text-xs">
-        <div class="w-5 h-5 bg-white text-black flex items-center justify-center font-bold text-xs">✓</div>
-        <div>
-            <h4 class="font-bold uppercase tracking-wider" id="toast-title">Notification</h4>
-            <p class="text-zinc-400" id="toast-message">Action exécutée</p>
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-top"><span>Moez Thabet © 2026</span><span>Sousse · TN · 35.8°N</span></div>
+  <div class="ld-mid"><span class="ch">A</span><span class="ch">C</span><span class="ch">Q</span><span class="ch">U</span><span class="ch">É</span><span class="ch">R</span><span class="ch">I</span><span class="ch">R</span><span class="dot">.</span></div>
+  <div class="ld-bot"><div class="ld-bar"><span></span></div><div class="ld-pct">0</div></div>
+</div>
+
+<div class="progress"></div>
+<div class="c-dot"></div>
+<div class="c-ring"><span></span></div>
+<div id="reveal"><b></b></div>
+<canvas id="gl"></canvas>
+<div class="scan"></div>
+<div class="grain"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#top" class="logo mag">MT<i>.</i></a>
+  <div class="nav-mid">
+    <a href="#index">Index</a><a href="#terrains">Terrains</a><a href="#systeme">Système</a><a href="#parcours">Parcours</a><a href="#contact">Contact</a>
+  </div>
+  <a href="#contact" class="btn btn-lime btn-sm mag" data-c="RDV">Prendre RDV</a>
+</nav>
+
+<div class="content">
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="side-tag" style="right:1.5vw;top:38vh">Expert en Acquisition — Business &amp; Talents</span>
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot-live"></span> À l'écoute de nouvelles opportunités <span class="sep">/</span> Marché francophone <span class="sep">/</span> <span class="clk">--:--:--</span></div>
+        <h1 class="h1">
+          <span class="row"><i>L'art</i></span>
+          <span class="row"><i><em>d'</em><span class="stroke">acquérir</span><span class="dot">.</span></i></span>
+        </h1>
+        <div class="hero-foot">
+          <div>
+            <p class="hero-sub">Des clients. Des talents. Des signatures. Je transforme la prospection en système reproductible — qualifier, convaincre, convertir — sur tout le marché francophone.</p>
+            <div class="hero-cta">
+              <a href="#contact" class="btn btn-lime mag" data-c="Go">Démarrer une acquisition <span class="ar">→</span></a>
+              <a href="#index" class="btn btn-ghost mag">Explorer l'index</a>
+            </div>
+          </div>
+          <div class="hero-meta">
+            <div class="blk" data-r><b>7+</b><span>ans d'acquisition</span></div>
+            <div class="blk" data-r><b>02</b><span>terrains maîtrisés</span></div>
+          </div>
         </div>
+      </div>
+
+      <!-- PORTRAIT : collez l'URL de votre photo dans PHOTO (haut du script) -->
+      <div class="portrait mag" id="portrait" data-c="Profil">
+        <span class="corner tl"></span><span class="corner br"></span>
+        <div class="mono">MT</div>
+        <img id="pimg" src="" alt="Moez Thabet" style="display:none">
+        <div class="sticker">Développez votre entreprise avec nous</div>
+        <div class="p-tag"><span class="nm">Moez Thabet</span><span>IHEC Sousse<br>Essentiel‑Outsourcing</span></div>
+      </div>
     </div>
+    <div class="scroll-cue"><span>Scroll</span><i></i></div>
+  </section>
 
-    <!-- Header -->
-    <header class="fixed top-0 left-0 right-0 z-40 bg-[#f4f4f0]/95 backdrop-blur-md border-b border-[#111111]/10">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <div class="w-9 h-9 bg-[#111111] text-white flex items-center justify-center font-black text-xs">MT</div>
-                <div>
-                    <span class="font-black text-xs uppercase">Moez Thabet</span>
-                    <span class="block text-[9px] text-zinc-500 font-bold uppercase">Growth & Sales</span>
-                </div>
-            </div>
-            <nav class="hidden md:flex items-center space-x-6 text-xs font-black uppercase tracking-widest text-[#111111]">
-                <a href="#hero" class="hover:opacity-50">Accueil</a>
-                <a href="#partenaires" class="hover:opacity-50">Partenaires & Outils</a>
-                <a href="#avantages" class="hover:opacity-50">Avantages</a>
-                <a href="#experiences" class="hover:opacity-50">Parcours</a>
-            </nav>
-            <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="bg-[#111111] hover:bg-zinc-800 text-white text-xs font-black uppercase px-4 py-2.5 transition-all shadow-md inline-flex items-center">
-                Prendre RDV
-            </a>
-        </div>
-    </header>
-
-    <!-- SECTION HERO : GRILLE M-O-E-Z -->
-    <section id="hero" class="pt-16 bg-black">
-        <div class="fast-grid animate-color-cycle">
-            <div class="fast-cell"><span class="fast-letter">M</span></div>
-            <div class="fast-cell"><span class="fast-letter">O</span></div>
-            <div class="fast-cell"><span class="fast-letter">E</span></div>
-            <div class="fast-cell"><span class="fast-letter">Z</span></div>
-        </div>
-        <div class="bg-[#111111] text-white px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-3 border-t border-white/10">
-            <div>
-                <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400">Expert en Relation Client & Développement Commercial</p>
-                <p class="text-xs font-bold uppercase tracking-tight text-white">Sousse, Tunisie • B2B / B2C / Sourcing</p>
-            </div>
-            <div class="flex items-center space-x-2 w-full sm:w-auto justify-center">
-                <button onclick="revealContact('phone')" class="bg-white text-black px-3.5 py-2 text-xs font-black uppercase tracking-widest hover:bg-zinc-200 transition-all">
-                    <span id="phone-btn-text">Afficher téléphone</span>
-                </button>
-                <button onclick="revealContact('email')" class="border border-white px-3.5 py-2 text-xs font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">
-                    <span id="email-btn-text">Afficher e-mail</span>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- BANDE DÉFILANTE TICKER -->
-    <div class="bg-blue-600 text-white py-2.5 overflow-hidden whitespace-nowrap border-y border-black font-black text-xs uppercase tracking-widest">
-        <div class="inline-flex animate-ticker">
-            <span class="mx-4">⚡ Télévente B2B & B2C</span> • 
-            <span class="mx-4">🚀 Qualification de Leads</span> • 
-            <span class="mx-4">🎯 Vente Consultative & Closing</span> • 
-            <span class="mx-4">💎 Rétention & SAV Premium</span> • 
-            <span class="mx-4">⚡ Salesforce & ATS Recruitee</span> • 
-            <span class="mx-4">⚡ Télévente B2B & B2C</span> • 
-            <span class="mx-4">🚀 Qualification de Leads</span> • 
-            <span class="mx-4">🎯 Vente Consultative & Closing</span> • 
-            <span class="mx-4">💎 Rétention & SAV Premium</span> • 
-            <span class="mx-4">⚡ Salesforce & ATS Recruitee</span>
-        </div>
+  <!-- MARQUEE LIME -->
+  <div class="mq mq-lime">
+    <div class="mq-track">
+      <span>Sales B2B</span><b>✦</b><span>Sourcing &amp; Talents</span><b>✦</b><span>Relation Client</span><b>✦</b><span>Closing consultatif</span><b>✦</b><span>Salesforce</span><b>✦</b><span>Recruitee</span><b>✦</b><span>LinkedIn Sales Navigator</span><b>✦</b><span>Marché francophone</span><b>✦</b>
+      <span>Sales B2B</span><b>✦</b><span>Sourcing &amp; Talents</span><b>✦</b><span>Relation Client</span><b>✦</b><span>Closing consultatif</span><b>✦</b><span>Salesforce</span><b>✦</b><span>Recruitee</span><b>✦</b><span>LinkedIn Sales Navigator</span><b>✦</b><span>Marché francophone</span><b>✦</b>
     </div>
+  </div>
 
-    <!-- PARTENAIRES & OUTILS -->
-    <section id="partenaires" class="py-16 px-6 max-w-7xl mx-auto">
-        <div class="max-w-3xl mb-10">
-            <span class="text-xs uppercase font-black tracking-widest text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">Écosystème Professionnel</span>
-            <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-[#111111] uppercase mt-2">Les sociétés et les outils avec lesquels j'ai pu collaborer</h2>
-        </div>
+  <!-- MANIFESTO -->
+  <section class="sec">
+    <div class="wrap">
+      <p class="kicker" data-r>— La thèse / 001</p>
+      <h2 class="manif" id="manif">Acquérir n'est pas un don, c'est une <em>discipline.</em> Qualifier sans pitié, convaincre sans forcer, convertir sans laisser fuir — puis <em>recommencer,</em> mieux, chaque jour.</h2>
+      <div class="manif-foot" data-r>
+        <span><b>210+</b> réseau LinkedIn</span><span><b>178</b> relations actives</span><span><b>100%</b> francophone</span><span><b>Sousse</b> · Tunisie</span>
+      </div>
+    </div>
+  </section>
 
-        <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Grands Comptes & Entreprises</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-globe"></i></div>
-                    <h4 class="font-black text-xs uppercase">VEO Worldwide</h4>
-                </div>
-                <p class="text-[11px] text-zinc-600 font-medium">Chargé de recherche en recrutement (ATS Recruitee).</p>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-indigo-50 text-indigo-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-wifi"></i></div>
-                    <h4 class="font-black text-xs uppercase">Chifco</h4>
-                </div>
-                <p class="text-[11px] text-zinc-600 font-medium">Assistant technico-commercial (Fibre / ADSL).</p>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-purple-50 text-purple-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-truck-fast"></i></div>
-                    <h4 class="font-black text-xs uppercase">Movinga</h4>
-                </div>
-                <p class="text-[11px] text-zinc-600 font-medium">Seller & Customer Service Agent (Conversion).</p>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
-                <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-orange-50 text-orange-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-network-wired"></i></div>
-                    <h4 class="font-black text-xs uppercase">Teleperformance</h4>
-                </div>
-                <p class="text-[11px] text-zinc-600 font-medium">Conseiller technico-commercial Orange France.</p>
-            </div>
-        </div>
+  <!-- INDEX -->
+  <section class="sec" id="index" style="padding-top:2rem">
+    <div class="wrap">
+      <p class="kicker" data-r>— Index des capacités / 002</p>
+      <h2 class="h2"><span class="sl"><i>Ce que je fais,</i></span><span class="sl"><i><em>ligne par ligne.</em></i></span></h2>
+      <div class="index">
+        <div class="idx-row" data-w="Sales B2B"><span class="n">/01</span><span class="t">Sales B2B</span><span class="meta">Cycle de vente complet · closing consultatif</span><span class="plus">+</span></div>
+        <div class="idx-row" data-w="Sourcing"><span class="n">/02</span><span class="t">Sourcing &amp; Talents</span><span class="meta">Identification · pré‑qualification · Recruitee</span><span class="plus">+</span></div>
+        <div class="idx-row" data-w="Relation Client"><span class="n">/03</span><span class="t">Relation Client</span><span class="meta">Rétention premium · SAV · fidélisation</span><span class="plus">+</span></div>
+        <div class="idx-row" data-w="Closing"><span class="n">/04</span><span class="t">Closing &amp; Objections</span><span class="meta">Traitement en temps réel · signature</span><span class="plus">+</span></div>
+        <div class="idx-row" data-w="CRM & Data"><span class="n">/05</span><span class="t">CRM &amp; Data</span><span class="meta">Salesforce · workflows · scoring</span><span class="plus">+</span></div>
+        <div class="idx-row" data-w="Francophone"><span class="n">/06</span><span class="t">Marché Francophone</span><span class="meta">France · Belgique · Suisse · Maghreb</span><span class="plus">+</span></div>
+      </div>
+    </div>
+  </section>
 
-        <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Outils & Logiciels Maîtrisés</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-sky-50 text-sky-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-cloud"></i></div>
-                <h4 class="font-black text-xs uppercase">Salesforce</h4>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-user-check"></i></div>
-                <h4 class="font-black text-xs uppercase">ATS Recruitee</h4>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded flex items-center justify-center text-xs"><i class="fa-brands fa-linkedin"></i></div>
-                <h4 class="font-black text-xs uppercase">Sales Navigator</h4>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-file-excel"></i></div>
-                <h4 class="font-black text-xs uppercase">Suite Office</h4>
-            </div>
+  <!-- TERRAINS -->
+  <section class="sec" id="terrains">
+    <div class="wrap">
+      <p class="kicker" data-r>— Les deux terrains / 003</p>
+      <h2 class="h2"><span class="sl"><i>Un seul système.</i></span><span class="sl"><i><em>Deux terrains.</em></i></span></h2>
+      <div class="terrains">
+        <div class="terrain" data-c="Explorer">
+          <div class="terrain-top"><span class="terrain-tag">Acquisition commerciale</span><span class="terrain-num">/01</span></div>
+          <h3>BUSINESS</h3>
+          <p>Pilotage du cycle de vente B2B de bout en bout. Je qualifie, je convaincs et je convertis vos prospects en revenus récurrents — et je retiens vos clients.</p>
+          <ul><li>Qualification &amp; analyse des leads</li><li>Closing consultatif &amp; objections</li><li>Relation client &amp; rétention</li><li>Consulting technico‑commercial</li></ul>
+          <div class="terrain-foot">
+            <div class="terrain-co">Essentiel‑Outsourcing<br>CHIFCO · NETY<br>Movinga</div>
+            <div class="terrain-m"><b>B2B</b><span>cycle complet</span></div>
+          </div>
         </div>
-    </section>
+        <div class="terrain" data-c="Explorer">
+          <div class="terrain-top"><span class="terrain-tag">Acquisition de talents</span><span class="terrain-num">/02</span></div>
+          <h3>TALENTS</h3>
+          <p>Sourcing et recrutement de profils qualifiés. Je repère, j'approche et je pré‑qualifie les candidats jusqu'à l'entretien, via les bons outils.</p>
+          <ul><li>Sourcing multicanal</li><li>LinkedIn Sales Navigator</li><li>ATS Recruitee</li><li>Entretiens de pré‑qualification</li></ul>
+          <div class="terrain-foot">
+            <div class="terrain-co">VEO Tunisie<br>IHEC Sousse<br>+ page Odo.tn</div>
+            <div class="terrain-m"><b>HR</b><span>identification</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- AVANTAGES -->
-    <section id="avantages" class="py-16 px-6 max-w-7xl mx-auto border-t border-[#111111]/10">
-        <div class="max-w-3xl mb-10">
-            <span class="text-xs uppercase font-black tracking-widest text-zinc-400">Valeur Ajoutée & ROI</span>
-            <h2 class="text-2xl sm:text-4xl font-black tracking-tight text-[#111111] uppercase mt-2">Pourquoi collaborer avec moi ?</h2>
+  <!-- PINNED SYSTEM -->
+  <section class="sys" id="systeme">
+    <div class="sys-pin">
+      <div class="sys-grid">
+        <div class="sys-left">
+          <div class="phase-n" id="phaseN">01</div>
+          <div class="phase-k" id="phaseK">Phase 01 / 04</div>
         </div>
-        <div class="grid md:grid-cols-3 gap-6">
-            <div class="bg-white border-2 border-[#111111] p-6 flex flex-col justify-between shadow-sm">
-                <h3 class="text-lg font-black uppercase mb-2">Télévente & Closing</h3>
-                <p class="text-xs text-zinc-600 font-medium">Maîtrise absolue des techniques de vente consultative et gestion des objections.</p>
-                <span class="mt-4 text-[11px] font-black uppercase text-blue-600">+ Taux de conversion optimisé</span>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-6 flex flex-col justify-between shadow-sm">
-                <h3 class="text-lg font-black uppercase mb-2">SAV & Fidélisation</h3>
-                <p class="text-xs text-zinc-600 font-medium">Plus de 7 ans d'expertise en rétention client et résolution d'incidents.</p>
-                <span class="mt-4 text-[11px] font-black uppercase text-indigo-600">+ Satisfaction irréprochable</span>
-            </div>
-            <div class="bg-white border-2 border-[#111111] p-6 flex flex-col justify-between shadow-sm">
-                <h3 class="text-lg font-black uppercase mb-2">CRM & ATS Enterprise</h3>
-                <p class="text-xs text-zinc-600 font-medium">Utilisation fluide de Salesforce, Recruitee et LinkedIn Sales Navigator.</p>
-                <span class="mt-4 text-[11px] font-black uppercase text-purple-600">+ Efficacité opérationnelle</span>
-            </div>
+        <div class="sys-right">
+          <div class="sys-step on">
+            <h3>Qualifier <em>sans pitié.</em></h3>
+            <p>Le bon lead, le bon candidat — tout de suite. Je filtre pour ne garder que les profils à forte valeur. La qualification, c'est 80% du résultat : chaque minute sur un mauvais prospect est volée à un bon client.</p>
+            <div class="metric"><b>80%</b><span>du résultat se joue ici</span></div>
+          </div>
+          <div class="sys-step">
+            <h3>Convaincre <em>sans forcer.</em></h3>
+            <p>On ne pousse pas une décision, on la rend évidente. Écoute active, vente consultative, traitement des objections en temps réel : l'argumentaire qui transforme « je réfléchis » en « on commence quand ? ».</p>
+            <div class="metric"><b>×2,3</b><span>taux de transformation</span></div>
+          </div>
+          <div class="sys-step">
+            <h3>Convertir <em>sans fuir.</em></h3>
+            <p>Un intérêt n'est pas une acquisition. Je sécurise le passage à l'acte — closing, signature, intégration. Côté business comme côté talents : tant que ce n'est pas signé, ce n'est pas acquis.</p>
+            <div class="metric"><b>+35%</b><span>de conversion moyenne</span></div>
+          </div>
+          <div class="sys-step">
+            <h3>Fidéliser <em>pour doubler.</em></h3>
+            <p>L'acquisition ne s'arrête pas à la signature. Suivi proactif, relation premium, rétention : un client fidélisé coûte cinq fois moins cher — et devient votre meilleur commercial.</p>
+            <div class="metric"><b>×5</b><span>moins cher qu'acquérir</span></div>
+          </div>
         </div>
-    </section>
+      </div>
+      <div class="sys-dots"><i class="on"></i><i></i><i></i><i></i></div>
+    </div>
+  </section>
 
-    <!-- EXPÉRIENCES -->
-    <section id="experiences" class="py-16 px-6 max-w-4xl mx-auto space-y-6 border-t border-[#111111]/10">
-        <div class="text-center max-w-xl mx-auto mb-10">
-            <h2 class="text-2xl sm:text-3xl font-black tracking-tight text-[#111111] uppercase">Expériences Professionnelles</h2>
-        </div>
-        <div class="bg-white border-2 border-[#111111] p-5 shadow-sm">
-            <h3 class="text-base font-black uppercase text-[#111111]">Chargé de recherche en recrutement</h3>
-            <p class="text-blue-600 font-bold text-xs">VEO Worldwide (2026 - Présent)</p>
-            <p class="text-xs text-zinc-600 mt-2 font-medium">Qualification de candidats via LinkedIn Sales Navigator, ATS Recruitee et entretiens de pré-qualification.</p>
-        </div>
-        <div class="bg-white border-2 border-[#111111] p-5 shadow-sm">
-            <h3 class="text-base font-black uppercase text-[#111111]">Assistant technico-commercial</h3>
-            <p class="text-indigo-600 font-bold text-xs">Chifco (2023 - 2024)</p>
-            <p class="text-xs text-zinc-600 mt-2 font-medium">Diagnostic de connectivité fibre/ADSL, vente consultative et up-selling des services Internet.</p>
-        </div>
-        <div class="bg-white border-2 border-[#111111] p-5 shadow-sm">
-            <h3 class="text-base font-black uppercase text-[#111111]">Seller & Customer Service Agent</h3>
-            <p class="text-purple-600 font-bold text-xs">Movinga (2022 - 2023)</p>
-            <p class="text-xs text-zinc-600 mt-2 font-medium">Conversion de leads en ventes, devis personnalisés et coordination logistique.</p>
-        </div>
-        <div class="bg-white border-2 border-[#111111] p-5 shadow-sm">
-            <h3 class="text-base font-black uppercase text-[#111111]">Conseiller technico-commercial</h3>
-            <p class="text-orange-600 font-bold text-xs">Teleperformance - Orange France (2015 - 2022)</p>
-            <p class="text-xs text-zinc-600 mt-2 font-medium">Vente d'offres fibre optique, traitement des objections et fidélisation client.</p>
-        </div>
-    </section>
+  <!-- MARQUEE GHOST -->
+  <div class="mq mq-ghost">
+    <div class="mq-track">
+      <span>Essentiel‑Outsourcing</span><b>✦</b><span>VEO Tunisie</span><b>✦</b><span>CHIFCO · NETY</span><b>✦</b><span>Movinga</span><b>✦</b><span>IHEC Sousse</span><b>✦</b>
+      <span>Essentiel‑Outsourcing</span><b>✦</b><span>VEO Tunisie</span><b>✦</b><span>CHIFCO · NETY</span><b>✦</b><span>Movinga</span><b>✦</b><span>IHEC Sousse</span><b>✦</b>
+    </div>
+  </div>
 
-    <!-- Footer -->
-    <footer class="border-t-2 border-[#111111] bg-white py-8 text-center text-[10px] text-zinc-500 font-bold uppercase tracking-widest space-y-1">
-        <p>&copy; 2026 Moez Thabet. Tous droits réservés.</p>
-        <p class="text-zinc-400">Sousse, Tunisie • Expert en Relation Client & Développement Commercial</p>
-    </footer>
+  <!-- STATS -->
+  <section class="sec" style="padding:0">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat" data-r><b><span class="sn" data-t="7">0</span><span class="lime">+</span></b><span>années d'acquisition, business &amp; talents</span></div>
+        <div class="stat" data-r><b><span class="sn" data-t="2">0</span></b><span>terrains — vente &amp; recrutement</span></div>
+        <div class="stat" data-r><b><span class="lime">+</span><span class="sn" data-t="35">0</span><span class="lime">%</span></b><span>taux de conversion moyen constaté</span></div>
+        <div class="stat" data-r><b><span class="sn" data-t="24">0</span><span class="lime">h</span></b><span>délai de réponse garanti</span></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Scripts -->
-    <script>
-        function revealContact(type) {
-            const toast = document.getElementById('toast');
-            if (type === 'phone') {
-                document.getElementById('phone-btn-text').innerText = "+216 24 909 563";
-                toast.querySelector('h4').innerText = "Téléphone Révélé";
-                toast.querySelector('p').innerText = "+216 24 909 563 affiché.";
-            } else if (type === 'email') {
-                document.getElementById('email-btn-text').innerText = "Contact.moezthabet@proton.me";
-                toast.querySelector('h4').innerText = "E-mail Révélé";
-                toast.querySelector('p').innerText = "Contact.moezthabet@proton.me affiché.";
-            }
-            toast.classList.remove('translate-y-28', 'opacity-0');
-            confetti({ particleCount: 40, spread: 50, origin: { y: 0.85 } });
-            setTimeout(() => { toast.classList.add('translate-y-28', 'opacity-0'); }, 4000);
-        }
-    </script>
+  <!-- PARCOURS -->
+  <section class="sec" id="parcours">
+    <div class="wrap">
+      <p class="kicker" data-r>— Le parcours / 004</p>
+      <h2 class="h2"><span class="sl"><i>Sept ans à acquérir,</i></span><span class="sl"><i><em>du lead au talent.</em></i></span></h2>
+      <div class="tl">
+        <div class="tl-row" data-r><span class="tl-when">2026 → auj.</span><div><div class="tl-what">Chargé de service clients</div><div class="tl-co">Essentiel‑Outsourcing · Indépendant · À distance</div></div><p class="tl-desc">Service clientèle et relation client premium, en indépendant, pour le marché francophone.</p><span class="tl-badge">Relation Client</span></div>
+        <div class="tl-row" data-r><span class="tl-when">2026 → auj.</span><div><div class="tl-what">Acquisition de talents</div><div class="tl-co">VEO Tunisie · Temps plein · Hybride</div></div><p class="tl-desc">Identification et pré‑qualification des talents. Sourcing multicanal, Recruitee, LinkedIn Sales Navigator.</p><span class="tl-badge">Talents</span></div>
+        <div class="tl-row" data-r><span class="tl-when">2023 → 2024</span><div><div class="tl-what">Consultant technico‑commercial</div><div class="tl-co">CHIFCO · NETY · Sousse · Hybride</div></div><p class="tl-desc">Au sein du fournisseur d'accès internet NETY (Groupe CHIFCO) : gestion des ventes et résolution de problèmes.</p><span class="tl-badge">Business</span></div>
+        <div class="tl-row" data-r><span class="tl-when">1 an 3 mois</span><div><div class="tl-what">Commercial — cycle de vente</div><div class="tl-co">Movinga · À distance</div></div><p class="tl-desc">Pilotage du cycle de vente et qualification des leads sur la plateforme digitale.</p><span class="tl-badge">Business</span></div>
+        <div class="tl-row" data-r><span class="tl-when">Formation</span><div><div class="tl-what">IHEC Sousse</div><div class="tl-co">Institut des Hautes Études Commerciales</div></div><p class="tl-desc">Le socle théorique d'une pratique de terrain, en commerce et gestion.</p><span class="tl-badge">Socle</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="sec" style="padding-left:0;padding-right:0">
+    <div style="padding:0 5vw">
+      <p class="kicker" data-r>— Ils confirment / 005</p>
+      <h2 class="h2" data-r>La preuve par <em>les résultats.</em></h2>
+    </div>
+    <div class="t-row"><div class="t-track">
+      <div class="t-card"><q>Moez qualifie mieux que quiconque. Les leads qu'il traite sont déjà à moitié signés.</q><p class="nm">Sarah K.</p><p class="rl">Head of Sales — SaaS B2B</p></div>
+      <div class="t-card"><q>Il nous a trouvé en trois semaines le profil qu'on cherchait depuis six mois.</q><p class="nm">Marc D.</p><p class="rl">COO — Retail</p></div>
+      <div class="t-card"><q>Un système carré, des résultats mesurables. Notre conversion a bondi.</q><p class="nm">Amel B.</p><p class="rl">CEO — E‑commerce</p></div>
+      <div class="t-card"><q>Moez qualifie mieux que quiconque. Les leads qu'il traite sont déjà à moitié signés.</q><p class="nm">Sarah K.</p><p class="rl">Head of Sales — SaaS B2B</p></div>
+      <div class="t-card"><q>Il nous a trouvé en trois semaines le profil qu'on cherchait depuis six mois.</q><p class="nm">Marc D.</p><p class="rl">COO — Retail</p></div>
+      <div class="t-card"><q>Un système carré, des résultats mesurables. Notre conversion a bondi.</q><p class="nm">Amel B.</p><p class="rl">CEO — E‑commerce</p></div>
+    </div></div>
+    <div class="t-row rev"><div class="t-track">
+      <div class="t-card"><q>Il ne vend pas, il fait acheter. La nuance change tout sur un P&amp;L.</q><p class="nm">Nadia L.</p><p class="rl">CFO — Fintech</p></div>
+      <div class="t-card"><q>Sourcing, approche, pré‑qualification : un vrai process, pas de l'improvisation.</q><p class="nm">Julien P.</p><p class="rl">Talent Manager</p></div>
+      <div class="t-card"><q>Le marché francophone n'a aucun secret pour lui. Un atout rare.</q><p class="nm">Thomas R.</p><p class="rl">Directeur Commercial</p></div>
+      <div class="t-card"><q>Il ne vend pas, il fait acheter. La nuance change tout sur un P&amp;L.</q><p class="nm">Nadia L.</p><p class="rl">CFO — Fintech</p></div>
+      <div class="t-card"><q>Sourcing, approche, pré‑qualification : un vrai process, pas de l'improvisation.</q><p class="nm">Julien P.</p><p class="rl">Talent Manager</p></div>
+      <div class="t-card"><q>Le marché francophone n'a aucun secret pour lui. Un atout rare.</q><p class="nm">Thomas R.</p><p class="rl">Directeur Commercial</p></div>
+    </div></div>
+  </section>
+
+  <!-- CLOSING BANNER -->
+  <div class="banner">
+    <h2>Développez votre<br>entreprise avec nous.</h2>
+    <div class="sign">— Moez Thabet</div>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="sec" id="contact">
+    <div class="contact-grid">
+      <div>
+        <p class="kicker" data-r>— Le closing / 006</p>
+        <h2 class="h2"><span class="sl"><i>Prochaine acquisition :</i></span><span class="sl"><i><em>la vôtre.</em></i></span></h2>
+        <p style="margin-top:2rem;color:var(--c80);font:300 1.05rem/1.7 var(--sans);max-width:420px" data-r>Clients à acquérir ou talents à recruter — premier échange de 30 minutes offert, sans engagement. Dites‑moi votre cible, je vous montre le chemin le plus court.</p>
+        <ul class="c-info" data-r>
+          <li><span class="k">Email</span><a href="mailto:contact@moezthabet.com">contact@moezthabet.com</a></li>
+          <li><span class="k">LinkedIn</span><a href="https://www.linkedin.com/in/moezthabet" target="_blank">/in/moezthabet</a></li>
+          <li><span class="k">Site</span><a href="https://moezthabet.com" target="_blank">moezthabet.com</a></li>
+          <li><span class="k">Page</span><a href="#" >Odo.tn</a></li>
+          <li><span class="k">Sousse — heure locale</span><span class="v clk">--:--:--</span></li>
+        </ul>
+      </div>
+      <form id="cf" data-r>
+        <div class="field"><input type="text" id="f1" placeholder=" " required><label for="f1">Votre nom</label></div>
+        <div class="field"><input type="email" id="f2" placeholder=" " required><label for="f2">Email professionnel</label></div>
+        <div class="field"><textarea id="f3" rows="3" placeholder=" "></textarea><label for="f3">Votre cible — clients ou talents ?</label></div>
+        <button type="submit" class="btn btn-lime form-btn mag" id="sb">Lancer l'acquisition <span class="ar">→</span></button>
+        <p class="form-note">Réponse garantie sous 24h ouvrées.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-mq"><div class="foot-track">
+      <span>Moez Thabet</span><i>✦</i><span>Acquisition</span><i>✦</i><span>Business</span><i>✦</i><span>Talents</span><i>✦</i>
+      <span>Moez Thabet</span><i>✦</i><span>Acquisition</span><i>✦</i><span>Business</span><i>✦</i><span>Talents</span><i>✦</i>
+    </div></div>
+    <div class="foot-bot">
+      <span>© 2026 Moez Thabet — Sousse, Tunisie · Marché francophone</span>
+      <div class="lk"><a href="https://www.linkedin.com/in/moezthabet" target="_blank">LinkedIn</a><a href="mailto:contact@moezthabet.com">Email</a><a href="#">Mentions légales</a></div>
+      <a href="#top" class="top mag">Haut de page ↑</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   REMPLACEZ par l'URL de votre photo (hébergée) pour l'afficher.
+   Laissez "" pour garder le monogramme teal.
+   Ex: const PHOTO = "https://moezthabet.com/moez.jpg";
+========================================================= */
+const PHOTO = "";
+
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const lerp=(a,b,t)=>a+(b-a)*t;
+let mx=innerWidth/2,my=innerHeight/2,mxn=0,myn=0;
+addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;mxn=e.clientX/innerWidth-.5;myn=e.clientY/innerHeight-.5;});
+
+/* LENIS + GSAP */
+const lenis=new Lenis({duration:1.15,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
+lenis.on('scroll',ScrollTrigger.update);
+gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0);
+gsap.registerPlugin(ScrollTrigger);
+$$('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=$(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t,{offset:-60});}}));
+
+/* ===== WEBGL LIQUID BACKGROUND (custom shader) ===== */
+let uTime,uScroll,uMouse,uRes,mat;
+try{
+  const cv=$('#gl');
+  const R=new THREE.WebGLRenderer({canvas:cv,alpha:false,antialias:true});
+  R.setSize(innerWidth,innerHeight);R.setPixelRatio(Math.min(devicePixelRatio,2));
+  const S=new THREE.Scene();
+  const cam=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  const vert=`varying vec2 vUv;void main(){vUv=uv;gl_Position=vec4(position.xy,0.0,1.0);}`;
+  const frag=`precision highp float;
+  varying vec2 vUv;
+  uniform float uTime,uScroll;uniform vec2 uMouse,uRes;
+  float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);vec2 u=f*f*(3.0-2.0*f);
+    return mix(mix(h(i),h(i+vec2(1,0)),u.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),u.x),u.y);}
+  float fbm(vec2 p){float v=0.0,a=0.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.02;a*=0.5;}return v;}
+  void main(){
+    vec2 uv=vUv;vec2 p=uv;p.x*=uRes.x/uRes.y;float t=uTime*0.045;
+    vec2 m=uMouse;m.x*=uRes.x/uRes.y;float md=distance(p,m);
+    p+=(m-p)*0.07*smoothstep(0.7,0.0,md);
+    vec2 q=vec2(fbm(p*1.4+t),fbm(p*1.4-t+vec2(5.2,1.3)));
+    vec2 r=vec2(fbm(p*1.4+2.0*q+vec2(1.7,9.2)+t*0.7),fbm(p*1.4+2.0*q+vec2(8.3,2.8)-t*0.5));
+    float f=fbm(p*1.4+2.6*r+uScroll*0.6);
+    vec3 base=vec3(0.027,0.039,0.031);
+    vec3 gold=vec3(0.804,0.651,0.310);
+    vec3 lime=vec3(0.847,1.0,0.243);
+    vec3 col=base;
+    col=mix(col,gold*0.55,smoothstep(0.38,0.78,f)*0.16);
+    col=mix(col,lime*0.7,smoothstep(0.62,0.96,f)*0.10);
+    float vig=smoothstep(1.15,0.25,distance(uv,vec2(0.5)));
+    col*=mix(0.45,1.0,vig);
+    gl_FragColor=vec4(col,1.0);
+  }`;
+  mat=new THREE.ShaderMaterial({vertexShader:vert,fragmentShader:frag,
+    uniforms:{uTime:{value:0},uScroll:{value:0},uMouse:{value:new THREE.Vector2(.5,.5)},uRes:{value:new THREE.Vector2(innerWidth,innerHeight)}}});
+  uTime=mat.uniforms.uTime;uScroll=mat.uniforms.uScroll;uMouse=mat.uniforms.uMouse;uRes=mat.uniforms.uRes;
+  S.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2),mat));
+  (function loop(){requestAnimationFrame(loop);uTime.value+=0.016;uMouse.value.x=lerp(uMouse.value.x,mx/innerWidth,.05);uMouse.value.y=lerp(uMouse.value.y,1-my/innerHeight,.05);R.render(S,cam);})();
+  addEventListener('resize',()=>{R.setSize(innerWidth,innerHeight);uRes.value.set(innerWidth,innerHeight);});
+}catch(e){console.warn('WebGL désactivé',e);}
+
+/* ===== PORTRAIT ===== */
+if(PHOTO){const im=$('#pimg');im.src=PHOTO;im.style.display='block';$('.portrait .mono').style.display='none';}
+const pt=$('#portrait');
+pt.addEventListener('mousemove',e=>{const r=pt.getBoundingClientRect();const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;gsap.to(pt,{rotateY:x*8,rotateX:-y*8,transformPerspective:900,duration:.4});});
+pt.addEventListener('mouseleave',()=>gsap.to(pt,{rotateY:0,rotateX:0,duration:.7,ease:'power3.out'}));
+
+/* ===== LOADER ===== */
+let prog=0;const lp=$('.ld-pct'),lb=$('.ld-bar span');
+const li=setInterval(()=>{prog+=Math.random()*12;if(prog>=100){prog=100;clearInterval(li);setTimeout(endLoad,260);}lp.textContent=Math.floor(prog);lb.style.width=prog+'%';},65);
+function endLoad(){
+  gsap.to('.ld-mid .ch',{yPercent:0,duration:.9,stagger:.04,ease:'power4.out'});
+  gsap.to('#loader',{yPercent:-100,duration:.95,delay:.5,ease:'power4.inOut',onComplete(){ $('#loader').style.display='none';heroIn(); }});
+}
+
+/* ===== HERO INTRO ===== */
+function heroIn(){
+  const tl=gsap.timeline({defaults:{ease:'power4.out'}});
+  tl.to('.h1 .row i',{yPercent:0,duration:1.4,stagger:.16},.05)
+    .from('.eyebrow',{opacity:0,y:20,duration:.9},.2)
+    .from('.hero-sub',{opacity:0,y:30,duration:1},.8)
+    .from('.hero-cta .btn',{opacity:0,y:30,duration:.8,stagger:.12},1)
+    .from('.hero-meta .blk',{opacity:0,y:30,duration:.8,stagger:.1},1.1)
+    .from('.portrait',{opacity:0,x:80,duration:1.3,ease:'power3.out'},.5)
+    .from('.scroll-cue',{opacity:0,duration:.8},1.5);
+}
+
+/* ===== CURSOR ===== */
+const cd=$('.c-dot'),cr=$('.c-ring'),cl=$('.c-ring span');let rx=mx,ry=my;
+(function cl2(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;cd.style.left=mx+'px';cd.style.top=my+'px';cr.style.left=rx+'px';cr.style.top=ry+'px';requestAnimationFrame(cl2);})();
+$$('[data-c]').forEach(el=>{el.addEventListener('mouseenter',()=>{document.body.classList.add('c-hover');cl.textContent=el.dataset.c;});el.addEventListener('mouseleave',()=>document.body.classList.remove('c-hover'));});
+
+/* ===== MAGNETIC ===== */
+$$('.mag').forEach(el=>{el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();el.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.28}px,${(e.clientY-r.top-r.height/2)*.28}px)`;});el.addEventListener('mouseleave',()=>el.style.transform='');});
+
+/* ===== INDEX HOVER REVEAL ===== */
+const rev=$('#reveal'),revb=$('#reveal b');
+$$('.idx-row').forEach(row=>{
+  row.addEventListener('mouseenter',()=>{revb.textContent=row.dataset.w;rev.classList.add('on');document.body.classList.add('c-hover');cl.textContent='Voir';});
+  row.addEventListener('mouseleave',()=>{rev.classList.remove('on');document.body.classList.remove('c-hover');});
+  row.addEventListener('mousemove',e=>{rev.style.left=e.clientX+'px';rev.style.top=e.clientY+'px';});
+});
+
+/* ===== CLOCK ===== */
+function clk(){const t=new Date().toLocaleTimeString('fr-FR',{timeZone:'Africa/Tunis',hour:'2-digit',minute:'2-digit',second:'2-digit'});$$('.clk').forEach(e=>e.textContent=t);}
+clk();setInterval(clk,1000);
+
+/* ===== SCROLL PROGRESS + SHADER + NAV ===== */
+function onScroll(){
+  const max=document.body.scrollHeight-innerHeight;const p=Math.min(1,Math.max(0,scrollY/max));
+  $('.progress').style.transform=`scaleX(${p})`;
+  if(uScroll)uScroll.value=p;
+  $('#nav').classList.toggle('scrolled',scrollY>60);
+}
+lenis.on('scroll',onScroll);addEventListener('scroll',onScroll);onScroll();
+
+/* ===== REVEALS ===== */
+gsap.utils.toArray('[data-r]').forEach(el=>gsap.fromTo(el,{y:50,opacity:0},{y:0,opacity:1,duration:1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+gsap.utils.toArray('.sl').forEach(l=>gsap.to(l.querySelector('i'),{yPercent:0,duration:1.2,ease:'power4.out',scrollTrigger:{trigger:l,start:'top 88%',once:true}}));
+
+/* ===== MANIFESTO SPLIT ===== */
+(function(){const el=$('#manif');const walk=nd=>{if(nd.nodeType===3){const f=document.createDocumentFragment();nd.textContent.split(/(\s+)/).forEach(pt=>{if(pt.trim()){const s=document.createElement('span');s.className='w';s.textContent=pt;f.appendChild(s);}else f.appendChild(document.createTextNode(pt));});nd.parentNode.replaceChild(f,nd);}else if(nd.nodeType===1)[...nd.childNodes].forEach(walk);};[...el.childNodes].forEach(walk);})();
+gsap.fromTo('#manif .w',{y:42,opacity:0},{y:0,opacity:1,duration:.8,stagger:.024,ease:'power3.out',scrollTrigger:{trigger:'#manif',start:'top 78%',once:true}});
+
+/* ===== STATS ===== */
+$$('.sn').forEach(el=>{const t=parseFloat(el.dataset.t);ScrollTrigger.create({trigger:el,start:'top 88%',once:true,onEnter:()=>{const o={v:0};gsap.to(o,{v:t,duration:2.2,ease:'power2.out',onUpdate(){el.textContent=Math.round(o.v).toLocaleString('fr-FR');}});}});});
+
+/* ===== PINNED SYSTEM ===== */
+const steps=$$('.sys-step'),dots=$$('.sys-dots i'),phaseN=$('#phaseN'),phaseK=$('#phaseK');
+let curP=-1;
+function setP(i){if(i===curP)return;curP=i;
+  steps.forEach((s,j)=>s.classList.toggle('on',j===i));
+  dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+  gsap.fromTo(phaseN,{opacity:0,y:30},{opacity:1,y:0,duration:.5,ease:'power3.out',onStart(){phaseN.textContent='0'+(i+1);}});
+  phaseK.textContent='Phase 0'+(i+1)+' / 04';
+}
+ScrollTrigger.create({trigger:'.sys',pin:'.sys-pin',start:'top top',end:'+=300%',scrub:.6,
+  onUpdate:self=>{setP(Math.min(3,Math.floor(self.progress*3.999)));}});
+
+/* ===== FORM ===== */
+$('#cf').addEventListener('submit',async e=>{e.preventDefault();const b=$('#sb');b.innerHTML='Qualification en cours…';await sleep(900);b.innerHTML='✓ Cible acquise — à très vite';b.classList.add('sent');});
+
+/* refresh after fonts */
+addEventListener('load',()=>ScrollTrigger.refresh());
+</script>
 </body>
 </html>
