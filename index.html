@@ -2,10 +2,9 @@
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    ‎<meta name="google-site-verification" content="Rdyw047v0Adm685QaN-WjXM51gDTP2J7WA6KY_xSZoM" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ===== SEO PRIMAIRE (mots-clés freelance / externalisation / Tunisie) ===== -->
+    <!-- ===== SEO PRIMAIRE ===== -->
     <title>Freelance Service Client, SAV & Télévente — Moez Thabet | Tunisie & Remote Europe</title>
     <meta name="description" content="Externalisez votre service client : freelance expert SAV, support e-commerce, e-réputation & télévente B2B/B2C. 10+ ans d'expérience (Orange France, NETY.tn). Remote Tunisie → France/Europe. Devis gratuit sous 48 h.">
     <meta name="robots" content="index, follow, max-image-preview:large">
@@ -16,12 +15,22 @@
     <!-- ===== FAVICON ===== -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23111111'/><text x='32' y='44' font-family='Arial,sans-serif' font-size='28' font-weight='900' fill='white' text-anchor='middle'>MT</text></svg>">
 
+    <!-- ===== GOOGLE ANALYTICS 4 (TRAÇABILITÉ) ===== -->
+    <!-- ⚠️ Créez une propriété gratuite sur analytics.google.com puis remplacez G-XXXXXXXXXX par votre ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+
     <!-- ===== OPEN GRAPH ===== -->
     <meta property="og:type" content="profile">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:site_name" content="Moez Thabet — Freelance Relation Client">
     <meta property="og:title" content="Freelance Service Client, SAV & Télévente — Moez Thabet">
-    <meta property="og:description" content="SAV premium, e-réputation, télévente B2B/B2C. 10+ ans (Orange France, NETY.tn). Remote Tunisie → Europe. Appel gratuit 30 min.">
+    <meta property="og:description" content="SAV premium, e-réputation, télévente B2B/B2C. 10+ ans d'expérience. Remote Tunisie → Europe. Appel gratuit 30 min.">
     <meta property="og:url" content="https://moezthabet.com/">
     <meta property="og:image" content="https://moezthabet.com/og.jpg">
     <meta property="og:image:width" content="1200">
@@ -74,7 +83,7 @@
             { "@type": "Question", "name": "Pourquoi choisir un freelance service client basé en Tunisie ?", "acceptedAnswer": { "@type": "Answer", "text": "Un expert senior dédié, à un coût maîtrisé, travaillant aux fuseaux horaires européens en remote total : l'alternative souple au centre d'appels, sans charges ni engagement long terme." } },
             { "@type": "Question", "name": "Êtes-vous disponible immédiatement pour une mission ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui. Selon le périmètre, je peux démarrer en moins de 72 h, à temps plein ou partiel, aux fuseaux horaires français et européens." } },
             { "@type": "Question", "name": "Travaillez-vous en remote ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, 100 % remote depuis Sousse (Tunisie), avec un équipement professionnel (Ringover, fibre optique). Je travaille déjà en remote pour Essentiel-Outsourcing / Casanovaparis." } },
-            { "@type": "Question", "name": "Quels outils pouvez-vous prendre en main ?", "acceptedAnswer": { "@type": "Answer", "text": "Salesforce, HubSpot, Gorgias, Zendesk, Shopify, Ringover, ClickUp, Trustpilot, Power BI, Trello, Notion, Slack, Zoom et Suite Office. J'intègre vos outils internes en quelques jours." } },
+            { "@type": "Question", "name": "Quels outils pouvez-vous prendre en main ?", "acceptedAnswer": { "@type": "Answer", "text": "Salesforce, HubSpot, Gorgias, Zendesk, Shopify, Ringover, ClickUp, Trello, Notion, Trustpilot, Power BI, Slack, Zoom et Suite Office. J'intègre vos outils internes en quelques jours." } },
             { "@type": "Question", "name": "Comment facturez-vous ?", "acceptedAnswer": { "@type": "Answer", "text": "À l'heure, à la journée ou au forfait mission selon le besoin. Devis gratuit et détaillé sous 48 h après notre premier appel." } },
             { "@type": "Question", "name": "Proposez-vous une période d'essai ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui : une courte mission pilote permet de valider la qualité du travail avant tout engagement long terme." } },
             { "@type": "Question", "name": "Quelles langues parlez-vous ?", "acceptedAnswer": { "@type": "Answer", "text": "Français professionnel (écrit et parlé, plus de 10 ans au contact de clients français) et arabe natif." } }
@@ -87,6 +96,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://www.google.com">
+    <link rel="preconnect" href="https://assets.calendly.com">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -175,6 +185,29 @@
 </head>
 <body class="bg-[#f4f4f0] text-[#111111] font-sans antialiased overflow-x-hidden selection:bg-black selection:text-white">
 
+    <!-- ===== VUE RDV : CALENDLY INTÉGRÉ SOUS VOTRE DOMAINE ===== -->
+    <div id="vue-rdv" class="fixed inset-0 z-50 bg-[#f4f4f0] hidden overflow-y-auto">
+        <div class="max-w-4xl mx-auto px-4 py-6">
+            <div class="flex items-center justify-between mb-4 gap-3">
+                <h2 class="text-base sm:text-lg font-black uppercase">📅 Réservez votre appel gratuit — 30 min</h2>
+                <a href="#hero" class="bg-[#111111] text-white px-4 py-2 text-xs font-black uppercase shrink-0">✕ Fermer</a>
+            </div>
+            <div class="calendly-inline-widget" data-url="https://calendly.com/moez-thabet-881988/30min?hide_gdpr_banner=1&hide_landing_page_details=1" style="width:100%;height:700px;background:#ffffff;border:2px solid #111111;"></div>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-3 text-center">Réservation sécurisée — sans quitter moezthabet.com</p>
+        </div>
+    </div>
+
+    <!-- ===== VUE CONFIRMATION (traçable) ===== -->
+    <div id="vue-confirmation" class="fixed inset-0 z-50 bg-[#f4f4f0] hidden items-center justify-center px-4">
+        <div class="bg-white border-2 border-[#111111] shadow-[8px_8px_0_#111111] p-8 max-w-md text-center">
+            <div class="text-4xl mb-4">✅</div>
+            <h2 class="text-xl font-black uppercase mb-3">Merci !</h2>
+            <p class="text-xs text-zinc-600 font-medium leading-relaxed">Votre rendez-vous est confirmé. Vous recevrez un e-mail avec le lien de visioconférence. À très vite !</p>
+            <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mt-3">— Moez Thabet</p>
+            <a href="#hero" class="inline-block mt-6 bg-[#111111] text-white px-6 py-3 text-xs font-black uppercase tracking-widest">← Retour au site</a>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 bg-[#111111] text-white px-5 py-3 shadow-2xl flex items-center space-x-3 border border-white/20 text-xs">
         <div class="w-5 h-5 bg-white text-black flex items-center justify-center font-bold text-xs">✓</div>
@@ -201,7 +234,7 @@
                 <a href="#parcours" class="hover:opacity-50">Parcours</a>
                 <a href="#faq" class="hover:opacity-50">FAQ</a>
             </nav>
-            <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="bg-[#111111] hover:bg-zinc-800 text-white text-xs font-black uppercase px-4 py-2.5 transition-all shadow-md inline-flex items-center">
+            <a href="#rdv" class="bg-[#111111] hover:bg-zinc-800 text-white text-xs font-black uppercase px-4 py-2.5 transition-all shadow-md inline-flex items-center">
                 RDV Gratuit
             </a>
         </div>
@@ -273,7 +306,7 @@
                     <li>✔ E-réputation : collecte d'avis & notoriété en ligne (Trustpilot, Google)</li>
                     <li>✔ Fidélisation & rétention des clients à risque</li>
                 </ul>
-                <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="mt-auto text-[11px] font-black uppercase text-teal-600 hover:underline">Discuter de ce besoin →</a>
+                <a href="#rdv" class="mt-auto text-[11px] font-black uppercase text-teal-600 hover:underline">Discuter de ce besoin →</a>
             </div>
             <div class="bg-white border-2 border-[#111111] p-6 flex flex-col shadow-sm">
                 <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-phone-volume"></i></div>
@@ -284,7 +317,7 @@
                     <li>✔ Vente consultative, up-selling & cross-selling</li>
                     <li>✔ Traitement des objections & closing</li>
                 </ul>
-                <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="mt-auto text-[11px] font-black uppercase text-blue-600 hover:underline">Discuter de ce besoin →</a>
+                <a href="#rdv" class="mt-auto text-[11px] font-black uppercase text-blue-600 hover:underline">Discuter de ce besoin →</a>
             </div>
             <div class="bg-white border-2 border-[#111111] p-6 flex flex-col shadow-sm">
                 <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded flex items-center justify-center text-lg mb-4"><i class="fa-solid fa-chart-line"></i></div>
@@ -295,7 +328,7 @@
                     <li>✔ Sourcing & pré-qualification (ATS Recruitee)</li>
                     <li>✔ Rédaction de scripts & documentation process</li>
                 </ul>
-                <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="mt-auto text-[11px] font-black uppercase text-purple-600 hover:underline">Discuter de ce besoin →</a>
+                <a href="#rdv" class="mt-auto text-[11px] font-black uppercase text-purple-600 hover:underline">Discuter de ce besoin →</a>
             </div>
         </div>
     </section>
@@ -322,7 +355,7 @@
         </div>
     </section>
 
-    <!-- BLOC SEO : L'ALTERNATIVE AU CENTRE D'APPELS -->
+    <!-- BLOC SEO -->
     <section id="expert" class="py-16 px-6 max-w-5xl mx-auto">
         <div class="bg-white border-2 border-[#111111] p-8 sm:p-10 shadow-sm">
             <h2 class="text-xl sm:text-3xl font-black tracking-tight text-[#111111] uppercase">Freelance service client & SAV : l'alternative au centre d'appels</h2>
@@ -379,7 +412,6 @@
 
         <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Grands Comptes & Entreprises</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=essentiel-outsourcing.com" alt="Logo Essentiel-Outsourcing" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -387,7 +419,6 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Chargé de service clients freelance — 2 missions pour Casanovaparis.</p>
             </div>
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=casanovaparis.com" alt="Logo Casanovaparis" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -395,7 +426,6 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Mobilier : collecte d'avis & e-réputation + SAV (missions en cours).</p>
             </div>
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=veoworldwide.com" alt="Logo VEO Worldwide" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -403,7 +433,6 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Acquisition de talents : sourcing & pré-qualification (ATS Recruitee).</p>
             </div>
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=chifco.com" alt="Logo Chifco NETY" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -411,7 +440,6 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Consultant technico-commercial pour le FAI NETY.tn (Fibre / ADSL).</p>
             </div>
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=movinga.de" alt="Logo Movinga" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -419,7 +447,6 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Chargé de clientèle & Commercial sédentaire B2B (conversion).</p>
             </div>
-
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
                     <img src="https://www.google.com/s2/favicons?sz=128&domain=teleperformance.com" alt="Logo Teleperformance" class="company-logo rounded" width="32" height="32" loading="lazy" decoding="async">
@@ -427,13 +454,10 @@
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Pour l'opérateur n°1 en Europe : ORANGE France (fibre & service client).</p>
             </div>
-
         </div>
 
         <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Outils & Logiciels Maîtrisés</h3>
         <div class="space-y-6">
-
-            <!-- CRM & Ventes -->
             <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">CRM & Ventes</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -455,8 +479,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Support Client & SAV -->
             <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Support Client & SAV</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -478,8 +500,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- E-réputation & Avis -->
             <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">E-réputation & Avis Clients</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -493,8 +513,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Téléphonie & Collaboration -->
             <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Téléphonie & Collaboration</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -516,8 +534,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Pilotage & Reporting -->
             <div>
                 <p class="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Pilotage, Reporting & Bureautique</p>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -543,7 +559,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
@@ -622,7 +637,7 @@
         <h2 class="text-2xl sm:text-4xl font-black uppercase tracking-tight max-w-3xl mx-auto">Un pic d'activité ? Un SAV à restructurer ? Des leads à convertir ?</h2>
         <p class="text-xs text-zinc-400 font-bold uppercase tracking-widest mt-4">10+ ans d'expérience • Appel découverte gratuit 30 min • Devis sous 48 h</p>
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
-            <a href="https://calendly.com/moez-thabet-881988/30min" target="_blank" rel="noopener noreferrer" class="bg-white text-black px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg">Réserver mon appel gratuit</a>
+            <a href="#rdv" class="bg-white text-black px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-zinc-200 transition-all shadow-lg">Réserver mon appel gratuit</a>
             <button onclick="revealContact('email')" class="border border-white px-6 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white hover:text-black transition-all">Obtenir mon e-mail</button>
         </div>
     </section>
@@ -635,7 +650,44 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
+    <script src="https://assets.calendly.com/assets/external/widget.js" defer></script>
     <script>
+        // ===== ROUTAGE DES VUES RDV / CONFIRMATION (sous votre domaine) =====
+        function routeHash() {
+            var h = window.location.hash;
+            document.getElementById('vue-rdv').classList.toggle('hidden', h !== '#rdv');
+            var conf = document.getElementById('vue-confirmation');
+            conf.classList.toggle('hidden', h !== '#confirmation');
+            conf.classList.toggle('flex', h === '#confirmation');
+            document.body.style.overflow = (h === '#rdv' || h === '#confirmation') ? 'hidden' : '';
+        }
+        window.addEventListener('hashchange', routeHash);
+        window.addEventListener('load', routeHash);
+
+        // ===== DÉTECTION DU RDV CONFIRMÉ (traçabilité) =====
+        var rdvFait = false;
+        function surRdvConfirme() {
+            if (rdvFait) return;
+            rdvFait = true;
+            // Événement de conversion GA4 (importable dans Google Ads)
+            if (window.gtag) gtag('event', 'rdv_confirme', { method: 'calendly' });
+            window.location.hash = 'confirmation';
+            if (window.confetti) confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
+        }
+        // Méthode officielle Calendly
+        window.addEventListener('load', function () {
+            if (window.Calendly && typeof Calendly.on === 'function') {
+                Calendly.on('calendly.event_scheduled', surRdvConfirme);
+            }
+        });
+        // Méthode de secours (messages de l'iframe Calendly)
+        window.addEventListener('message', function (e) {
+            try {
+                if (String(e.origin).indexOf('calendly.com') === -1) return;
+                if (JSON.stringify(e.data || '').indexOf('event_scheduled') !== -1) surRdvConfirme();
+            } catch (_) {}
+        });
+
         function revealContact(type) {
             const toast = document.getElementById('toast');
             if (type === 'phone') {
