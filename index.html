@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moez Thabet — Expert Relation Client & Développement Commercial</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         tailwind.config = {
@@ -65,6 +61,32 @@
         @media (min-width: 768px) {
             .fast-letter { font-size: 13vw; }
         }
+        .tool-logo {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+        .company-logo {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+        .tool-logo-mask {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+        }
     </style>
 </head>
 <body class="bg-[#f4f4f0] text-[#111111] font-sans antialiased overflow-x-hidden selection:bg-black selection:text-white">
@@ -100,7 +122,7 @@
         </div>
     </header>
 
-    <!-- SECTION HERO : GRILLE M-O-E-Z -->
+    <!-- SECTION HERO -->
     <section id="hero" class="pt-16 bg-black">
         <div class="fast-grid animate-color-cycle">
             <div class="fast-cell"><span class="fast-letter">M</span></div>
@@ -149,54 +171,102 @@
 
         <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Grands Comptes & Entreprises</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+
+            <!-- VEO Worldwide -->
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-globe"></i></div>
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=veoworldwide.com" alt="VEO Worldwide" class="company-logo rounded">
                     <h4 class="font-black text-xs uppercase">VEO Worldwide</h4>
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Chargé de recherche en recrutement (ATS Recruitee).</p>
             </div>
+
+            <!-- Chifco -->
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-indigo-50 text-indigo-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-wifi"></i></div>
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=chifco.com" alt="Chifco" class="company-logo rounded">
                     <h4 class="font-black text-xs uppercase">Chifco</h4>
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Assistant technico-commercial (Fibre / ADSL).</p>
             </div>
+
+            <!-- Movinga -->
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-purple-50 text-purple-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-truck-fast"></i></div>
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=movinga.de" alt="Movinga" class="company-logo rounded">
                     <h4 class="font-black text-xs uppercase">Movinga</h4>
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Seller & Customer Service Agent (Conversion).</p>
             </div>
+
+            <!-- Teleperformance -->
             <div class="bg-white border-2 border-[#111111] p-4 shadow-sm">
                 <div class="flex items-center space-x-3 mb-2">
-                    <div class="w-8 h-8 bg-orange-50 text-orange-600 rounded flex items-center justify-center font-bold text-sm"><i class="fa-solid fa-network-wired"></i></div>
+                    <img src="https://www.google.com/s2/favicons?sz=128&domain=teleperformance.com" alt="Teleperformance" class="company-logo rounded">
                     <h4 class="font-black text-xs uppercase">Teleperformance</h4>
                 </div>
                 <p class="text-[11px] text-zinc-600 font-medium">Conseiller technico-commercial Orange France.</p>
             </div>
+
         </div>
 
         <h3 class="text-xs font-black uppercase tracking-widest text-zinc-400 mb-4">Outils & Logiciels Maîtrisés</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+
+            <!-- Salesforce -->
             <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-sky-50 text-sky-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-cloud"></i></div>
+                <span class="tool-logo-mask" style="background-color:#00A1E0; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/salesforce.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/salesforce.svg');"></span>
                 <h4 class="font-black text-xs uppercase">Salesforce</h4>
             </div>
+
+            <!-- ATS Recruitee -->
             <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-user-check"></i></div>
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=recruitee.com" alt="Recruitee" class="tool-logo rounded">
                 <h4 class="font-black text-xs uppercase">ATS Recruitee</h4>
             </div>
+
+            <!-- LinkedIn Sales Navigator -->
             <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded flex items-center justify-center text-xs"><i class="fa-brands fa-linkedin"></i></div>
+                <span class="tool-logo-mask" style="background-color:#0A66C2; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/linkedin.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/linkedin.svg');"></span>
                 <h4 class="font-black text-xs uppercase">Sales Navigator</h4>
             </div>
+
+            <!-- Microsoft Office -->
             <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
-                <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded flex items-center justify-center text-xs"><i class="fa-solid fa-file-excel"></i></div>
+                <span class="tool-logo-mask" style="background-color:#5E5E5E; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/microsoft.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/microsoft.svg');"></span>
                 <h4 class="font-black text-xs uppercase">Suite Office</h4>
             </div>
+
+            <!-- Gorgias -->
+            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=gorgias.com" alt="Gorgias" class="tool-logo rounded">
+                <h4 class="font-black text-xs uppercase">Gorgias</h4>
+            </div>
+
+            <!-- Ringover -->
+            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
+                <img src="https://www.google.com/s2/favicons?sz=64&domain=ringover.com" alt="Ringover" class="tool-logo rounded">
+                <h4 class="font-black text-xs uppercase">Ringover</h4>
+            </div>
+
+            <!-- ClickUp -->
+            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
+                <span class="tool-logo-mask" style="background-color:#7B68EE; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/clickup.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/clickup.svg');"></span>
+                <h4 class="font-black text-xs uppercase">ClickUp</h4>
+            </div>
+
+            <!-- Shopify -->
+            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
+                <span class="tool-logo-mask" style="background-color:#96BF48; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/shopify.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/shopify.svg');"></span>
+                <h4 class="font-black text-xs uppercase">Shopify</h4>
+            </div>
+
+            <!-- Power BI -->
+            <div class="bg-white border-2 border-[#111111] p-3 flex items-center space-x-3 shadow-sm">
+                <span class="tool-logo-mask" style="background-color:#F2C811; -webkit-mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/powerbi.svg'); mask-image:url('https://cdn.jsdelivr.net/npm/simple-icons@11/icons/powerbi.svg');"></span>
+                <h4 class="font-black text-xs uppercase">Power BI</h4>
+            </div>
+
         </div>
     </section>
 
