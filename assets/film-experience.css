@@ -1,0 +1,49 @@
+
+/* Signature Film: CSS is deliberately separate from the existing site's UI. */
+.moez-film{position:fixed;inset:0;z-index:9999;display:none;background:#050505;color:#fff;align-items:center;justify-content:center}
+.moez-film.is-active{display:flex}
+.moez-film video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+.moez-film__controls{position:absolute;top:max(18px,env(safe-area-inset-top));right:20px;z-index:4;display:flex;flex-wrap:wrap;gap:10px}
+.moez-film__controls button,.moez-film__finished button,.moez-film__finished a{font:600 13px/1.2 Arial,Helvetica,sans-serif;letter-spacing:.06em;border:1px solid #aaa;background:rgba(0,0,0,.76);color:#fff;padding:14px 16px;cursor:pointer}
+.moez-film__controls button:focus-visible,.moez-film__finished button:focus-visible,.moez-film__finished a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.moez-film__finished{display:none;position:absolute;inset:0;background:#090909ed;padding:24px;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+.moez-film__finished.is-visible{display:flex}
+.moez-film__eyebrow{font:500 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.20em;color:#cfcfcf;text-transform:uppercase}
+.moez-film__finished h2{font:900 clamp(48px,9vw,120px)/.9 Arial,Helvetica,sans-serif;letter-spacing:-.07em;margin:26px 0}
+.moez-film__finished p{font:400 clamp(16px,2.2vw,22px)/1.5 Arial,Helvetica,sans-serif;max-width:640px;color:#ddd}
+.moez-film__buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:25px}
+.moez-film__finished a{background:#fff;color:#070707;border-color:#fff;text-decoration:none;padding:18px 23px}
+.moez-film__finished button{padding:18px 23px}
+body.moez-film-open{overflow:hidden!important}
+@media(max-width:640px){.moez-film__controls{top:14px;right:14px;left:14px;justify-content:flex-end}.moez-film__finished h2{font-size:clamp(44px,12vw,70px)}.moez-film__controls button{padding:12px}}
+@media(prefers-reduced-motion:reduce){.moez-film *{animation:none!important;transition:none!important}}
+
+/* Keep the cinematic layer behind the 180° reversal until the intro clears. */
+.moez-film__controls button{min-height:44px;min-width:44px}
+.moez-film__finished{overflow-y:auto;overscroll-behavior:contain;padding-block:max(36px,env(safe-area-inset-top)) max(42px,env(safe-area-inset-bottom))}
+.moez-film__finished a:focus-visible,.moez-film__finished button:focus-visible{outline-color:#fff}
+@media(max-width:640px){.moez-film__finished{justify-content:flex-start;padding-top:max(100px,22vh)}.moez-film__buttons{flex-direction:column;width:min(100%,350px)}.moez-film__buttons>a,.moez-film__buttons>button{width:100%;min-height:52px}}
+
+
+/* SIGNATURE CINEMA — refined typography, loader and progressive disclosure */
+.moez-film{isolation:isolate}
+.moez-film__controls{align-items:center;max-width:calc(100% - 40px)}
+.moez-film__label{font:600 10px/1.3 Arial,sans-serif;letter-spacing:.22em;color:#eee;text-shadow:0 1px 5px #000;padding:11px;background:#0009}
+.moez-film__loading{position:absolute;inset:0;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:24px;background:#080808;color:#fff;z-index:2;transition:opacity .5s ease,visibility .5s ease;pointer-events:none}
+.moez-film__loading.is-hidden{opacity:0;visibility:hidden}
+.moez-film__loading-index{font:600 11px/1 Arial;letter-spacing:.3em;color:#b6b6b6}
+.moez-film__loading strong{max-width:90vw;text-align:center;font:900 clamp(36px,8vw,110px)/.91 Arial,sans-serif;letter-spacing:-.07em}
+.moez-film__loading-track{height:2px;width:min(240px,55vw);background:#555;overflow:hidden}
+.moez-film__loading-track i{display:block;background:#fff;width:34%;height:100%;animation:moez-film-load 1.5s ease-in-out infinite alternate}
+@keyframes moez-film-load{from{transform:translateX(-100%)}to{transform:translateX(300%)}}
+.moez-film__progress{position:absolute;bottom:0;left:0;right:0;height:3px;background:#ffffff2c;z-index:3;pointer-events:none}
+.moez-film__progress i{display:block;width:0;height:100%;background:#fff;transition:width .18s linear}
+.moez-film__finished{z-index:3}
+.moez-film__finished.is-visible{animation:moez-film-end .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes moez-film-end{from{opacity:0}to{opacity:1}}
+.moez-film__finished a{transition:background .22s,color .22s,transform .22s}
+.moez-film__finished a:hover{background:#d9d9d9;transform:translateY(-3px)}
+@media(max-width:640px){.moez-film__label{font-size:8px;letter-spacing:.12em}.moez-film__controls{justify-content:space-between;right:12px;left:12px;max-width:none}.moez-film__controls button{padding:12px;font-size:11px}.moez-film__finished h2{font-size:clamp(38px,10.5vw,65px)}}
+@media(prefers-reduced-motion:reduce){.moez-film__loading-track i,.moez-film__finished.is-visible{animation:none!important}}
+
+.moez-film__skip{background:#fff!important;color:#111!important;border:2px solid #fff!important;font-weight:800!important;min-height:44px}

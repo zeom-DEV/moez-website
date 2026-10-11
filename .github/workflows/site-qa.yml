@@ -1,0 +1,27 @@
+name: Verify Signature website
+on:
+  push:
+    branches: [refonte-signature-preview-20261010]
+  pull_request:
+    branches: [main]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/check_site.py
+      - run: node --check assets/film-experience.js
+      - run: node --check assets/offer-inline-details.js
+      - run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/moez-http.log 2>&1 &
+          echo $! > /tmp/moez-http.pid
+      - run: |
+          cd /tmp
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          ln -s /tmp/node_modules "$GITHUB_WORKSPACE/node_modules"
+          cd "$GITHUB_WORKSPACE"
+          node scripts/browser-qa.mjs

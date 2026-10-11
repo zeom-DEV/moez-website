@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://moezthabet.com/sitemap.xml
