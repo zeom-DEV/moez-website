@@ -9,7 +9,7 @@ node.setAttribute('role','dialog');
 node.setAttribute('aria-modal','true');
 node.setAttribute('aria-label','Film Signature de Moez');
 node.setAttribute('aria-hidden','true');
-node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / RELATION CLIENT & CONVERSION</span><h2>VOTRE PROCHAINE<br>PRIORITÉ COMPTE.</h2><p>Service client, avis, relances et expérience web : découvrez comment je peux intervenir concrètement avant de décider de la suite.</p><div class=\"moez-film__buttons\"><a href=\"#signal-room\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a><button type=\"button\" data-film-diagnose>VOIR MES SERVICES ↘</button><button type=\"button\" data-film-replay>REVOIR LE FILM ↻</button></div></div>";
+node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / RELATION CLIENT & CONVERSION</span><h2>VOTRE PROCHAINE<br>PRIORITÉ COMPTE.</h2><p>Découvrez les cinq services proposés et choisissez celui qui correspond à votre projet.</p><div class=\"moez-film__buttons\"><a href=\"#offres\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a></div></div>";
 document.body.append(node);
 const video=node.querySelector('video'),sound=node.querySelector('[data-film-sound]'),end=node.querySelector('[data-film-end]'),loading=node.querySelector('[data-film-loading]'),progress=node.querySelector('[data-film-progress]');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -97,13 +97,9 @@ sound.addEventListener('click',()=>{
    promise?.catch?.(fail);
  }else{video.muted=!video.muted;setSound();}
 });
-node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
+
 node.querySelector('[data-film-discover]').addEventListener('click',event=>{event.preventDefault();close(false);document.getElementById('offres')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});});
-node.querySelector('[data-film-replay]').addEventListener('click',()=>{
- end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
- replayed=true;busy(true);video.currentTime=0;video.muted=false;setSound();
- video.play().catch(fail);
-});
+
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&open)video.pause();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open){e.preventDefault();close(false);}});
 })();
