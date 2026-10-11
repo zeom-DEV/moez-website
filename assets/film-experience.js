@@ -1,59 +1,108 @@
-
 (()=>{
- 'use strict';
- const VIDEO='./assets/moez-signature-teaser-12s.mp4';
- const CAL='https://calendly.com/moez-thabet-881988/30min';
- const node=document.createElement('div');
- node.className='moez-film';
- node.setAttribute('role','dialog');
- node.setAttribute('aria-modal','true');
- node.setAttribute('aria-label','Film Signature de Moez');
- node.setAttribute('aria-hidden','true');
- node.innerHTML=`
-  <div class="moez-film__controls">
-    <button type="button" data-film-sound>Couper le son ✕</button>
-  </div>
-  <video preload="none" playsinline webkit-playsinline disablepictureinpicture poster="./assets/moez-portrait-900.webp"><source type="video/mp4" src="${VIDEO}"></video>
-  <div class="moez-film__finished" data-film-end>
-    <span class="moez-film__eyebrow">Moez / Relation client & conversion</span>
-    <h2>PARLONS DE<br>VOTRE PROJET.</h2>
-    <p>Une conversation suffit pour identifier votre priorité et voir comment avancer.</p>
-    <div class="moez-film__buttons">
-      <a href="${CAL}" target="_blank" rel="noopener noreferrer">Réserver 30 minutes ↗</a>
-      <button type="button" data-film-diagnose>Voir le diagnostic</button>
-      <button type="button" data-film-replay>Revoir le film ↻</button>
-    </div>
-  </div>`;
- document.body.append(node);
- const vid=node.querySelector('video'),end=node.querySelector('[data-film-end]');
- const sound=node.querySelector('[data-film-sound]');
- let focusBefore=null;
- const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- const diagnose=()=>{ const target=document.getElementById('diagnostic');if(target)target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); };
- const close=(toDiagnosis=false)=>{vid.pause();node.classList.remove('is-active');node.setAttribute('aria-hidden','true');document.body.classList.remove('moez-film-open');end.classList.remove('is-visible'); if(toDiagnosis)diagnose();focusBefore?.focus?.({preventScroll:true});};
- const reveal=()=>{end.classList.add('is-visible');end.querySelector('a')?.focus();};
- const fallback=()=>{end.querySelector('h2').textContent='PARLONS DE VOTRE PROJET.';end.querySelector('p').textContent='La vidéo est indisponible pour le moment. Retrouvez les services et réservez directement un échange.';reveal();};
- const start=(fromIntro)=>{
-   // Start playback synchronously from the visitor's click, to preserve
-   // the browser's audio-playback gesture permission.
-   focusBefore=document.activeElement;
-   node.classList.add('is-active');node.setAttribute('aria-hidden','false');
-   document.body.classList.add('moez-film-open');
-   end.classList.remove('is-visible');vid.currentTime=0;vid.muted=false;
-   sound.textContent='Couper le son ✕';
-   const playResult=vid.play();
-   if(playResult&&typeof playResult.catch==='function'){
-     playResult.catch(()=>{sound.textContent='Démarrer le film ▶'; fallback();});
-   }
- };
- document.getElementById('intro-flip')?.addEventListener('click',()=>start(true));
- document.querySelectorAll('[data-replay-film]').forEach(b=>b.addEventListener('click',()=>start(false)));
- sound.addEventListener('click',()=>{if(vid.paused){vid.muted=false;vid.play().catch(()=>{});sound.textContent='Couper le son ✕';return;}vid.muted=!vid.muted;sound.textContent=vid.muted?'Activer le son ♫':'Couper le son ✕';});
- node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
- node.querySelector('[data-film-replay]').addEventListener('click',()=>{end.classList.remove('is-visible');vid.currentTime=0;vid.play().catch(()=>{});});
- vid.addEventListener('ended',reveal);
- vid.addEventListener('error',fallback);
- vid.addEventListener('stalled',()=>{if(vid.readyState<2&&!end.classList.contains('is-visible')) fallback();});
- document.addEventListener('visibilitychange',()=>{if(document.hidden&&node.classList.contains('is-active'))vid.pause();});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&node.classList.contains('is-active')){e.preventDefault();vid.pause();}});
+'use strict';
+const intro=document.getElementById('inversion-intro');
+const trigger=document.getElementById('intro-flip');
+if(!trigger)return;
+const node=document.createElement('section');
+node.className='moez-film';
+node.setAttribute('role','dialog');
+node.setAttribute('aria-modal','true');
+node.setAttribute('aria-label','Film Signature de Moez');
+node.setAttribute('aria-hidden','true');
+node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / RELATION CLIENT & CONVERSION</span><h2>LE BON SENS.<br>LA BONNE DÉCISION.</h2><p>Un projet, des clients, des résultats à améliorer. Parlons de votre priorité pendant 30 minutes.</p><div class=\"moez-film__buttons\"><a href=\"https://calendly.com/moez-thabet-881988/30min\" target=\"_blank\" rel=\"noopener noreferrer\">RÉSERVER 30 MINUTES ↗</a><button type=\"button\" data-film-diagnose>DÉCOUVRIR MON APPROCHE ↗</button><button type=\"button\" data-film-replay>REVOIR LE FILM ↻</button></div></div>";
+document.body.append(node);
+const video=node.querySelector('video'),sound=node.querySelector('[data-film-sound]'),end=node.querySelector('[data-film-end]'),loading=node.querySelector('[data-film-loading]'),progress=node.querySelector('[data-film-progress]');
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let open=false,previousFocus=null,watchdog=0,started=false,replayed=false,observer=null;
+const clearWatch=()=>{clearTimeout(watchdog);watchdog=0;};
+const busy=on=>{loading.classList.toggle('is-hidden',!on);loading.setAttribute('aria-hidden',String(!on));};
+const setSound=()=>{sound.textContent=video.muted?'Activer le son ♫':'Couper le son ✕';sound.setAttribute('aria-label',video.muted?'Activer le son':'Couper le son');};
+function close(toDiagnosis=false){
+ if(!open)return;
+ clearWatch();observer?.disconnect();video.pause();open=false;
+ node.classList.remove('is-active');node.setAttribute('aria-hidden','true');
+ document.body.classList.remove('moez-film-open');
+ end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');busy(false);
+ if(toDiagnosis){
+   const section=document.getElementById('diagnostic');
+   section?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+   const heading=document.getElementById('diagnostic-title');
+   if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+ }else{
+   const focus=previousFocus?.isConnected?previousFocus:document.getElementById('hero-title');
+   if(focus){if(focus.tagName==='H1')focus.tabIndex=-1;focus.focus({preventScroll:true});}
+ }
+}
+function showFinal(error=false){
+ if(!open)return;
+ clearWatch();busy(false);
+ if(error){
+   end.querySelector('h2').textContent='ET SI ON EN PARLAIT ?';
+   end.querySelector('p').textContent="Le film n'a pas pu être chargé. Mes services et la réservation restent disponibles.";
+ }else{
+   end.querySelector('h2').innerHTML='LE BON SENS.<br>LA BONNE DÉCISION.';
+   end.querySelector('p').textContent='Un projet, des clients, des résultats à améliorer. Parlons de votre priorité pendant 30 minutes.';
+ }
+ end.classList.add('is-visible');end.setAttribute('aria-hidden','false');
+ end.querySelector('a')?.focus({preventScroll:true});
+}
+function fail(){
+ if(!open||end.classList.contains('is-visible'))return;
+ showFinal(true);
+}
+function play(fromIntro){
+ if(open)return;
+ clearWatch();previousFocus=document.activeElement;open=true;started=false;replayed=!fromIntro;
+ end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
+ progress.style.width='0%';
+ node.classList.add('is-active');node.setAttribute('aria-hidden','false');
+ document.body.classList.add('moez-film-open');
+ busy(true);video.pause();
+ try{video.currentTime=0;}catch(e){}
+ video.muted=false;setSound();
+ // Must run synchronously in visitor click to satisfy browser sound policies.
+ try{
+   const promise=video.play();
+   promise?.catch?.(()=>{if(open){busy(false);sound.textContent='DÉMARRER LE FILM ▶';sound.setAttribute('aria-label','Démarrer le film');}});
+ }catch(e){busy(false);sound.textContent='DÉMARRER LE FILM ▶';}
+ watchdog=setTimeout(()=>{if(open&&!started)fail();},12000);
+}
+trigger.addEventListener('click',()=>play(true));
+document.querySelectorAll('[data-replay-film]').forEach(b=>b.addEventListener('click',()=>play(false)));
+video.addEventListener('playing',()=>{
+ started=true;clearWatch();busy(false);
+ if(!replayed&&intro&&!intro.classList.contains('is-hidden')){
+   observer?.disconnect();
+   observer=new MutationObserver(()=>{
+     if(intro.classList.contains('is-hidden')){
+       observer.disconnect();
+       if(open&&!video.paused){try{video.currentTime=0;}catch(e){}}
+     }
+   });
+   observer.observe(intro,{attributes:true,attributeFilter:['class']});
+   setTimeout(()=>observer?.disconnect(),5000);
+ }
+});
+video.addEventListener('timeupdate',()=>{
+ const ratio=video.duration>0?Math.min(100,video.currentTime/video.duration*100):0;
+ progress.style.width=ratio+'%';
+});
+video.addEventListener('ended',()=>showFinal(false));
+video.addEventListener('error',fail);
+video.addEventListener('stalled',()=>{if(!started)busy(true);});
+sound.addEventListener('click',()=>{
+ if(video.paused){
+   video.muted=false;setSound();busy(true);
+   const promise=video.play();
+   promise?.catch?.(fail);
+ }else{video.muted=!video.muted;setSound();}
+});
+node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
+node.querySelector('[data-film-replay]').addEventListener('click',()=>{
+ end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
+ replayed=true;busy(true);video.currentTime=0;video.muted=false;setSound();
+ video.play().catch(fail);
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&open)video.pause();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open){e.preventDefault();close(false);}});
 })();
