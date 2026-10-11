@@ -98,7 +98,7 @@ sound.addEventListener('click',()=>{
  }else{video.muted=!video.muted;setSound();}
 });
 node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
-node.querySelector('[data-film-discover]').addEventListener('click',event=>{event.preventDefault();close(false);document.getElementById('signal-room')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});});
+node.querySelector('[data-film-discover]').addEventListener('click',event=>{event.preventDefault();close(false);document.getElementById('offres')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});});
 node.querySelector('[data-film-replay]').addEventListener('click',()=>{
  end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
  replayed=true;busy(true);video.currentTime=0;video.muted=false;setSound();
