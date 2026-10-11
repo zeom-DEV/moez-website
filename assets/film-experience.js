@@ -98,7 +98,7 @@ video.addEventListener('error',fail);
 video.addEventListener('stalled',()=>{if(!started)busy(true);});
 video.addEventListener('pause',()=>{if(open&&!video.ended){sound.textContent='Reprendre le film ▶';sound.setAttribute('aria-label','Reprendre le film');}});
 sound.addEventListener('click',()=>{
- if(video.paused){
+ if(video.paused&&!video.ended){
    video.muted=false;setSound();busy(true);
    const promise=video.play();
    promise?.catch?.(fail);
