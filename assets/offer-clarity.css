@@ -1,0 +1,24 @@
+/* Concrete tasks and deliverables remain readable at every viewport size. */
+.service-choice__tasks{list-style:none;padding:0;margin:6px 0 20px;font-size:15px;line-height:1.55}
+.service-choice__tasks li{position:relative;padding:6px 0 6px 20px}
+.service-choice__tasks li:before{content:"✓";position:absolute;left:0;font-weight:800;color:#922841}
+.service-choice:first-child .service-choice__tasks li:before{color:#e2b5c0}
+.service-choice .service-choice__deliverable{padding:16px 18px;margin:0 0 24px;background:#f1f0ed;border-left:3px solid #922841;font-size:15px;color:#222;line-height:1.55}
+.service-choice__deliverable strong{display:block;margin-bottom:5px;font-size:11px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.service-choice:first-child .service-choice__deliverable{background:#292929;color:#fff;border-color:#e2b5c0}
+.offer-detail__flow{gap:8px;align-items:stretch;margin-top:25px}
+.offer-detail__flow>span{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;min-width:0}
+.offer-detail__flow i{flex-shrink:0}
+.offer-detail__flow b{font-size:11px;letter-spacing:0;font-weight:750;line-height:1.4}
+.offer-detail__flow>span:nth-child(2) i{animation-delay:.25s}
+.offer-detail__flow>span:nth-child(3) i{animation-delay:.5s}
+.offer-detail__conversion{grid-template-columns:minmax(0,1fr) minmax(0,.8fr)}
+.offer-detail__conversion>a{max-width:100%;line-height:1.4;text-align:left}
+.offer-detail__conversion>a span{flex-shrink:0}
+.service-deliverable{margin-top:30px;padding:25px 28px;background:#eaeae7;border-left:4px solid #922841}
+.service-deliverable>span{font-size:11px;font-weight:850;letter-spacing:.1em}
+.service-deliverable p{font-size:clamp(17px,2vw,22px);font-weight:700;line-height:1.5;margin:12px 0 0}
+.service-offer-cta a{line-height:1.4;text-align:left}
+.service-offer-cta a span{flex-shrink:0}
+@media(max-width:760px){.offer-detail__conversion{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){.service-choice__tasks{font-size:15px}.service-deliverable{padding:22px 18px}.service-offer-cta a{gap:18px}}
