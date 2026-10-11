@@ -93,6 +93,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  else await page.locator('.desktop-nav a[href="./#offres"]').click();
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','navigation selects flagship');
  await page.locator('[data-offer-link="crm"]').click();
+ const announcementBefore=await page.locator('[data-carousel-live]').textContent();
  for(const anchor of ['methode','contact']){
   if(await page.locator('#menu-button').isVisible()){
    await page.locator('#menu-button').click();
@@ -101,6 +102,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.waitForFunction(id=>{const top=document.getElementById(id).getBoundingClientRect().top;return top>=0&&top<200;},anchor);
   assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-crm','ordinary anchors retain selected service');
   assert(!(await page.locator('#solution-title-crm').evaluate(el=>el===document.activeElement)),anchor+': carousel does not steal focus');
+  assert.equal(await page.locator('[data-carousel-live]').textContent(),announcementBefore,anchor+': no unrelated service announcement');
  }
  await page.locator('#brief-form').scrollIntoViewIfNeeded();
  await page.locator('#brief-service').selectOption('Création de sites web');

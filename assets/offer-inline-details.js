@@ -22,7 +22,7 @@
       else choice.removeAttribute('aria-current');
     });
     carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / 05';
-    if (announce) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur 5.';
+    if (announce && (index !== -1 || id === 'offres')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur 5.';
     if (!focus || (!ids.includes(id) && id !== 'offres')) return;
     const home = id === 'offres';
     (home ? document.getElementById('offers-five-title') : carousel).scrollIntoView({behavior: 'instant', block: 'start'});
