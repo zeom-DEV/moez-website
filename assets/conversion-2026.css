@@ -42,3 +42,18 @@ h1,h2,h3,.intro-dialog h2,.signal-head h2{font-family:var(--sans)!important}
 @media(max-width:800px){.site-header .nav-book{display:none}.hero-actions .button-lime{width:100%;max-width:520px}.intro-dialog h2{font-size:clamp(37px,8vw,67px)!important}.intro-flip>span:first-child strong{font-size:clamp(16px,3vw,22px)}}
 @media(max-width:530px){body{font-size:16px}.intro-overlay{padding:10px!important}.inversion-intro .intro-dialog{width:calc(100vw - 22px)!important;max-height:94dvh!important;overflow-y:auto}.intro-dialog-top{padding:15px 19px 0}.intro-instruction{font-size:9px}.intro-dialog-body{padding:0 19px}.intro-dialog h2{font-size:clamp(34px,9.4vw,48px)!important;line-height:1.08!important;margin-bottom:15px}.intro-dialog-body>p:last-child{font-size:14px!important;line-height:1.42!important;margin-bottom:19px}.intro-symbol{width:42px;height:42px;font-size:24px;margin:5px 0 12px}.intro-eyebrow{font-size:10px;line-height:1.35;margin-bottom:10px}.intro-flip{margin:0 19px!important;width:calc(100% - 38px)!important;min-height:99px!important;padding:12px 14px!important;gap:8px}.intro-flip>span:first-child small{font-size:9px;letter-spacing:.035em}.intro-flip>span:first-child strong{font-size:clamp(14px,4.15vw,20px);line-height:1.16}.intro-flip .intro-flip-arrow{font-size:30px}.intro-caption{margin:14px 19px 16px;font-size:11px!important;line-height:1.5!important}.hero h1{font-size:clamp(42px,10.7vw,63px)!important;line-height:1.1!important}.hero-sub{font-size:16px!important}.hero .button-lime{min-height:68px;font-size:13px}.diag-heading h2{font-size:clamp(36px,10.2vw,55px)!important}.signal-head h2{font-size:clamp(48px,12vw,67px)!important}.signal-stage h3{font-size:clamp(33px,9.2vw,51px)!important;line-height:1.11!important}.contact h2{font-size:clamp(42px,11vw,64px)!important}.editorial{font-size:clamp(37px,9.3vw,57px)!important}.story h2{font-size:clamp(40px,10vw,58px)!important}}
 @media(prefers-reduced-motion:reduce){.inversion-intro.is-ready .intro-flip{animation:none!important}}
+
+
+/* Consistent three-step visitor journey on every service page */
+.service-journey{padding:clamp(68px,8vw,112px) 0;background:#eee;color:#121212}
+.service-journey__top{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;border-bottom:1px solid #888;padding-bottom:25px;margin-bottom:25px}
+.service-journey__top span{font-size:12px;letter-spacing:.13em;font-weight:800}
+.service-journey__top strong{font-size:clamp(25px,3.6vw,47px);letter-spacing:-.055em;line-height:1.08}
+.service-journey__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.service-journey__grid>div{background:#fff;border:1px solid #aaa;padding:clamp(22px,3vw,35px);display:flex;flex-direction:column;min-width:0}
+.service-journey__grid small{font-size:11px;font-weight:800;letter-spacing:.12em;color:#444}
+.service-journey__grid h3{font-size:clamp(23px,2.7vw,35px);line-height:1.16;margin:24px 0 13px;letter-spacing:-.045em}
+.service-journey__grid p{font-size:15px;line-height:1.65;color:#333;margin-bottom:20px}
+.service-journey__grid a{margin-top:auto;display:inline-flex;justify-content:space-between;background:#111;color:#fff;padding:15px;font-size:12px;font-weight:800;line-height:1.5;min-height:53px;align-items:center}
+.service-journey__grid a:hover{background:#333}
+@media(max-width:800px){.service-journey__top{align-items:flex-start;flex-direction:column}.service-journey__grid{grid-template-columns:1fr}.service-journey__grid>div{padding:24px}.service-journey__grid h3{margin:14px 0}}
