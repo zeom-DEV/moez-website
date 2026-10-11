@@ -22,7 +22,10 @@
     if (!intro || completed || intro.classList.contains('is-righted')) return;
     if (reduce) { closeIntro(false,true); return; }
     intro.classList.add('is-righted');
-    stageTimer = setTimeout(() => closeIntro(false,true), 1750);
+    stageTimer = setTimeout(() => {
+      closeIntro(false,false);
+      setTimeout(() => window.dispatchEvent(new CustomEvent('moez:film-play-request')), 520);
+    }, 1100);
   };
   const replay = () => {
     if (!intro) return;
