@@ -47,3 +47,6 @@ body.moez-film-open{overflow:hidden!important}
 @media(prefers-reduced-motion:reduce){.moez-film__loading-track i,.moez-film__finished.is-visible{animation:none!important}}
 
 .moez-film__skip{background:#fff!important;color:#111!important;border:2px solid #fff!important;font-weight:800!important;min-height:44px}
+
+/* Visible keyboard focus on the dark film, including the shared theme override. */
+.moez-film :focus-visible{outline:3px solid #fff!important;outline-offset:4px}

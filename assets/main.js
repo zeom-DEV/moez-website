@@ -174,9 +174,10 @@
       window.dispatchEvent(new CustomEvent('mt:brief_generated',{detail:{service:String(data.get('service')||'')}}));
     });
     $('#brief-copy')?.addEventListener('click',async e=>{
+      const button=e.currentTarget;
       const text=$('#brief-output').value;
-      try{await navigator.clipboard.writeText(text);e.currentTarget.textContent='Copié ✓';}
-      catch{const output=$('#brief-output');output.focus();output.select();e.currentTarget.textContent='Sélectionné — copier';}
+      try{await navigator.clipboard.writeText(text);button.textContent='Copié ✓';}
+      catch{const output=$('#brief-output');output.focus();output.select();button.textContent='Sélectionné — copier';}
     });
   }
 })();
