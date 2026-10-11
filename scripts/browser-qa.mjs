@@ -141,6 +141,20 @@ assert.equal(await fallback.locator('.offer-detail[aria-hidden="true"]').count()
 assert.equal(await fallback.locator('#inversion-intro').isVisible(),false,'no-JS intro bypass');
 await nojs.close();
 console.log('PASS no-JS fallback');
+const shortcutContext=await browser.newContext({reducedMotion:'reduce'});
+const shortcut=await shortcutContext.newPage();
+await shortcut.goto(BASE+'/');
+await shortcut.locator('#intro-flip').focus();
+await shortcut.keyboard.press('Tab');
+assert(await shortcut.locator('#intro-direct').evaluate(el=>el===document.activeElement),'intro shortcut reachable by keyboard');
+await shortcut.keyboard.press('Tab');
+assert(await shortcut.locator('#intro-flip').evaluate(el=>el===document.activeElement),'intro focus wraps');
+await shortcut.locator('#intro-direct').click();
+assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'direct flagship skips film');
+assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film');
+assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
+await shortcutContext.close();
+console.log('PASS direct flagship shortcut and intro keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
 finally{await browser.close();}
 if(failed)process.exit(1);
