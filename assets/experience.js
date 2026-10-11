@@ -7,12 +7,13 @@
   let completed = false;
   let stageTimer = 0;
   let hideTimer = 0;
+  let revealTimer = 0;
   const shouldSkip = () => { try { return sessionStorage.getItem(introKey) === 'done'; } catch { return false; } };
   const remember = () => { try { sessionStorage.setItem(introKey,'done'); } catch { /* Storage may be unavailable. */ } };
   const closeIntro = (instant = false, toDiagnostic = false) => {
     if (!intro || completed) return;
     completed = true; remember();
-    clearTimeout(stageTimer); clearTimeout(hideTimer);
+    clearTimeout(stageTimer); clearTimeout(hideTimer); clearTimeout(revealTimer);
     if (instant) { intro.classList.add('is-hidden'); intro.setAttribute('aria-hidden','true'); document.body.classList.remove('intro-active'); return; }
     intro.classList.add('is-exiting');
     hideTimer = setTimeout(() => { intro.classList.add('is-hidden'); intro.setAttribute('aria-hidden','true'); document.body.classList.remove('intro-active'); if(toDiagnostic){ const section=document.getElementById('diagnostic'); if(section){ section.scrollIntoView({behavior:reduce?'instant':'smooth',block:'start'}); setTimeout(()=>document.getElementById('diagnostic-title')?.setAttribute('tabindex','-1'),60); setTimeout(()=>document.getElementById('diagnostic-title')?.focus({preventScroll:true}),450); }} else { document.querySelector('.hero-actions .button')?.focus({preventScroll:true}); } }, 480);
@@ -29,14 +30,15 @@
     if (!intro) return;
     completed = false;
     clearTimeout(stageTimer); clearTimeout(hideTimer);
-    intro.classList.remove('is-hidden','is-exiting','is-righted');
+    intro.classList.remove('is-hidden','is-exiting','is-righted','is-ready');
+    revealTimer=setTimeout(()=>{intro.classList.add('is-ready');flip?.focus({preventScroll:true});},reduce?0:1700);
     intro.removeAttribute('aria-hidden'); document.body.classList.add('intro-active');
     scrollTo({top:0,behavior:'instant'});
     flip?.focus({preventScroll:true});
   };
   if (intro && flip) {
     if (shouldSkip()) closeIntro(true);
-    else { document.body.classList.add('intro-active'); requestAnimationFrame(() => document.getElementById('intro-dialog')?.focus({preventScroll:true})); }
+    else { document.body.classList.add('intro-active'); revealTimer=setTimeout(()=>{intro.classList.add('is-ready');flip?.focus({preventScroll:true});},reduce?0:1700); }
     flip.addEventListener('click', rightSite);
     intro.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
