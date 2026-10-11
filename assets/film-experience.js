@@ -11,8 +11,7 @@
  node.setAttribute('aria-hidden','true');
  node.innerHTML=`
   <div class="moez-film__controls">
-    <button type="button" data-film-sound>Activer le son ♫</button>
-    <button type="button" data-film-skip>Passer le film ↗</button>
+    <button type="button" data-film-sound>Couper le son ✕</button>
   </div>
   <video preload="none" playsinline webkit-playsinline disablepictureinpicture poster="./assets/moez-portrait-900.webp"><source type="video/mp4" src="${VIDEO}"></video>
   <div class="moez-film__finished" data-film-end>
@@ -27,7 +26,7 @@
   </div>`;
  document.body.append(node);
  const vid=node.querySelector('video'),end=node.querySelector('[data-film-end]');
- const sound=node.querySelector('[data-film-sound]'),skip=node.querySelector('[data-film-skip]');
+ const sound=node.querySelector('[data-film-sound]');
  let focusBefore=null;
  const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
  const diagnose=()=>{ const target=document.getElementById('diagnostic');if(target)target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); };
@@ -44,18 +43,17 @@
    focusBefore=document.activeElement;
    node.classList.add('is-active');node.setAttribute('aria-hidden','false');
    document.body.classList.add('moez-film-open');
-   end.classList.remove('is-visible');vid.currentTime=0;vid.muted=true;
-   sound.textContent='Activer le son ♫';skip.focus();
-   try{await vid.play();}catch(_){sound.textContent='Lire la vidéo ▶';}
+   end.classList.remove('is-visible');vid.currentTime=0;vid.muted=false;
+   sound.textContent='Couper le son ✕';sound.focus();
+   try{await vid.play();}catch(_){sound.textContent='Démarrer le film ▶';}
  };
- window.addEventListener('moez:film-play-request',()=>start(true));
+ document.getElementById('intro-flip')?.addEventListener('click',()=>start(true));
  document.querySelectorAll('[data-replay-film]').forEach(b=>b.addEventListener('click',()=>start(false)));
- skip.addEventListener('click',()=>close(true));
- sound.addEventListener('click',()=>{if(vid.paused)vid.play().catch(()=>{});vid.muted=!vid.muted;sound.textContent=vid.muted?'Activer le son ♫':'Couper le son ✕';});
+ sound.addEventListener('click',()=>{if(vid.paused){vid.muted=false;vid.play().catch(()=>{});sound.textContent='Couper le son ✕';return;}vid.muted=!vid.muted;sound.textContent=vid.muted?'Activer le son ♫':'Couper le son ✕';});
  node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
  node.querySelector('[data-film-replay]').addEventListener('click',()=>{end.classList.remove('is-visible');vid.currentTime=0;vid.play().catch(()=>{});});
  vid.addEventListener('ended',reveal);
  vid.addEventListener('error',()=>close(true));
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&node.classList.contains('is-active'))vid.pause();});
- document.addEventListener('keydown',e=>{if(e.key==='Escape'&&node.classList.contains('is-active')){e.preventDefault();close(true);}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&node.classList.contains('is-active')){e.preventDefault();vid.pause();}});
 })();
