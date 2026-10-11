@@ -1,7 +1,7 @@
 name: Verify Signature website
 on:
   push:
-    branches: [refonte-signature-preview-20261010]
+    branches: [main, refonte-signature-preview-20261010, "audit-public-*"]
   pull_request:
     branches: [main]
 jobs:
