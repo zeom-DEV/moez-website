@@ -137,3 +137,20 @@ body.intro-active{overflow:hidden}
   .inversion-intro.is-ready .intro-dialog{animation:none!important}
   .inversion-intro .intro-shade{opacity:1}
 }
+
+
+/* Actual site rotates rather than a separate decorative imitation. */
+#site-shell{transform-origin:center center;will-change:transform;transition:transform 1.25s cubic-bezier(.19,1,.22,1),filter .6s ease}
+body.intro-active #site-shell{position:fixed;inset:0;overflow:hidden;transform:rotate(180deg) scale(.89);filter:grayscale(1);pointer-events:none}
+body.intro-active #site-shell:after{content:"";position:fixed;inset:0;background:#0004;pointer-events:none}
+body.intro-righting #site-shell{transform:rotate(360deg) scale(1);filter:grayscale(1)}
+body:not(.intro-active) #site-shell{position:relative;transform:none;filter:none;pointer-events:auto}
+#inversion-intro{background:transparent}
+#inversion-intro .intro-world{display:none!important}
+#inversion-intro .intro-overlay{background:transparent}
+#inversion-intro .intro-shade{background:rgba(0,0,0,.15);backdrop-filter:none}
+#inversion-intro .intro-dialog{max-height:min(90dvh,820px);box-shadow:0 16px 70px #0009}
+#inversion-intro.is-ready .intro-dialog{animation:moez-landing .72s cubic-bezier(.16,1,.3,1) both!important}
+#inversion-intro.is-righted .intro-dialog{animation:none!important;opacity:0;transform:translateY(-16px) scale(.98)}
+@media(max-width:640px){body.intro-active #site-shell{transform:rotate(180deg) scale(.94)}#inversion-intro .intro-dialog{width:min(94vw,520px)}#inversion-intro .intro-overlay{padding:12px}}
+@media(prefers-reduced-motion:reduce){body.intro-active #site-shell{transform:none!important}#site-shell{transition:none!important}}
