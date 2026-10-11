@@ -61,6 +61,7 @@
     else lastTime = 0;
   }
   function start() {
+    if (progress !== targetProgress || turn !== targetTurn) wheel.dataset.wheelSettled = 'false';
     if (frame || document.hidden) return;
     if (reduce.matches) {
       progress = targetProgress;
