@@ -126,7 +126,7 @@
   let lastFocus;
   $$('a[data-book]').forEach(link=>link.addEventListener('click', e=>{
     if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    if(!dialog || typeof dialog.showModal!=='function' || matchMedia('(max-width:800px)').matches) return;
+    if(!dialog || typeof dialog.showModal!=='function' || matchMedia('(max-width:800px), (max-height:600px)').matches) return;
     e.preventDefault();
     lastFocus=document.activeElement;
     const slot=$('#calendly-slot');

@@ -98,6 +98,15 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert((await page.locator('#brief-output').inputValue()).includes('Création de sites web'),'web brief');
  await page.locator('#brief-copy').click();
  await page.waitForFunction(()=>/Copié|Sélectionné/.test(document.getElementById('brief-copy').textContent));
+ if(size.name==='landscape'){
+  await page.locator('[data-offer-link="web"]').click();
+  const popupPromise=page.waitForEvent('popup');
+  await page.locator('#solution-web [data-book]').click();
+  const popup=await popupPromise;
+  await popup.waitForLoadState('domcontentloaded');
+  assert(popup.url().startsWith('https://calendly.com/'),'landscape booking opens full calendar');
+  await popup.close();
+ }
  if(size.name==='desktop'){
   await page.locator('[data-offer-link="web"]').click();
   const book=page.locator('#solution-web [data-book]');
