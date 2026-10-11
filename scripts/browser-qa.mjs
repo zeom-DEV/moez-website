@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 const BASE=process.env.QA_BASE_URL || 'http://127.0.0.1:8765';
 const routes=[['sav','sav-ecommerce.html'],['avis','e-reputation.html'],['prospects','televente.html'],['crm','crm-reporting.html'],['web','site-signature.html']];
-const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 let failed=false;
 try{
 for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',width:320,height:568},{name:'landscape',width:844,height:390},{name:'desktop',width:1365,height:900}]){
@@ -22,7 +22,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.keyboard.press('Shift+Tab');
  assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
  if(size.name==='desktop'){
-  await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});
+  try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message,codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"')})));throw error;}
   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),false,'film sound enabled after click');
   await page.locator('[data-film-sound]').click();
   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
