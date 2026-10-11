@@ -103,7 +103,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   const popupPromise=page.waitForEvent('popup');
   await page.locator('#solution-web [data-book]').click();
   const popup=await popupPromise;
-  await popup.waitForLoadState('domcontentloaded');
+  await popup.waitForURL(/^https:\/\/calendly\.com\//,{waitUntil:'domcontentloaded',timeout:30000});
   assert(popup.url().startsWith('https://calendly.com/'),'landscape booking opens full calendar');
   await popup.close();
  }

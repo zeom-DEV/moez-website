@@ -11,9 +11,9 @@ for(const [name,path] of [['intro','/'],['offers','/#offres'],['website','/site-
   const report=JSON.parse(readFileSync(output));
   if(report.runtimeError)throw Error(report.runtimeError.message);
   console.log('LIGHTHOUSE',name,form,JSON.stringify(Object.fromEntries(Object.entries(report.categories).map(([key,value])=>[key,Math.round(value.score*100)]))),JSON.stringify(Object.fromEntries(['largest-contentful-paint','cumulative-layout-shift','total-blocking-time'].map(key=>[key,report.audits[key].displayValue]))));
-  if(name!=='intro'&&report.categories.accessibility.score<1)throw Error(name+' '+form+': accessibility audit needs correction');
   const issues=Object.values(report.audits).filter(a=>a.score!==null&&a.score<1&&a.details?.items?.length).map(a=>({id:a.id,title:a.title,items:a.details.items.slice(0,3)}));
-  console.log('LIGHTHOUSE_ISSUES',name,form,JSON.stringify(issues));
+  console.log('LIGHTHOUSE_ISSUES',name,form,JSON.stringify(issues.map(issue=>({id:issue.id,title:issue.title,items:issue.items.map(item=>({selector:item.node?.selector,explanation:item.node?.explanation,description:item.description,url:item.url}))}))));
+  if(name!=='intro'&&report.categories.accessibility.score<1)throw Error(name+' '+form+': accessibility audit needs correction');
   if(name!=='intro'&&(report.categories.performance.score===null||report.categories.performance.score<.9))throw Error(name+' '+form+': performance below 90');
  }
 }
