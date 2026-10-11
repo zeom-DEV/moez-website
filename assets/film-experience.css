@@ -1,0 +1,19 @@
+
+/* Signature Film: CSS is deliberately separate from the existing site's UI. */
+.moez-film{position:fixed;inset:0;z-index:10000;display:none;background:#050505;color:#fff;align-items:center;justify-content:center}
+.moez-film.is-active{display:flex}
+.moez-film video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+.moez-film__controls{position:absolute;top:max(18px,env(safe-area-inset-top));right:20px;z-index:4;display:flex;flex-wrap:wrap;gap:10px}
+.moez-film__controls button,.moez-film__finished button,.moez-film__finished a{font:600 13px/1.2 Arial,Helvetica,sans-serif;letter-spacing:.06em;border:1px solid #aaa;background:rgba(0,0,0,.76);color:#fff;padding:14px 16px;cursor:pointer}
+.moez-film__controls button:focus-visible,.moez-film__finished button:focus-visible,.moez-film__finished a:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.moez-film__finished{display:none;position:absolute;inset:0;background:#090909ed;padding:24px;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+.moez-film__finished.is-visible{display:flex}
+.moez-film__eyebrow{font:500 12px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.20em;color:#cfcfcf;text-transform:uppercase}
+.moez-film__finished h2{font:900 clamp(48px,9vw,120px)/.9 Arial,Helvetica,sans-serif;letter-spacing:-.07em;margin:26px 0}
+.moez-film__finished p{font:400 clamp(16px,2.2vw,22px)/1.5 Arial,Helvetica,sans-serif;max-width:640px;color:#ddd}
+.moez-film__buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:25px}
+.moez-film__finished a{background:#fff;color:#070707;border-color:#fff;text-decoration:none;padding:18px 23px}
+.moez-film__finished button{padding:18px 23px}
+body.moez-film-open{overflow:hidden!important}
+@media(max-width:640px){.moez-film__controls{top:14px;right:14px;left:14px;justify-content:flex-end}.moez-film__finished h2{font-size:clamp(44px,12vw,70px)}.moez-film__controls button{padding:12px}}
+@media(prefers-reduced-motion:reduce){.moez-film *{animation:none!important;transition:none!important}}
