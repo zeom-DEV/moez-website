@@ -32,20 +32,18 @@
  const diagnose=()=>{ const target=document.getElementById('diagnostic');if(target)target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); };
  const close=(toDiagnosis=false)=>{vid.pause();node.classList.remove('is-active');node.setAttribute('aria-hidden','true');document.body.classList.remove('moez-film-open');end.classList.remove('is-visible'); if(toDiagnosis)diagnose();focusBefore?.focus?.({preventScroll:true});};
  const reveal=()=>{end.classList.add('is-visible');end.querySelector('a')?.focus();};
- const start=async(fromIntro)=>{
-   // Graceful fallback until the MP4 has been uploaded to the GitHub branch.
-   try{
-     if(location.protocol!=='file:'){
-       const response=await fetch(VIDEO,{method:'HEAD',cache:'no-store'});
-       if(!response.ok)throw new Error('Film MP4 not yet deployed');
-     }
-   }catch(_){if(fromIntro)diagnose();return;}
+ const start=(fromIntro)=>{
+   // Start playback synchronously from the visitor's click, to preserve
+   // the browser's audio-playback gesture permission.
    focusBefore=document.activeElement;
    node.classList.add('is-active');node.setAttribute('aria-hidden','false');
    document.body.classList.add('moez-film-open');
    end.classList.remove('is-visible');vid.currentTime=0;vid.muted=false;
-   sound.textContent='Couper le son ✕';sound.focus();
-   try{await vid.play();}catch(_){sound.textContent='Démarrer le film ▶';}
+   sound.textContent='Couper le son ✕';
+   const playResult=vid.play();
+   if(playResult&&typeof playResult.catch==='function'){
+     playResult.catch(()=>{sound.textContent='Démarrer le film ▶';});
+   }
  };
  document.getElementById('intro-flip')?.addEventListener('click',()=>start(true));
  document.querySelectorAll('[data-replay-film]').forEach(b=>b.addEventListener('click',()=>start(false)));
