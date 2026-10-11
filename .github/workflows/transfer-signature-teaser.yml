@@ -1,0 +1,34 @@
+name: Import signature teaser once
+on:
+  push:
+    branches:
+      - refonte-signature-preview-20261010
+    paths:
+      - '.github/workflows/transfer-signature-teaser.yml'
+permissions:
+  contents: write
+jobs:
+  import-mp4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out preview branch
+        uses: actions/checkout@v4
+        with:
+          ref: refonte-signature-preview-20261010
+          persist-credentials: true
+      - name: Transfer verified teaser
+        env:
+          APPROVED_VIDEO_URL: "https://storage.googleapis.com/vidiq-user-videos/e15a74ab-56ab-46d7-a95f-075d646d50a0/7acd484f-f8aa-43cc-8f91-528b15701c35.mp4?GoogleAccessId=ai-proxy-20261001%40studious-pen-429.vid.io.iam.gserviceaccount.com&Expires=1792294801&Signature=XZ2E9mCcEy63QdtsgkcEdYgqCQiAurlxYbRuQmWOD97i5B3fct31sDnqL73IURes2iqR4ArdXO4THNGERPvZLPdqEwVxiMtybJQYakEnrLZu6%2Bz1zUF6euX%2FvJhrrUiWwCCtoQ0344rhde5PMZU2X3N08Rj0GpN58SVjoBWvnul1RNTH7flQfeKzV2kyDWQOG6INuL0IRaMw2OWXMCCDMA9xmTlUTPYvG4bLV9hew7mSG1Fo3pmaU79nUaeGnm1Q7WIDqrz55MKEwS3eKui5fdGoT3Zbl4nAXa5K14wo%2FhE%2B5iLohr2QE5NT2jlfPwCJiQs%2Bd39KHjXWtFC7ktmxug%3D%3D"
+        run: |
+          mkdir -p assets
+          curl --fail --location --silent --show-error --retry 2 --max-time 90 "$APPROVED_VIDEO_URL" --output assets/moez-signature-teaser-12s.mp4
+          echo "56d35db131667179b1e578408e8b4dd752c52555ee54aef1ead4cd3a279e6623  assets/moez-signature-teaser-12s.mp4" | sha256sum --check --status
+          test "$(wc -c < assets/moez-signature-teaser-12s.mp4)" -eq 1674219
+      - name: Commit film only to preview
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/moez-signature-teaser-12s.mp4
+          git diff --cached --quiet && exit 0
+          git commit -m "assets: import approved signature film teaser"
+          git push origin HEAD:refonte-signature-preview-20261010
