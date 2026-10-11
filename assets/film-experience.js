@@ -9,7 +9,7 @@ node.setAttribute('role','dialog');
 node.setAttribute('aria-modal','true');
 node.setAttribute('aria-label','Film Signature de Moez');
 node.setAttribute('aria-hidden','true');
-node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / RELATION CLIENT & CONVERSION</span><h2>LE BON SENS.<br>LA BONNE DÉCISION.</h2><p>Un projet, des clients, des résultats à améliorer. Parlons de votre priorité pendant 30 minutes.</p><div class=\"moez-film__buttons\"><a href=\"https://calendly.com/moez-thabet-881988/30min\" target=\"_blank\" rel=\"noopener noreferrer\">RÉSERVER 30 MINUTES ↗</a><button type=\"button\" data-film-diagnose>DÉCOUVRIR MON APPROCHE ↗</button><button type=\"button\" data-film-replay>REVOIR LE FILM ↻</button></div></div>";
+node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / RELATION CLIENT & CONVERSION</span><h2>VOTRE PROCHAINE<br>PRIORITÉ COMPTE.</h2><p>Service client, avis, relances et expérience web : découvrez comment je peux intervenir concrètement avant de décider de la suite.</p><div class=\"moez-film__buttons\"><a href=\"#signal-room\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a><button type=\"button\" data-film-diagnose>VOIR MES SERVICES ↘</button><button type=\"button\" data-film-replay>REVOIR LE FILM ↻</button></div></div>";
 document.body.append(node);
 const video=node.querySelector('video'),sound=node.querySelector('[data-film-sound]'),end=node.querySelector('[data-film-end]'),loading=node.querySelector('[data-film-loading]'),progress=node.querySelector('[data-film-progress]');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -37,11 +37,11 @@ function showFinal(error=false){
  if(!open)return;
  clearWatch();busy(false);
  if(error){
-   end.querySelector('h2').textContent='ET SI ON EN PARLAIT ?';
-   end.querySelector('p').textContent="Le film n'a pas pu être chargé. Mes services et la réservation restent disponibles.";
+   end.querySelector('h2').textContent='DÉCOUVREZ MES SOLUTIONS.';
+   end.querySelector('p').textContent="Le film n'a pas pu être chargé. Vous pouvez découvrir mes services et mon approche sans interruption.";
  }else{
-   end.querySelector('h2').innerHTML='LE BON SENS.<br>LA BONNE DÉCISION.';
-   end.querySelector('p').textContent='Un projet, des clients, des résultats à améliorer. Parlons de votre priorité pendant 30 minutes.';
+   end.querySelector('h2').innerHTML='VOTRE PROCHAINE<br>PRIORITÉ COMPTE.';
+   end.querySelector('p').textContent='Service client, avis, relances et expérience web : découvrez comment je peux intervenir concrètement avant de décider de la suite.';
  }
  end.classList.add('is-visible');end.setAttribute('aria-hidden','false');
  end.querySelector('a')?.focus({preventScroll:true});
@@ -98,6 +98,7 @@ sound.addEventListener('click',()=>{
  }else{video.muted=!video.muted;setSound();}
 });
 node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
+node.querySelector('[data-film-discover]').addEventListener('click',event=>{event.preventDefault();close(false);document.getElementById('signal-room')?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});});
 node.querySelector('[data-film-replay]').addEventListener('click',()=>{
  end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
  replayed=true;busy(true);video.currentTime=0;video.muted=false;setSound();
