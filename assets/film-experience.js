@@ -32,6 +32,7 @@
  const diagnose=()=>{ const target=document.getElementById('diagnostic');if(target)target.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'}); };
  const close=(toDiagnosis=false)=>{vid.pause();node.classList.remove('is-active');node.setAttribute('aria-hidden','true');document.body.classList.remove('moez-film-open');end.classList.remove('is-visible'); if(toDiagnosis)diagnose();focusBefore?.focus?.({preventScroll:true});};
  const reveal=()=>{end.classList.add('is-visible');end.querySelector('a')?.focus();};
+ const fallback=()=>{end.querySelector('h2').textContent='PARLONS DE VOTRE PROJET.';end.querySelector('p').textContent='La vidéo est indisponible pour le moment. Retrouvez les services et réservez directement un échange.';reveal();};
  const start=(fromIntro)=>{
    // Start playback synchronously from the visitor's click, to preserve
    // the browser's audio-playback gesture permission.
@@ -42,7 +43,7 @@
    sound.textContent='Couper le son ✕';
    const playResult=vid.play();
    if(playResult&&typeof playResult.catch==='function'){
-     playResult.catch(()=>{sound.textContent='Démarrer le film ▶';});
+     playResult.catch(()=>{sound.textContent='Démarrer le film ▶'; fallback();});
    }
  };
  document.getElementById('intro-flip')?.addEventListener('click',()=>start(true));
@@ -51,7 +52,8 @@
  node.querySelector('[data-film-diagnose]').addEventListener('click',()=>close(true));
  node.querySelector('[data-film-replay]').addEventListener('click',()=>{end.classList.remove('is-visible');vid.currentTime=0;vid.play().catch(()=>{});});
  vid.addEventListener('ended',reveal);
- vid.addEventListener('error',()=>close(true));
+ vid.addEventListener('error',fallback);
+ vid.addEventListener('stalled',()=>{if(vid.readyState<2&&!end.classList.contains('is-visible')) fallback();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden&&node.classList.contains('is-active'))vid.pause();});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&node.classList.contains('is-active')){e.preventDefault();vid.pause();}});
 })();
