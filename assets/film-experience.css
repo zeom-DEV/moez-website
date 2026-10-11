@@ -1,6 +1,6 @@
 
 /* Signature Film: CSS is deliberately separate from the existing site's UI. */
-.moez-film{position:fixed;inset:0;z-index:10000;display:none;background:#050505;color:#fff;align-items:center;justify-content:center}
+.moez-film{position:fixed;inset:0;z-index:9999;display:none;background:#050505;color:#fff;align-items:center;justify-content:center}
 .moez-film.is-active{display:flex}
 .moez-film video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .moez-film__controls{position:absolute;top:max(18px,env(safe-area-inset-top));right:20px;z-index:4;display:flex;flex-wrap:wrap;gap:10px}
@@ -17,3 +17,9 @@
 body.moez-film-open{overflow:hidden!important}
 @media(max-width:640px){.moez-film__controls{top:14px;right:14px;left:14px;justify-content:flex-end}.moez-film__finished h2{font-size:clamp(44px,12vw,70px)}.moez-film__controls button{padding:12px}}
 @media(prefers-reduced-motion:reduce){.moez-film *{animation:none!important;transition:none!important}}
+
+/* Keep the cinematic layer behind the 180° reversal until the intro clears. */
+.moez-film__controls button{min-height:44px;min-width:44px}
+.moez-film__finished{overflow-y:auto;overscroll-behavior:contain;padding-block:max(36px,env(safe-area-inset-top)) max(42px,env(safe-area-inset-bottom))}
+.moez-film__finished a:focus-visible,.moez-film__finished button:focus-visible{outline-color:#fff}
+@media(max-width:640px){.moez-film__finished{justify-content:flex-start;padding-top:max(100px,22vh)}.moez-film__buttons{flex-direction:column;width:min(100%,350px)}.moez-film__buttons>a,.moez-film__buttons>button{width:100%;min-height:52px}}
