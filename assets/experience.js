@@ -2,7 +2,6 @@
   'use strict';
   const intro = document.getElementById('inversion-intro');
   const flip = document.getElementById('intro-flip');
-  const skip = document.getElementById('intro-skip');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const introKey = 'mt-signature-intro-2026-v4';
   let completed = false;
@@ -20,11 +19,10 @@
   };
   const rightSite = () => {
     if (!intro || completed || intro.classList.contains('is-righted')) return;
-    if (reduce) { closeIntro(false,true); return; }
+    if (reduce) { closeIntro(false,false); return; }
     intro.classList.add('is-righted');
     stageTimer = setTimeout(() => {
       closeIntro(false,false);
-      setTimeout(() => window.dispatchEvent(new CustomEvent('moez:film-play-request')), 520);
     }, 1100);
   };
   const replay = () => {
@@ -36,17 +34,13 @@
     scrollTo({top:0,behavior:'instant'});
     flip?.focus({preventScroll:true});
   };
-  if (intro && flip && skip) {
+  if (intro && flip) {
     if (shouldSkip()) closeIntro(true);
     else { document.body.classList.add('intro-active'); requestAnimationFrame(() => document.getElementById('intro-dialog')?.focus({preventScroll:true})); }
     flip.addEventListener('click', rightSite);
-    skip.addEventListener('click', () => closeIntro(true));
     intro.addEventListener('keydown', e => {
-      if (e.key === 'Escape') { e.preventDefault(); closeIntro(true); }
       if (e.key === 'Tab') {
-        const buttons = [skip,flip];
-        const i = buttons.indexOf(document.activeElement);
-        if ((e.shiftKey && i===0) || (!e.shiftKey && i===1)) { e.preventDefault(); buttons[e.shiftKey?1:0].focus(); }
+        if (document.activeElement===flip) { e.preventDefault(); flip.focus(); }
       }
     });
     document.querySelectorAll('[data-replay-flip]').forEach(b => b.addEventListener('click', replay));
