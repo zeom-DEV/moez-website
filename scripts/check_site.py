@@ -5,7 +5,8 @@ from urllib.parse import urlsplit, unquote
 import unittest
 import json
 R=Path(__file__).resolve().parents[1]
-PAGES=['index.html','sav-ecommerce.html','e-reputation.html','televente.html','crm-reporting.html','site-signature.html','confidentialite.html','experience-v5.html']
+SERVICES=['site-signature.html','sav-ecommerce.html','e-reputation.html','televente.html','crm-reporting.html','automatisation-workflows.html']
+PAGES=['index.html']+SERVICES+['confidentialite.html','experience-v5.html']
 class Reader(HTMLParser):
  def __init__(self):
   super().__init__();self.ids=set();self.links=[];self.cards=0
@@ -37,11 +38,13 @@ class QA(unittest.TestCase):
       self.assertIn(key,self.html)
       self.assertIn(unquote(u.fragment),self.html[key].ids)
  def test_business_path(self):
-  self.assertEqual(self.html['index.html'].cards,5)
-  for p in PAGES[1:6]:
+  self.assertEqual(self.html['index.html'].cards,6)
+  for p in SERVICES:
    self.assertIn('calendly.com/moez-thabet-881988/30min',self.pages[p])
+   self.assertIn('Les 6 offres',self.pages[p])
+  self.assertIn('Automatisation des workflows',self.pages['index.html'])
  def test_indexing(self):
-  for p in PAGES[:7]:
+  for p in PAGES[:-1]:
    self.assertIn('rel="canonical"',self.pages[p])
    self.assertNotIn('noindex,nofollow,noarchive',self.pages[p])
   self.assertIn('noindex',self.pages['experience-v5.html'])

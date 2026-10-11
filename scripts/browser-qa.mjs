@@ -2,7 +2,7 @@ import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
 
 const BASE=process.env.QA_BASE_URL || 'http://127.0.0.1:8765';
-const routes=[['sav','sav-ecommerce.html'],['avis','e-reputation.html'],['prospects','televente.html'],['crm','crm-reporting.html'],['web','site-signature.html']];
+const routes=[['sav','sav-ecommerce.html'],['avis','e-reputation.html'],['prospects','televente.html'],['crm','crm-reporting.html'],['web','site-signature.html'],['automation','automatisation-workflows.html']];
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 let failed=false;
 await (await import('node:fs/promises')).mkdir('reports',{recursive:true});
@@ -15,7 +15,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  page.on('pageerror',err=>errors.push(err.message));
  page.setDefaultTimeout(15000);
  await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
- assert.equal(await page.locator('[data-offer-link]').count(),5,size.name+': services');
+ assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
@@ -48,6 +48,55 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('[data-web-stage]').nth(step).click();
   assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
  }
+ // The reference's two distinct compositions must work with real input.
+ const wheel=page.locator('[data-works-wheel]');
+ const canvas=page.locator('[data-wheel-canvas]');
+ await page.locator('[data-offer-link="web"]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ if(size.name!=='small-mobile'){
+  await page.locator('[data-wheel-reset]').click();
+  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='circle');
+  const closedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
+  assert.equal(await page.locator('[data-wheel-card]').count(),6,'six illustrated wheel cards');
+  await page.screenshot({path:'reports/wheel-circle-'+size.name+'.png'});
+  if(size.name==='desktop'){
+   await canvas.hover();
+   await page.mouse.wheel(0,180);
+   await page.mouse.wheel(0,180);
+   await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='carousel');
+   const openedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
+   assert(openedCard.width>closedCard.width*1.3,'wheel opens into a larger front card');
+   const bounds=await canvas.boundingBox();
+   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2+60);
+   await page.mouse.down();
+   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2-60,{steps:12});
+   await page.mouse.up();
+   await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
+  }
+ }
+ await page.locator('[data-offer-link="automation"]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ assert.equal(await wheel.getAttribute('data-wheel-mode'),'carousel','selected service opens the 3D drum');
+ assert.equal(await page.locator('[data-wheel-title]').textContent(),'Automatisation','active wheel title');
+ assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows','contact form follows the service');
+ await page.screenshot({path:'reports/wheel-open-'+size.name+'.png'});
+ await page.locator('[data-wheel-details]').click();
+ const detailTop=await page.locator('#solution-title-automation').evaluate(el=>el.getBoundingClientRect().top);
+ assert(detailTop>=0&&detailTop<180,'wheel opens the readable service details');
+ assert(await page.locator('#solution-title-automation').evaluate(el=>el===document.activeElement),'details receive keyboard focus');
+ await page.locator('[data-offer-link="web"]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ if(size.name==='mobile'){
+  await canvas.scrollIntoViewIfNeeded();
+  const rect=await canvas.boundingBox();
+  const cdp=await context.newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2+60,y:rect.y+rect.height/2}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:rect.x+rect.width/2-60,y:rect.y+rect.height/2}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
+  await cdp.detach();
+  await page.locator('[data-offer-link="web"]').click();
+ }
  const documentsBefore=await page.evaluate(()=>performance.getEntriesByType('navigation').length);
  for(const [key,file] of routes){
   await page.locator('[data-offer-link="'+key+'"]').click();
@@ -64,7 +113,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.evaluate(()=>performance.getEntriesByType('navigation').length),documentsBefore,size.name+': no navigation when switching offers');
  await page.locator('[data-offer-link="web"]').click();
  await page.locator('[data-carousel-prev]').click();
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-crm','carousel wraps backwards');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation','carousel wraps backwards');
  await page.locator('[data-carousel-next]').click();
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','carousel wraps forwards');
  await page.locator('[data-offer-link="web"]').focus();
@@ -105,6 +154,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert.equal(await page.locator('[data-carousel-live]').textContent(),announcementBefore,anchor+': no unrelated service announcement');
  }
  await page.locator('#brief-form').scrollIntoViewIfNeeded();
+ await page.locator('#brief-service').selectOption('Automatisation des workflows');
+ await page.locator('#brief-form button[type="submit"]').click();
+ await page.locator('#brief-result').waitFor({state:'visible'});
+ assert((await page.locator('#brief-output').inputValue()).includes('Automatisation des workflows'),'automation brief');
  await page.locator('#brief-service').selectOption('Création de sites web');
  await page.locator('#brief-form button[type="submit"]').click();
  await page.locator('#brief-result').waitFor({state:'visible'});
@@ -153,13 +206,13 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','shared offer shown');
  assert.deepEqual(errors,[],size.name+': uncaught JS exceptions');
  await page.screenshot({path:'reports/'+size.name+'.png',fullPage:true});
- console.log('PASS',size.name,'5 services, film, keyboard, history, direct links, demos, web brief/copy, responsive layout and scripts');
+ console.log('PASS',size.name,'6 services, 3D wheel, drag/swipe, film, keyboard, history, direct links, demos, web/automation brief and responsive layout');
  await context.close();
 }
 const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
 const fallback=await nojs.newPage();
 await fallback.goto(BASE+'/#offres');
-assert.equal(await fallback.locator('.offer-detail:visible').count(),5,'all offers usable without JS');
+assert.equal(await fallback.locator('.offer-detail:visible').count(),6,'all offers usable without JS');
 assert.equal(await fallback.locator('.offer-detail[aria-hidden="true"]').count(),0,'no-JS accessible offers');
 assert.equal(await fallback.locator('#inversion-intro').isVisible(),false,'no-JS intro bypass');
 await nojs.close();

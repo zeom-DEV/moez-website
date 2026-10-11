@@ -44,7 +44,7 @@ function showFinal(error=false){
    end.querySelector('p').textContent="Le film n'a pas pu être chargé. Vous pouvez découvrir mes services et mon approche sans interruption.";
  }else{
    end.querySelector('h2').innerHTML='UN SITE CLAIR.<br>UNE ACTION ÉVIDENTE.';
-   end.querySelector('p').textContent='La création de sites internet est mon offre phare. Découvrez aussi mes quatre services pour le suivi de vos clients et de votre activité.';
+   end.querySelector('p').textContent='La création de sites internet est mon offre phare. Découvrez aussi mes cinq autres services, dont l’automatisation de vos tâches répétitives.';
  }
  end.classList.add('is-visible');end.setAttribute('aria-hidden','false');
  end.querySelector('a')?.focus({preventScroll:true});

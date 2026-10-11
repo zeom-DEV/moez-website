@@ -21,13 +21,18 @@
       if (index === current) choice.setAttribute('aria-current', 'location');
       else choice.removeAttribute('aria-current');
     });
-    carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / 05';
-    if (announce && (index !== -1 || id === 'offres')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur 5.';
+    carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / ' + String(ids.length).padStart(2, '0');
+    if (index !== -1 || id === 'offres' || !id) {
+      const brief = document.getElementById('brief-service');
+      if (brief && choices[current].dataset.serviceValue) brief.value = choices[current].dataset.serviceValue;
+      carousel.dispatchEvent(new CustomEvent('mt:offer-select', {detail: {index: current, open: index !== -1}}));
+    }
+    if (announce && (index !== -1 || id === 'offres')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur ' + ids.length + '.';
     if (!focus || (!ids.includes(id) && id !== 'offres')) return;
     const home = id === 'offres';
     (home ? document.getElementById('offers-five-title') : carousel).scrollIntoView({behavior: 'instant', block: 'start'});
-    const target = home ? document.getElementById('offers-five-title') : panels[current].querySelector('h2');
-    target.tabIndex = -1;
+    const target = home ? document.getElementById('offers-five-title') : choices[current];
+    if (home) target.tabIndex = -1;
     target.focus({preventScroll: true});
   }
   function select(index, focus = false) {
@@ -48,8 +53,16 @@
   });
   carousel.querySelector('[data-carousel-prev]').addEventListener('click', () => select(current - 1));
   carousel.querySelector('[data-carousel-next]').addEventListener('click', () => select(current + 1));
+  carousel.addEventListener('mt:wheel-select', event => select(event.detail.index));
+  carousel.addEventListener('mt:wheel-details', () => {
+    select(current);
+    const target = panels[current].querySelector('h2');
+    target.tabIndex = -1;
+    target.scrollIntoView({behavior: 'instant', block: 'start'});
+    target.focus({preventScroll: true});
+  });
   choices.forEach((choice, index) => choice.addEventListener('keydown', event => {
-    const target = {ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: ids.length - 1}[event.key];
+    const target = {ArrowRight: index + 1, ArrowDown: index + 1, ArrowLeft: index - 1, ArrowUp: index - 1, Home: 0, End: ids.length - 1}[event.key];
     if (target === undefined || event.altKey || event.ctrlKey || event.metaKey) return;
     event.preventDefault();
     select(target);
