@@ -34,6 +34,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': intro dismissed');
  await page.locator('#offers-five-title').waitFor({state:'visible'});
+ const heroTop=await page.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
+ assert(heroTop>=0&&heroTop<350,size.name+': film lands on flagship hero, not below it ('+heroTop+')');
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
   assert(layout.scrollWidth <= layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
@@ -162,6 +164,8 @@ await shortcut.locator('#intro-direct').click();
 assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'direct flagship skips film');
 assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film');
 assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
+const shortcutTop=await shortcut.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
+assert(shortcutTop>=0&&shortcutTop<180,'direct shortcut lands on the carousel');
 await shortcutContext.close();
 console.log('PASS direct flagship shortcut and intro keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
