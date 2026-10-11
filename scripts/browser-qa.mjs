@@ -41,6 +41,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
  }
+ await page.screenshot({path:'reports/home-'+size.name+'.png'});
  for(let step=0;step<3;step++){
   await page.locator('[data-web-stage]').nth(step).click();
   assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
@@ -108,6 +109,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
+  await page.screenshot({path:'reports/'+key+'-'+size.name+'.png'});
   assert(await page.locator('a[href^="https://calendly.com/"]').count()>0,size.name+': booking '+file);
   assert(await page.locator('a[href="./#offres"]').count()>0,size.name+': offers return '+file);
   assert(await page.locator('a[href^="https://calendly.com/"]').count()>0,size.name+': booking call to action '+file);
