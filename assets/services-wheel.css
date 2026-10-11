@@ -190,7 +190,7 @@ body .works-wheel__card:focus-visible {
 .wheel-toolbar > p { max-width: 620px; }
 .wheel-toolbar .carousel-controls { gap: 12px; }
 .wheel-toolbar [data-wheel-reset] { margin-right: 12px; }
-.offer-detail__heading h2 { scroll-margin-top: 104px; }
+.offer-detail__heading h2 { scroll-margin-top: 16px; }
 .workflow-example { display: grid; gap: 8px; text-align: left; }
 .workflow-example > div {
   border: 1px solid #c1d4c4;
