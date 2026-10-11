@@ -82,7 +82,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
    const layout=await page.evaluate(()=>({w:document.documentElement.scrollWidth,v:innerWidth}));
    assert(layout.w<=layout.v+4,file+': horizontal scroll '+layout.w+' > '+layout.v);
   }
-  await page.locator('a[href="./#offres"]').first().click();
+  await page.locator('.breadcrumbs a[href="./#offres"]').click();
   assert.equal(await page.locator('#inversion-intro').isVisible(),false,'return bypasses intro');
  }
  await page.goto(BASE+'/#solution-web',{waitUntil:'domcontentloaded'});
