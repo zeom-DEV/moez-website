@@ -5,6 +5,7 @@ const BASE=process.env.QA_BASE_URL || 'http://127.0.0.1:8765';
 const routes=[['sav','sav-ecommerce.html'],['avis','e-reputation.html'],['prospects','televente.html'],['crm','crm-reporting.html'],['web','site-signature.html']];
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 let failed=false;
+await (await import('node:fs/promises')).mkdir('reports',{recursive:true});
 try{
 for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',width:320,height:568},{name:'landscape',width:844,height:390},{name:'desktop',width:1365,height:900}]){
  const context=await browser.newContext({viewport:{width:size.width,height:size.height},isMobile:size.name!=='desktop',hasTouch:size.name!=='desktop',reducedMotion:size.name==='small-mobile'?'reduce':'no-preference',serviceWorkers:'block'});
@@ -40,26 +41,54 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
  }
+ for(let step=0;step<3;step++){
+  await page.locator('[data-web-stage]').nth(step).click();
+  assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
+ }
  const documentsBefore=await page.evaluate(()=>performance.getEntriesByType('navigation').length);
  for(const [key,file] of routes){
   await page.locator('[data-offer-link="'+key+'"]').click();
   await page.locator('#solution-'+key+'.is-active').waitFor({state:'visible'});
   assert.equal(await page.locator('.offer-detail.is-active').count(),1,size.name+': only selected service');
   assert(await page.locator('#solution-'+key+' .offer-detail__conversion a[href^="https://calendly.com/"]').count()>0,size.name+': CTA for '+key);
-  const position=await page.locator('#solution-'+key).evaluate(el=>el.getBoundingClientRect().top);
+  const position=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
   assert(position>=0&&position<180,size.name+': selected offer immediately in view '+position);
+  assert(await page.locator('.offer-detail:not(.is-active)').evaluateAll(els=>els.every(el=>el.inert)),size.name+': inactive offers excluded from focus');
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+4),size.name+': no overflow in '+key);
   await page.locator('#solution-'+key+' .offer-detail__back').click();
-  await page.locator('#solution-'+key+'.is-active').waitFor({state:'hidden'});
+  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','web stays first');
  }
  assert.equal(await page.evaluate(()=>performance.getEntriesByType('navigation').length),documentsBefore,size.name+': no navigation when switching offers');
  await page.locator('[data-offer-link="web"]').click();
+ await page.locator('[data-carousel-prev]').click();
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-crm','carousel wraps backwards');
+ await page.locator('[data-carousel-next]').click();
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','carousel wraps forwards');
+ await page.locator('[data-offer-link="web"]').focus();
+ await page.keyboard.press('ArrowRight');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','keyboard selection');
+ await page.keyboard.press('Home');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','keyboard Home');
+ if(size.name==='mobile'){
+  const graphic=page.locator('#solution-web .offer-graphic');
+  await graphic.scrollIntoViewIfNeeded();
+  const rect=await graphic.boundingBox();
+  const cdp=await context.newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width-25,y:rect.y+50}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:rect.x+25,y:rect.y+50}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','real mobile swipe');
+  await cdp.detach();
+  await page.locator('[data-offer-link="web"]').click();
+ }
+
  await page.locator('.offer-detail.is-active .offer-detail__other a[href="#solution-sav"]').click();
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav');
  await page.goBack();
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web');
  if(await page.locator('#menu-button').isVisible()){await page.locator('#menu-button').click();await page.locator('#mobile-nav a[href="./#offres"]').click();}
  else await page.locator('.desktop-nav a[href="./#offres"]').click();
- assert.equal(await page.locator('.offer-detail.is-active').count(),0,'navigation closes offer');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','navigation selects flagship');
  await page.locator('#brief-form').scrollIntoViewIfNeeded();
  await page.locator('#brief-service').selectOption('Création de sites web');
  await page.locator('#brief-form button[type="submit"]').click();
@@ -68,6 +97,14 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert((await page.locator('#brief-output').inputValue()).includes('Création de sites web'),'web brief');
  await page.locator('#brief-copy').click();
  await page.waitForFunction(()=>/Copié|Sélectionné/.test(document.getElementById('brief-copy').textContent));
+ if(size.name==='desktop'){
+  await page.locator('[data-offer-link="web"]').click();
+  const book=page.locator('#solution-web [data-book]');
+  await book.click();
+  await page.locator('#booking-dialog').waitFor({state:'visible'});
+  await page.keyboard.press('Escape');
+  assert(await book.evaluate(el=>el===document.activeElement),'booking focus restored');
+ }
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
@@ -90,9 +127,18 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared offer bypasses intro');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','shared offer shown');
  assert.deepEqual(errors,[],size.name+': uncaught JS exceptions');
+ await page.screenshot({path:'reports/'+size.name+'.png',fullPage:true});
  console.log('PASS',size.name,'5 services, film, keyboard, history, direct links, demos, web brief/copy, responsive layout and scripts');
  await context.close();
 }
+const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
+const fallback=await nojs.newPage();
+await fallback.goto(BASE+'/#offres');
+assert.equal(await fallback.locator('.offer-detail:visible').count(),5,'all offers usable without JS');
+assert.equal(await fallback.locator('.offer-detail[aria-hidden="true"]').count(),0,'no-JS accessible offers');
+assert.equal(await fallback.locator('#inversion-intro').isVisible(),false,'no-JS intro bypass');
+await nojs.close();
+console.log('PASS no-JS fallback');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
 finally{await browser.close();}
 if(failed)process.exit(1);

@@ -125,6 +125,7 @@
   const dialog=$('#booking-dialog');
   let lastFocus;
   $$('a[data-book]').forEach(link=>link.addEventListener('click', e=>{
+    if(e.defaultPrevented || e.button!==0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if(!dialog || typeof dialog.showModal!=='function' || matchMedia('(max-width:800px)').matches) return;
     e.preventDefault();
     lastFocus=document.activeElement;
@@ -160,7 +161,7 @@
         `Je souhaite échanger concernant : ${String(data.get('service')||'à préciser')}.`,
         `Format envisagé : ${String(data.get('format')||'à définir')}.`,
         `Entreprise : ${String(data.get('company')||'Non renseignée')}.`,
-        `Mon besoin : ${String(data.get('message')||'Je souhaiterais en discuter avec vous.')}.`,
+        `Mon besoin : ${String(data.get('message')||'Je souhaiterais en discuter avec vous.').trim()}`,
         '',
         'Pouvez-vous me proposer un premier échange ?',
         'Bien cordialement'
