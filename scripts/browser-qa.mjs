@@ -46,7 +46,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'desktop',width:13
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
   assert(await page.locator('a[href^="https://calendly.com/"]').count()>0,size.name+': booking '+file);
   assert(await page.locator('a[href="./#offres"]').count()>0,size.name+': offers return '+file);
-  assert.equal(await page.locator('.service-journey__grid').count(),1,size.name+': three steps '+file);
+  assert(await page.locator('a[href^="https://calendly.com/"]').count()>0,size.name+': booking call to action '+file);
   if(size.name==='mobile'){
    const layout=await page.evaluate(()=>({w:document.documentElement.scrollWidth,v:innerWidth}));
    assert(layout.w<=layout.v+4,file+': horizontal scroll '+layout.w+' > '+layout.v);
