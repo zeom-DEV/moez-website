@@ -8,7 +8,9 @@
   let current = 0;
   function sync(focus = false, announce = false) {
     const id = location.hash.slice(1);
-    current = Math.max(0, ids.indexOf(id));
+    const index = ids.indexOf(id);
+    if (index !== -1) current = index;
+    else if (id === 'offres' || !id) current = 0;
     panels.forEach((panel, index) => {
       const selected = index === current;
       panel.classList.toggle('is-active', selected);
@@ -21,7 +23,7 @@
     });
     carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / 05';
     if (announce) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur 5.';
-    if (!focus) return;
+    if (!focus || (!ids.includes(id) && id !== 'offres')) return;
     const home = id === 'offres';
     (home ? document.getElementById('offers-five-title') : carousel).scrollIntoView({behavior: 'instant', block: 'start'});
     const target = home ? document.getElementById('offers-five-title') : panels[current].querySelector('h2');
