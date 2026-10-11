@@ -131,7 +131,7 @@
     const slot=$('#calendly-slot');
     if(slot && !slot.querySelector('iframe')){
       const frame=document.createElement('iframe');
-      frame.title='Calendly — réserver un appel de 30 minutes avec Moez Thabet';
+      frame.title='Calendly — réserver un appel de 30 minutes avec Moez';
       frame.src=CALENDLY+'?hide_gdpr_banner=0';
       frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';
       frame.setAttribute('allow','payment *');
