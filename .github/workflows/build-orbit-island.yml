@@ -59,9 +59,9 @@ jobs:
           # control. Pointer taps open the matching native service panel;
           # swipes still use the untouched 3D physics.
           edits=[
-            ('  onIndexChange?: (index: number) => void', '  onIndexChange?: (index: number) => void\\n  onExplore?: (index: number) => void'),
+            ('  onIndexChange?: (index: number) => void', '  onIndexChange?: (index: number) => void\n  onExplore?: (index: number) => void'),
             ('  items, index: controlled, defaultIndex = 0, onIndexChange, brand,', '  items, index: controlled, defaultIndex = 0, onIndexChange, onExplore, brand,'),
-            ('        choose(info.tapIndex)', '        if (onExplore) onExplore(info.tapIndex)\\n        else choose(info.tapIndex)'),
+            ('        choose(info.tapIndex)', '        if (onExplore) onExplore(info.tapIndex)\n        else choose(info.tapIndex)'),
             ('onClick={() => { if (!suppressed.current && !drag.current) choose(i) }}', 'onClick={() => { if (!suppressed.current && !drag.current) { if (onExplore) onExplore(i); else choose(i) } }}'),
           ]
           for old,new in edits:
