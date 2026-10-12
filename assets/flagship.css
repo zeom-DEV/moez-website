@@ -64,3 +64,7 @@ button.intro-direct{border:0;background:transparent;width:calc(100% - 60px);text
 
 /* Homepage without the redundant web mockup: the flagship copy uses the full column. */
 .offers-five .flagship-hero--solo{display:block;width:100%;max-width:950px}
+
+/* Let the real cinematic six-service carousel replace the old white hero, edge to edge. */
+body[data-page="home"] .offers-five{padding-top:0!important}
+body[data-page="home"] #offers-five-title{outline:none}
