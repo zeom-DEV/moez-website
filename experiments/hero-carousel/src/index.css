@@ -86,7 +86,7 @@ button:focus-visible,a:focus-visible{outline:2px solid #efd0a9;outline-offset:4p
  .signature-preview__controller-eye{font-size:8px;letter-spacing:.09em}
  .signature-preview__controller-desc{font-size:11px;max-width:180px}
  .signature-preview__controller-actions{gap:4px}
- .signature-preview__controller-actions button{min-width:33px;min-height:38px;font-size:16px}
+ .signature-preview__controller-actions button{min-width:44px;min-height:44px;font-size:16px}
  .signature-preview__controller-actions .signature-preview__pause{min-width:73px;font-size:8px;letter-spacing:0}
  .signature-preview__focus{padding:42px 19px 60px}
  .signature-preview__focus-top{font-size:8px;letter-spacing:.1em}
