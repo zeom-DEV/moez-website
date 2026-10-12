@@ -1,0 +1,49 @@
+name: Hero carousel browser QA
+
+on:
+  push:
+    branches:
+      - feature/hero-carousel-react-preview-20261012
+    paths:
+      - 'experiments/hero-carousel/**'
+      - '.github/workflows/hero-carousel-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hero-carousel-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-test:
+    name: Playwright desktop and mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: experiments/hero-carousel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install isolated Playwright test dependency
+        run: npm install --no-save --no-audit --no-fund playwright@1.55.1
+      - name: Install Chromium for browser QA
+        run: npx playwright install --with-deps chromium
+      - name: Build the React preview
+        run: npm run build
+      - name: Run carousel Playwright scenarios
+        run: node scripts/qa.mjs
+      - name: Save desktop and mobile screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-carousel-screenshots
+          path: experiments/hero-carousel/reports/
+          if-no-files-found: warn
+          retention-days: 7
