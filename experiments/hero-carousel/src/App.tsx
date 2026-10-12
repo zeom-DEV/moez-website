@@ -1,5 +1,6 @@
 import * as React from "react"
 import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carousel"
+import "./hero-carousel.css"
 
 const ROOT = "https://moezthabet.com"
 const art = (id: string) => ROOT + "/assets/service-wheel/" + id + ".svg"
@@ -77,10 +78,10 @@ const items: HeroCarouselItem[] = services.map((s, i) => ({
 
 export function App() {
   const [index, setIndex] = React.useState(0)
-  const [autoplay, setAutoplay] = React.useState(false)
+  const [autoplay, setAutoplay] = React.useState(true)
   const current = services[index]
-  const prev = () => setIndex((value) => Math.max(0, value - 1))
-  const next = () => setIndex((value) => Math.min(services.length - 1, value + 1))
+  const prev = () => setIndex((value) => (value + services.length - 1) % services.length)
+  const next = () => setIndex((value) => (value + 1) % services.length)
   return (
     <div>
       <header className="preview-header">
@@ -95,18 +96,18 @@ export function App() {
         <div className="h-[68svh] min-h-[460px] w-full md:h-[76svh] md:min-h-[570px]">
           <HeroCarousel
             items={items} index={index} onIndexChange={setIndex}
-            autoplay={autoplay} autoplayDelay={4500}
+            autoplay={autoplay} autoplayDelay={5650}
             brand="MOEZ · SIX SOLUTIONS"
           />
         </div>
       </section>
       <section className="preview-section" aria-label="Détails de l'offre sélectionnée">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-300 pb-5">
-          <span className="text-[11px] font-extrabold tracking-[.18em] text-rose-700">UNE OFFRE AU CENTRE · SIX POSSIBILITÉS</span>
+          <span className="text-[11px] font-extrabold tracking-[.18em] text-rose-700">UN MOUVEMENT CONTINU · SIX SOLUTIONS CLAIRES</span>
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <button type="button" onClick={prev} disabled={index === 0} className="rounded-full border border-stone-400 px-4 py-2 disabled:opacity-40" aria-label="Service précédent">←</button>
-            <button type="button" onClick={next} disabled={index === services.length - 1} className="rounded-full border border-stone-400 px-4 py-2 disabled:opacity-40" aria-label="Service suivant">→</button>
-            <button type="button" onClick={() => setAutoplay(!autoplay)} className="rounded-full border border-stone-400 px-4 py-2 text-xs font-bold" aria-pressed={autoplay}>{autoplay ? "Ⅱ Pause auto" : "▶ Défilement auto"}</button>
+            <button type="button" onClick={prev} className="rounded-full border border-stone-400 px-4 py-2 disabled:opacity-40" aria-label="Service précédent">←</button>
+            <button type="button" onClick={next} className="rounded-full border border-stone-400 px-4 py-2 disabled:opacity-40" aria-label="Service suivant">→</button>
+            <button type="button" onClick={() => setAutoplay(!autoplay)} className="rounded-full border border-stone-400 px-4 py-2 text-xs font-bold" aria-pressed={autoplay}>{autoplay ? "Ⅱ Arrêter le ruban" : "▶ Relancer le ruban"}</button>
           </div>
         </div>
         <div className="preview-service mt-8">
@@ -132,7 +133,7 @@ export function App() {
             </button>
           ))}
         </div>
-        <p className="mt-8 text-xs leading-6 text-stone-600">Cet aperçu teste le composant HeroCarousel fourni avec les six offres réelles de moezthabet.com. Il est indépendant du site public. Utilisez les flèches du clavier, glissez la bande d'images ou cliquez sur une carte.</p>
+        <p className="mt-8 text-xs leading-6 text-stone-600">Le ruban avance automatiquement et boucle sans interruption. Touchez une carte, glissez horizontalement ou utilisez les flèches du clavier pour explorer librement. Le site public moezthabet.com reste inchangé.</p>
       </section>
       <footer className="border-t border-stone-300 px-5 py-5 text-center text-[10px] font-bold tracking-[.14em] text-stone-600">PROTOTYPE TECHNIQUE · MAIN ET MOEZTHABET.COM INCHANGÉS</footer>
     </div>
