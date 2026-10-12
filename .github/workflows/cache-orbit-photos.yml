@@ -1,0 +1,38 @@
+name: Cache Six Carousel Photos
+
+on:
+  push:
+    branches:
+      - feature/carousel-first-explorer-20261013
+    paths:
+      - .github/workflows/cache-orbit-photos.yml
+      - scripts/cache-orbit-photos.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: image-cache-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download and validate the original six photos in two responsive sizes
+        run: python3 scripts/cache-orbit-photos.py
+      - name: Commit optimized local images to the existing preview branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/orbit-photos/*.webp
+          if git diff --cached --quiet; then
+            echo "Images already current."
+          else
+            git commit -m "assets(perf): self-host six original carousel photos in responsive WebP"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
