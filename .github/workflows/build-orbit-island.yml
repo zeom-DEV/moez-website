@@ -39,6 +39,23 @@ jobs:
           set -euxo pipefail
           SOURCE=.orbit-source/experiments/hero-carousel
           cp integrations/orbit-island-entry.tsx "$SOURCE/src/island-entry.tsx"
+          # Only adjust accessibility of the source reference for this integrated build:
+          # keep its original artwork, photography and physics unchanged.
+          python3 - "$SOURCE/components/ui/hero-carousel.tsx" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          source=p.read_text()
+          source=''.join(line for line in source.splitlines(keepends=True) if 'aria-label={"Choisir le service "' not in line)
+          orig='data-hero-card={i}\n              onClick='
+          replacement='data-hero-card={i}\n              aria-hidden={i !== focusIndex && i !== mod(focusIndex + 1, n) && i !== mod(focusIndex - 1, n)}\n              tabIndex={i === focusIndex ? 0 : -1}\n              onClick='
+          assert orig in source
+          source=source.replace(orig,replacement)
+          a='style={{ width: cardW, height: cardH, "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
+          b='style={{ width: cardW, height: cardH, pointerEvents: (i === focusIndex || i === mod(focusIndex + 1, n) || i === mod(focusIndex - 1, n)) ? "auto" : "none", "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
+          assert a in source
+          p.write_text(source.replace(a,b))
+          PY
           cat > "$SOURCE/island.html" <<'HTML'
           <!doctype html><html lang="fr"><head><meta charset="utf-8"></head><body><div id="moez-orbit-root"></div><script type="module" src="/src/island-entry.tsx"></script></body></html>
           HTML
