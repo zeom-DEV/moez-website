@@ -122,12 +122,6 @@
    });
    watcher.observe(intro,{attributes:true,attributeFilter:["class"]});
  }
- // Useful discovery signal only if the visitor explicitly clicks the sole hero CTA.
- document.querySelector(".flagship-link")?.addEventListener("click",()=>{
-   setTimeout(()=>notify("choice","LE PARCOURS COMMENCE","Vos six solutions prennent vie.",
-      "Faites glisser les photos, choisissez un service puis découvrez les tâches concrètes.",
-      "Explorer le service phare","#solution-web","intro-guide"),600);
- });
  window.addEventListener("popstate",()=>{
    const id=location.hash.replace("#solution-","");
    if(names[id])track(id);
