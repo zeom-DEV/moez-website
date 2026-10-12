@@ -25,6 +25,7 @@ try{
   }
   await page.waitForFunction(()=>[...document.querySelectorAll('.orbit-hero__card-image')].length===6&&[...document.querySelectorAll('.orbit-hero__card-image')].every(img=>img.complete&&img.naturalWidth>0),{},{timeout:25000});
   check(true,name+' all six photographic assets really load');
+  await page.locator('.mt-orbit__viewport').screenshot({path:'reports/orbit/'+name+'-cinematic-stage.png',animations:'disabled'});
 
   check(await page.locator('#solution-web').count()===1&&await page.locator('.offer-detail').count()===6,name+' original six detailed services retained');
   check(await page.locator('.mt-orbit__quicknav button').count()===6,name+' one directly usable illustrated selector');
@@ -47,6 +48,11 @@ try{
   await page.locator('#brief-form button[type="submit"]').click();
   await page.locator('#brief-result').waitFor({state:'visible'});
   check((await page.locator('#brief-output').inputValue()).includes('Je souhaite automatiser'),name+' real request message generated without sending');
+  await page.locator('#solution-automation .offer-detail__other a[href="#solution-sav"]').click();
+  await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Service client');
+  check((await page.locator('.offer-detail.is-active').getAttribute('id'))==='solution-sav',name+' service cross-link updates the original detail');
+  check((await page.locator('.mt-orbit__current strong').textContent())==='Service client',name+' original 3D orbit stays synchronized with the linked service');
+
   check(!errors.length,name+' no JavaScript exceptions '+errors.join('|'));
   const dims=await page.evaluate(()=>({w:innerWidth,scroll:document.documentElement.scrollWidth}));
   check(dims.scroll<=dims.w+3,name+' no horizontal overflow '+JSON.stringify(dims));
