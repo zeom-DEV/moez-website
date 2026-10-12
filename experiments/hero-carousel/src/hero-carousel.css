@@ -34,7 +34,7 @@
 .orbit-hero__eyebrow i{width:22px;height:1px;flex:none;background:var(--orbit-tone);display:inline-block;box-shadow:0 0 12px var(--orbit-tone)}
 .orbit-hero__narrative h2{font-size:clamp(36px,4.9vw,82px);letter-spacing:-.074em;font-weight:800;line-height:.99;max-width:1040px;margin:17px 0 12px;text-shadow:0 8px 36px #0009}
 .orbit-hero__narrative h2 span{display:block}.orbit-hero__narrative p{color:#eadbce;font-size:clamp(9px,.65vw,11px);font-weight:800;letter-spacing:.22em;margin:0}
-.orbit-hero__world{position:absolute;inset-inline:0;top:37%;bottom:0;z-index:5;transform-style:preserve-3d;cursor:grab;user-select:none;-webkit-user-select:none;overscroll-behavior-x:contain;touch-action:pan-y}
+.orbit-hero__world{position:absolute;inset-inline:0;top:40%;bottom:0;z-index:5;transform-style:preserve-3d;cursor:grab;user-select:none;-webkit-user-select:none;overscroll-behavior-x:contain;touch-action:pan-y}
 .orbit-hero__world--dragging{cursor:grabbing}
 .orbit-hero__ring{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform;pointer-events:none}
 .orbit-hero__card{
