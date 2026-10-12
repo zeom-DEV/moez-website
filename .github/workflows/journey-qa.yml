@@ -1,0 +1,62 @@
+name: Existing site motion journey QA
+
+on:
+  push:
+    branches:
+      - feature/parcours-orchestre-site-existant-20261012
+    paths:
+      - 'index.html'
+      - 'assets/kinetic-crossing.js'
+      - 'assets/offer-inline-details.js'
+      - 'assets/journey-orchestration.*'
+      - 'scripts/journey-qa.mjs'
+      - '.github/workflows/journey-qa.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/kinetic-crossing.js'
+      - 'assets/offer-inline-details.js'
+      - 'assets/journey-orchestration.*'
+      - 'scripts/journey-qa.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: motion-journey-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Existing homepage - desktop and mobile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source syntax
+        run: |
+          node --check assets/journey-orchestration.js
+          node --check assets/kinetic-crossing.js
+          node --check assets/offer-inline-details.js
+      - name: Browser testing tools
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.55.1
+          npx playwright install --with-deps chromium
+      - name: Start original static site
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/mt-journey-server.log 2>&1 &
+      - name: Validate complete visitor path
+        run: node scripts/journey-qa.mjs
+      - name: Preserve browser captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: existing-site-journey-captures
+          path: reports/journey/
+          if-no-files-found: warn
+          retention-days: 7
