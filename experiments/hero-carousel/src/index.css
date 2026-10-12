@@ -11,3 +11,6 @@ button:focus-visible,a:focus-visible{outline:2px solid #c33d54;outline-offset:3p
 .preview-section{max-width:1320px;margin:0 auto;padding:28px clamp(18px,4vw,70px) 60px}
 .preview-service{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px}
 @media(max-width:700px){.preview-service{grid-template-columns:1fr}.preview-header{align-items:flex-start}}
+
+@keyframes fadeIn{from{opacity:.2;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.preview-section *{animation:none!important;scroll-behavior:auto!important}}
