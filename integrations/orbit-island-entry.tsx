@@ -92,7 +92,7 @@ function App(){
           aria-pressed={!playing}>{playing&&!reduce?"Ⅱ Pause":"▷ Animer"}</button>
       </div>
       <button className="mt-orbit__explore" type="button" onClick={openDetail}
-        data-orbit-explore aria-label={"Découvrir les tâches et le résultat du service "+current.name}>
+        data-orbit-explore>
         Voir ce que je peux faire pour vous <span aria-hidden="true">↗</span>
       </button>
     </div>
