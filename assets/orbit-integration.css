@@ -43,7 +43,7 @@
 .mt-orbit-mounted .web-demo{transition:transform .35s cubic-bezier(.2,.8,.25,1),box-shadow .35s}
 .mt-orbit-mounted .web-demo:hover{transform:translate3d(0,-4px,0);box-shadow:0 30px 70px #38202d29}
 /* No carousel library load = preserve the original service overview and details. */
-.mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{height:90px}
+.mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{min-height:clamp(565px,75svh,810px)}
 .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport:after{content:"Les six offres en images arrivent…";position:absolute;inset:0;display:grid;place-items:center;color:#d6bba1;font-size:13px}
 @media(max-width:930px){
  .mt-orbit__actionbar{grid-template-columns:minmax(0,1fr) auto;gap:13px}
@@ -53,6 +53,7 @@
  .mt-orbit__quicknav button:nth-child(3){border-right:0}
 }
 @media(max-width:650px){
+ .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{min-height:clamp(505px,74svh,715px)}
  .mt-orbit__viewport{height:clamp(505px,74svh,715px)}
  .mt-orbit__actionbar{padding:15px 17px;gap:12px}
  .mt-orbit__current small{font-size:8px}
