@@ -49,6 +49,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
  // The selected reference is the photographic React + framer-motion 3D carousel.
  const orbit=page.locator('.mt-orbit-showcase');
+ await orbit.scrollIntoViewIfNeeded();
  await orbit.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:25000});
  assert.equal(await orbit.locator('.orbit-hero__card').count(),6,size.name+': six genuine photographic carousel cards');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').count(),6,size.name+': six direct choices');
@@ -185,6 +186,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('#inversion-intro').waitFor({state:'hidden'});
  }
  await page.goto(BASE+'/#services-carousel',{waitUntil:'domcontentloaded'});
+ await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
  await page.locator('.orbit-hero__card').first().waitFor({state:'visible'});
  assert.equal(await page.locator('.works-wheel').isHidden(),true,'shared discovery URL presents the single cinematic carousel');
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared discovery URL bypasses intro');
