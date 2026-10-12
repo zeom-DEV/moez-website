@@ -71,7 +71,6 @@ export function HeroCarousel({
   const sizeRef = React.useRef({ w: bounds.w, h: bounds.h })
   const suppressed = React.useRef(false)
   const interacting = React.useRef(false)
-  const initRef = React.useRef(false)
 
   React.useEffect(() => { onChangeRef.current = onIndexChange }, [onIndexChange])
   React.useEffect(() => { playingRef.current = autoplay }, [autoplay])
@@ -153,7 +152,7 @@ export function HeroCarousel({
       // Bound phase so it cannot drift indefinitely after hours of running.
       if (Math.abs(phase.current) > n * 80 && springTo.current === null) phase.current = mod(phase.current, n)
 
-      const { w, h } = sizeRef.current
+      const { w } = sizeRef.current
       const mobile = w < 650
       const radiusX = mobile ? Math.max(190, w * .48) : Math.min(w * .42, 560)
       const radiusZ = mobile ? 250 : 375
@@ -226,7 +225,7 @@ export function HeroCarousel({
   if (!n || !selected) return null
   const mobile = bounds.w < 650
   const cardW = clamp(mobile ? bounds.w * .55 : bounds.w * .285, 205, 385)
-  const cardH = clamp(mobile ? bounds.h * .60 : bounds.h * .68, 290, 520)
+  const cardH = clamp(mobile ? bounds.h * .52 : bounds.h * .55, mobile ? 245 : 300, mobile ? 360 : 485)
 
   const beginDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse" && e.button !== 0) return
