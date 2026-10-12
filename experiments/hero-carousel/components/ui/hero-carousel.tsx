@@ -12,7 +12,6 @@ export interface HeroCarouselItem {
   meta?: string[]
   accent?: string
 }
-
 export interface HeroCarouselProps {
   items: HeroCarouselItem[]
   index?: number
@@ -21,319 +20,263 @@ export interface HeroCarouselProps {
   brand?: React.ReactNode
   onBack?: () => void
   onMenu?: () => void
-  /** A continuously moving, seamless filmstrip; enabled by the demo. */
   autoplay?: boolean
-  /** Used as a speed multiplier: nominal duration of one card in milliseconds. */
   autoplayDelay?: number
   className?: string
 }
 
-const mod = (n: number, size: number) => ((n % size) + size) % size
-const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n))
-const GRAIN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E\")"
-
-function ServiceArtwork({ item, ordinal }: { item: HeroCarouselItem; ordinal: number }) {
-  const kind = String(item.id ?? ordinal)
-  return (
-    <div className={"hc-art hc-art--" + kind} style={{ "--poster-accent": item.accent ?? "#ad7c96" } as React.CSSProperties}>
-      <img className="hc-art__image" src={item.image} alt="" loading="lazy" draggable={false} />
-      <div className="hc-art__light" aria-hidden="true" />
-      {kind === "web" && <div className="hc-ui hc-ui--web">
-        <div className="hc-ui__top"><i/><i/><i/><span>atelier / studio</span></div>
-        <div className="hc-web-visual"><span className="hc-web-orb"/><small>LA VITRINE QUI CONVAINC</small><strong>Votre idée.<br/>Notre prochain clic.</strong><b>EXPLORER ↗</b></div>
-      </div>}
-      {kind === "sav" && <div className="hc-ui hc-ui--chat">
-        <div className="hc-chat"><span>01 · MESSAGE REÇU</span><strong>Bonjour, j'ai une question.</strong><i>09:41</i></div>
-        <div className="hc-chat hc-chat--reply"><span>02 · RÉPONSE</span><strong>Je m'en occupe.</strong><i>✓ SUIVI EN COURS</i></div>
-      </div>}
-      {kind === "avis" && <div className="hc-ui hc-ui--review">
-        <span className="hc-review-star">✳</span><div className="hc-review-card"><small>AVIS CLIENTS</small><strong>★★★★★</strong><b>Écouter.<br/>Répondre.<br/>Progresser.</b><i>✓ RÉPONSE PRÉPARÉE</i></div>
-      </div>}
-      {kind === "prospects" && <div className="hc-ui hc-ui--phone">
-        <div className="hc-phone-ring"/><div className="hc-phone"><small>ÉCHANGE EN COURS</small><strong>↗</strong><span>PROCHAINE ÉTAPE</span></div><div className="hc-soundwave">{Array.from({ length: 14 }, (_, i) => <i key={i} style={{ "--wave": (i % 5) } as React.CSSProperties}/>)}</div>
-      </div>}
-      {kind === "crm" && <div className="hc-ui hc-ui--crm"><div className="hc-crm-top"><b>CRM / STUDIO</b><span>✓ EN SUIVI</span></div>
-        <div className="hc-crm-title">Tableau de suivi</div>
-        <div className="hc-crm-columns"><div><b>À FAIRE</b><span>Client 01</span><span>Client 04</span></div><div><b>EN COURS</b><span>Client 02</span><span>Client 05</span></div><div><b>TERMINÉ</b><span>Client 03</span></div></div>
-      </div>}
-      {kind === "automation" && <div className="hc-ui hc-ui--flow"><svg viewBox="0 0 340 250" aria-hidden="true"><path d="M65 126 C125 126 99 62 175 62 S235 125 281 125" /><path d="M65 126 C125 126 99 190 175 190 S235 125 281 125" /></svg><div className="hc-node hc-node--a">FORMULAIRE</div><div className="hc-node hc-node--b">CRM</div><div className="hc-node hc-node--c">EMAIL</div><div className="hc-node hc-node--d">✓ ACTION</div></div>}
-      <div className="hc-art__bottom"><span>{String(ordinal + 1).padStart(2, "0")} / 06</span><b>{["CRÉATION WEB","RELATION CLIENT","E-RÉPUTATION","PROSPECTION","ORGANISATION","WORKFLOWS"][ordinal] ?? "SOLUTION"}</b></div>
-    </div>
-  )
-}
+const mod = (n: number, m: number) => ((n % m) + m) % m
+const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n))
 
 export function HeroCarousel({
-  items, index: controlled, defaultIndex = 0, onIndexChange, brand, onBack, onMenu,
-  autoplay = false, autoplayDelay = 4400, className,
+  items, index: controlled, defaultIndex = 0, onIndexChange,
+  brand, onBack, onMenu, autoplay = true, autoplayDelay = 5400, className,
 }: HeroCarouselProps) {
-  const reduced = useReducedMotion()
-  const stageRef = React.useRef<HTMLDivElement>(null)
-  const trackRef = React.useRef<HTMLDivElement>(null)
-  const cardRefs = React.useRef<(HTMLDivElement | null)[]>([])
-  const [box, setBox] = React.useState({ w: 0, h: 0 })
-  const [local, setLocal] = React.useState(defaultIndex)
-  const [visualFocus, setVisualFocus] = React.useState(defaultIndex)
-  const [interacting, setInteracting] = React.useState(false)
-  const position = React.useRef(0)
-  const target = React.useRef<number | null>(null)
-  const velocity = React.useRef(0)
-  const drag = React.useRef<{ x: number; pos: number; time: number; lastX: number; moved: boolean } | null>(null)
-  const suppressClick = React.useRef(false)
-  const focusRef = React.useRef(defaultIndex)
-  const hovered = React.useRef(false)
-  const focused = React.useRef(false)
-  const visible = React.useRef(true)
+  const reduce = useReducedMotion()
+  const stage = React.useRef<HTMLDivElement>(null)
+  const ribbon = React.useRef<HTMLDivElement>(null)
+  const [size, setSize] = React.useState({ width: 1100, height: 620 })
+  const [internal, setInternal] = React.useState(defaultIndex)
+  const [selected, setSelected] = React.useState(defaultIndex)
+  const index = clamp(controlled ?? internal, 0, Math.max(0, items.length - 1))
+  const n = items.length
+  const position = React.useRef(defaultIndex)
+  const momentum = React.useRef(0)
+  const snap = React.useRef<number | null>(null)
+  const dragging = React.useRef<{ start: number; previous: number; t: number; origin: number; moved: boolean } | null>(null)
   const pauseUntil = React.useRef(0)
-  const motionPaused = React.useRef(false)
-  const activeCallback = React.useRef(onIndexChange)
-  const count = items.length
-  const focus = clamp(controlled ?? local, 0, Math.max(0, count - 1))
-  const step = clamp(box.h * 0.475, 200, 455) * 0.72 + Math.max(9, box.w * 0.012)
-  const cardH = clamp(box.h * 0.475, 200, 455)
-  const cardW = cardH * 0.72
-  const gap = step - cardW
-  const cycle = step * count
-  const stageCenter = box.w / 2
-  const focusItem = items[focus] ?? items[0]
-  const slides = React.useMemo(() => [...items, ...items, ...items], [items])
+  const hovering = React.useRef(false)
+  const focusing = React.useRef(false)
+  const visibility = React.useRef(true)
+  const current = React.useRef(defaultIndex)
+  const notified = React.useRef(onIndexChange)
+  const playing = React.useRef(autoplay)
+  const lastStep = React.useRef(1)
+  const clickBlock = React.useRef(false)
 
-  React.useEffect(() => { activeCallback.current = onIndexChange }, [onIndexChange])
+  const height = clamp(size.height * .57, 260, 505)
+  const width = height * .71
+  const step = width + clamp(size.width * .012, 9, 20)
+  const distance = step * n
 
+  React.useEffect(() => { notified.current = onIndexChange }, [onIndexChange])
+  React.useEffect(() => { playing.current = autoplay }, [autoplay])
   React.useEffect(() => {
-    const stage = stageRef.current
-    if (!stage) return
-    const read = () => setBox({ w: stage.clientWidth, h: stage.clientHeight })
+    const el = stage.current
+    if (!el) return
+    const read = () => setSize({ width: el.clientWidth, height: el.clientHeight })
     read()
-    const observer = new ResizeObserver(read)
-    observer.observe(stage)
-    const watch = new IntersectionObserver(entries => {
-      visible.current = entries[0]?.isIntersecting ?? true
-    }, { threshold: .05 })
-    watch.observe(stage)
-    return () => { observer.disconnect(); watch.disconnect() }
+    const ro = new ResizeObserver(read)
+    ro.observe(el)
+    const io = new IntersectionObserver(entries => { visibility.current = entries[0]?.isIntersecting ?? true }, { threshold: .03 })
+    io.observe(el)
+    return () => { ro.disconnect(); io.disconnect() }
   }, [])
 
-  const geometry = React.useRef({ step, cycle, cardW, stageCenter })
-  React.useEffect(() => { geometry.current = { step, cycle, cardW, stageCenter } }, [step, cycle, cardW, stageCenter])
+  const geom = React.useRef({ step, distance, width, center: size.width / 2 })
   React.useEffect(() => {
-    if (!step || !cycle) return
-    const newPos = clamp(focusRef.current, 0, count - 1) * step
-    if (position.current === 0 && focusRef.current !== 0) position.current = newPos
-  }, [step, cycle, count])
+    if (lastStep.current > 1 && step !== lastStep.current) position.current = position.current * step / lastStep.current
+    lastStep.current = step
+    geom.current = { step, distance, width, center: size.width / 2 }
+  }, [step, distance, width, size.width])
 
-  // The entire track translates at a constant velocity, without card-by-card stops.
-  // Three copies make modulo wrapping visually identical on both sides of a seam.
+  const go = React.useCallback((value: number) => {
+    if (!n) return
+    const next = mod(value, n)
+    const s = geom.current.step
+    const d = geom.current.distance
+    const currentPosition = position.current
+    // Nearest repeated instance avoids a backwards jump at the sixth card.
+    snap.current = next * s + Math.round((currentPosition - next * s) / d) * d
+    momentum.current = 0
+    pauseUntil.current = performance.now() + 2600
+    current.current = next
+    setSelected(next)
+    if (controlled === undefined) setInternal(next)
+    notified.current?.(next)
+  }, [n, controlled])
+
   React.useEffect(() => {
-    if (count < 1) return
+    if (controlled !== undefined && controlled !== current.current) go(controlled)
+  }, [controlled, go])
+
+  React.useEffect(() => {
+    if (!n) return
     let raf = 0
-    let last = 0
-    const tick = (time: number) => {
-      const dt = clamp(time - (last || time), 0, 40)
-      last = time
-      const { step: s, cycle: c, cardW: w, stageCenter: center } = geometry.current
-      if (!s || !c) { raf = requestAnimationFrame(tick); return }
-      const pointer = drag.current
-      const frozen = hovered.current || focused.current || !visible.current || document.hidden
-      if (reduced) {
-        position.current = focusRef.current * s
-        target.current = null
-      } else if (!pointer) {
-        if (target.current !== null) {
-          position.current += (target.current - position.current) * (1 - Math.exp(-dt / 225))
-          if (Math.abs(target.current - position.current) < .35) {
-            position.current = target.current
-            target.current = null
+    let previous = 0
+    const render = (t: number) => {
+      const dt = clamp(t - (previous || t), 0, 50)
+      previous = t
+      const { step: s, distance: d, width: w, center } = geom.current
+      if (!s || !d) { raf = requestAnimationFrame(render); return }
+      const now = t
+      const paused = hovering.current || focusing.current || !visibility.current || document.hidden
+      if (reduce) {
+        if (!dragging.current) position.current = current.current * s
+        snap.current = null
+        momentum.current = 0
+      } else if (!dragging.current) {
+        if (snap.current !== null) {
+          // Delta-time-stable critically damped approach.
+          position.current += (snap.current - position.current) * (1 - Math.exp(-dt / 205))
+          if (Math.abs(position.current - snap.current) < .2) {
+            position.current = snap.current
+            snap.current = null
           }
-        } else if (Math.abs(velocity.current) > .5) {
-          position.current += velocity.current * (dt / 1000)
-          velocity.current *= Math.exp(-dt / 330)
-        } else if (autoplay && !frozen && time > pauseUntil.current && !motionPaused.current) {
-          // Speed is proportional to card size, not viewport pixels.
-          position.current += (s * dt) / Math.max(2200, autoplayDelay)
+        } else if (Math.abs(momentum.current) > 6) {
+          position.current += momentum.current * dt / 1000
+          momentum.current *= Math.exp(-dt / 350)
+        } else if (playing.current && !paused && now > pauseUntil.current) {
+          position.current += s * dt / Math.max(2700, autoplayDelay)
         }
       }
-      const normalized = mod(position.current, c)
-      const translateX = center - w / 2 - (count * s + normalized)
-      if (trackRef.current) trackRef.current.style.transform = "translate3d(" + translateX.toFixed(2) + "px,0,0)"
-      // Subtle per-card optical bend, updated without React rendering.
-      cardRefs.current.forEach((card, i) => {
-        if (!card) return
-        const distance = (i - count) - normalized / s
-        const abs = Math.abs(distance)
-        if (abs > 4.3) {
-          card.style.visibility = "hidden"
-          return
-        }
-        card.style.visibility = "visible"
-        const bend = clamp(distance * -9, -22, 22)
-        card.style.transform = "translate3d(0," + (Math.min(abs * abs * 8, 42)).toFixed(1) + "px,0) rotateY(" + bend.toFixed(1) + "deg)"
-        card.style.opacity = String(clamp(1 - Math.max(0, abs - 2) * .29, .09, 1))
-      })
-      const next = mod(Math.round(normalized / s), count)
-      if (next !== focusRef.current && target.current === null && !pointer) {
-        focusRef.current = next
-        setVisualFocus(next)
-        if (controlled === undefined) setLocal(next)
-        activeCallback.current?.(next)
+      // Only ONE composited transform per frame. No per-card DOM writes.
+      const looped = mod(position.current, d)
+      if (ribbon.current) ribbon.current.style.transform =
+        "translate3d(" + (center - w / 2 - n * s - looped).toFixed(2) + "px,0,0)"
+      const nearest = mod(Math.round(looped / s), n)
+      if (snap.current === null && !dragging.current && nearest !== current.current) {
+        current.current = nearest
+        setSelected(nearest)
+        if (controlled === undefined) setInternal(nearest)
+        notified.current?.(nearest)
       }
-      raf = requestAnimationFrame(tick)
+      if (Math.abs(position.current) > d * 64) {
+        position.current = mod(position.current, d)
+        if (snap.current !== null) snap.current = mod(snap.current, d)
+      }
+      raf = requestAnimationFrame(render)
     }
-    raf = requestAnimationFrame(tick)
+    raf = requestAnimationFrame(render)
     return () => cancelAnimationFrame(raf)
-  }, [count, autoplay, autoplayDelay, reduced, controlled])
-
-  const navigate = React.useCallback((next: number) => {
-    if (count < 1) return
-    const i = mod(next, count)
-    const { step: s, cycle: c } = geometry.current
-    if (!s || !c) return
-    const current = position.current
-    const nearest = i * s + Math.round((current - i * s) / c) * c
-    target.current = nearest
-    velocity.current = 0
-    pauseUntil.current = performance.now() + 2900
-    focusRef.current = i
-    setVisualFocus(i)
-    if (controlled === undefined) setLocal(i)
-    activeCallback.current?.(i)
-  }, [count, controlled])
+  }, [n, controlled, reduce, autoplayDelay])
 
   React.useEffect(() => {
-    if (controlled === undefined || !count || !geometry.current.step) return
-    if (controlled !== focusRef.current) navigate(controlled)
-  }, [controlled, count, navigate, step])
-
-  React.useEffect(() => {
-    if (!stageRef.current) return
-    const stage = stageRef.current
-    // Only horizontal gestures control the ribbon; vertical scroll remains the page's.
-    const onWheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) * 1.3) return
-      e.preventDefault()
-      target.current = null
-      velocity.current = 0
-      position.current += e.deltaX * .8
-      pauseUntil.current = performance.now() + 1400
+    const el = stage.current
+    if (!el) return
+    const wheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) < Math.abs(event.deltaY) * 1.3) return
+      event.preventDefault()
+      position.current += event.deltaX * .8
+      snap.current = null
+      momentum.current = 0
+      pauseUntil.current = performance.now() + 1100
     }
-    stage.addEventListener("wheel", onWheel, { passive: false })
-    return () => stage.removeEventListener("wheel", onWheel)
+    el.addEventListener("wheel", wheel, { passive: false })
+    return () => el.removeEventListener("wheel", wheel)
   }, [])
 
-  if (!focusItem || !count) return null
-  const activeAccent = focusItem.accent ?? "#855d78"
+  if (!items.length) return null
+  const active = items[index] ?? items[0]
+  const triple = [0, 1, 2]
+  const start = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return
+    dragging.current = { start: e.clientX, previous: e.clientX, t: performance.now(), origin: position.current, moved: false }
+    snap.current = null
+    momentum.current = 0
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+  const move = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragging.current
+    if (!d) return
+    const dx = e.clientX - d.start
+    d.moved ||= Math.abs(dx) > 7
+    position.current = d.origin - dx
+    const time = performance.now()
+    const delta = Math.max(time - d.t, 16)
+    momentum.current = clamp(-(e.clientX - d.previous) * 1000 / delta, -520, 520)
+    d.previous = e.clientX
+    d.t = time
+  }
+  const release = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragging.current) return
+    const moved = dragging.current.moved
+    dragging.current = null
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* cancelled */ }
+    pauseUntil.current = performance.now() + 1600
+    if (moved) {
+      clickBlock.current = true
+      window.setTimeout(() => { clickBlock.current = false }, 180)
+    } else momentum.current = 0
+  }
+  const clickCard = (i: number) => { if (!clickBlock.current) go(i) }
 
-  return (
-    <section
-      className={cn("hc-stage relative isolate h-full w-full min-h-[24rem] overflow-hidden text-white", className)}
-      ref={stageRef} role="region" tabIndex={0} aria-roledescription="carrousel"
-      aria-label="Exploration automatique des six offres"
-      onPointerEnter={() => { hovered.current = true }}
-      onPointerLeave={() => { hovered.current = false }}
-      onFocusCapture={() => { focused.current = true }}
-      onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) focused.current = false }}
-      onKeyDown={e => {
-        if (e.key === "ArrowRight") { e.preventDefault(); navigate(focusRef.current + 1) }
-        if (e.key === "ArrowLeft") { e.preventDefault(); navigate(focusRef.current - 1) }
-        if (e.key === "Home") { e.preventDefault(); navigate(0) }
-        if (e.key === "End") { e.preventDefault(); navigate(count - 1) }
-      }}
-      onPointerDown={e => {
-        if (e.pointerType === "mouse" && e.button !== 0) return
-        drag.current = { x: e.clientX, lastX: e.clientX, pos: position.current, time: performance.now(), moved: false }
-        target.current = null
-        velocity.current = 0
-        setInteracting(true)
-        e.currentTarget.setPointerCapture(e.pointerId)
-      }}
-      onPointerMove={e => {
-        if (!drag.current) return
-        const dx = e.clientX - drag.current.x
-        drag.current.moved ||= Math.abs(dx) > 7
-        const now = performance.now()
-        const dt = Math.max(12, now - drag.current.time)
-        velocity.current = clamp(-(e.clientX - drag.current.lastX) / dt * 1000, -850, 850)
-        drag.current.lastX = e.clientX
-        drag.current.time = now
-        position.current = drag.current.pos - dx
-      }}
-      onPointerUp={e => {
-        const currentDrag = drag.current
-        if (!currentDrag) return
-        drag.current = null
-        try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* gesture cancelled */ }
-        setInteracting(false)
-        pauseUntil.current = performance.now() + 2200
-        if (currentDrag.moved) {
-          suppressClick.current = true
-          window.setTimeout(() => { suppressClick.current = false }, 250)
-        } else {
-          // Tap any visible card, including the left/right seamlessly repeated copies.
-          const rect = e.currentTarget.getBoundingClientRect()
-          const physical = e.clientX - rect.left
-          const s = geometry.current.step
-          navigate(Math.round((mod(position.current, geometry.current.cycle) + physical - rect.width / 2) / s))
-        }
-      }}
-      onPointerCancel={() => { drag.current = null; velocity.current = 0; setInteracting(false) }}
-      style={{ "--hc-accent": activeAccent } as React.CSSProperties}
-    >
-      <div aria-hidden="true" className="hc-backdrops">
-        <AnimatePresence initial={false}>
-          <motion.div key={String(focusItem.id ?? focus)} className="hc-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={reduced ? { duration: 0 } : { duration: 1.15 }}>
-            <img src={focusItem.image} alt="" className="hc-backdrop__image" draggable={false} />
-            <div className="hc-backdrop__tone" style={{ backgroundColor: activeAccent }} />
-          </motion.div>
-        </AnimatePresence>
-        <div className="hc-backdrop__veil" />
-        <div className="hc-backdrop__grain" style={{ backgroundImage: GRAIN }} />
+  return <section
+    ref={stage} tabIndex={0} role="region" aria-roledescription="carousel"
+    aria-label="Six services — carrousel photographique"
+    className={cn("photo-carousel relative isolate h-full w-full overflow-hidden text-white", className)}
+    style={{ "--photo-accent": active.accent ?? "#af745e" } as React.CSSProperties}
+    onPointerEnter={() => { hovering.current = true }}
+    onPointerLeave={() => { hovering.current = false }}
+    onFocusCapture={() => { focusing.current = true }}
+    onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) focusing.current = false }}
+    onKeyDown={e => {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(current.current + 1) }
+      if (e.key === "ArrowLeft") { e.preventDefault(); go(current.current - 1) }
+      if (e.key === "Home") { e.preventDefault(); go(0) }
+      if (e.key === "End") { e.preventDefault(); go(n - 1) }
+    }}
+  >
+    <div className="photo-carousel__atmosphere" aria-hidden="true"/>
+    <div className="photo-carousel__top">
+      <span>{onBack ? <button type="button" onClick={onBack}>← RETOUR</button> : null}</span>
+      <strong>{brand ?? "MOEZ THABET · 6 SOLUTIONS"}</strong>
+      <span>{onMenu ? <button type="button" onClick={onMenu}>MENU ↗</button> : null}</span>
+    </div>
+    <div className="photo-carousel__caption" aria-live="off">
+      <span className="photo-carousel__eyebrow">DES EXPERTISES CONCRÈTES · UN SEUL INTERLOCUTEUR</span>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div key={String(active.id ?? index)}
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -9 }}
+          transition={reduce ? { duration: 0 } : { duration: .55, ease: [.2, .8, .2, 1] }}>
+          <h2>{active.title.split("\n").map((line, i) => <span key={i}>{line}</span>)}</h2>
+          <p>{active.credit}</p>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+    <div className="photo-carousel__viewport"
+      style={{ top: "43%", height, touchAction: "pan-y" }}
+      onPointerDown={start} onPointerMove={move} onPointerUp={release} onPointerCancel={() => { dragging.current = null; momentum.current = 0 }}>
+      <div className="photo-carousel__track" ref={ribbon} style={{ gap, width: 3 * distance }}>
+        {triple.map(copy => items.map((item, i) =>
+          <button
+            type="button" key={copy + "-" + String(item.id ?? i)}
+            tabIndex={copy === 1 ? 0 : -1}
+            aria-hidden={copy === 1 ? undefined : true}
+            aria-label={"Choisir " + item.title.replace(/\n/g, " ")}
+            aria-current={copy === 1 && i === selected ? "true" : undefined}
+            onClick={() => clickCard(i)}
+            className={"photo-carousel__card " + (selected === i ? "is-focused" : "")}
+            style={{ width, height, flex: "0 0 " + width + "px" }}
+          >
+            <img
+              className="photo-carousel__photo"
+              src={item.image}
+              alt=""
+              draggable={false}
+              loading={copy === 1 ? "eager" : "lazy"}
+              decoding="async"
+            />
+            <span className="photo-carousel__shade"/>
+            <span className="photo-carousel__cardtop">
+              <small>{String(i + 1).padStart(2, "0")} / 06</small><b>↗</b>
+            </span>
+            <span className="photo-carousel__cardbottom">
+              <small>{item.meta?.[0] ?? "MOEZ · SERVICES"}</small>
+              <b>{["Sites internet", "Service client", "Avis clients", "Appels et relances", "Dossiers clients", "Automatisation"][i] ?? item.title.replace(/\n/g, " ")}</b>
+            </span>
+          </button>
+        ))}
       </div>
-
-      <div className="hc-topbar">
-        <span className="hc-topbar__side">{onBack && <button onPointerDown={e => e.stopPropagation()} onClick={onBack}>← RETOUR</button>}</span>
-        <div className="hc-topbar__brand">{brand || "MOEZ THABET / SERVICES"}</div>
-        <span className="hc-topbar__side hc-topbar__side--right">{onMenu && <button onPointerDown={e => e.stopPropagation()} onClick={onMenu}>MENU ↗</button>}</span>
+    </div>
+    <div className="photo-carousel__footer">
+      <div className="photo-carousel__progress">
+        <strong>{String(index + 1).padStart(2, "0")}</strong>
+        <span><i style={{ left: (index / n * 100) + "%", width: (100 / n) + "%" }}/></span>
+        <small>{String(n).padStart(2, "0")}</small>
       </div>
-
-      <div className="hc-editorial" aria-live="off">
-        <span className="hc-editorial__eyebrow"><i /> EXPERTISES · SERVICES SUR MESURE</span>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={String(focusItem.id ?? focus)} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
-            transition={reduced ? { duration: 0 } : { duration: .64, ease: [.22, 1, .36, 1] }} className="hc-editorial__content">
-            <h2>{focusItem.title.split("\n").map((line, i) => <span key={i}>{line}</span>)}</h2>
-            <div className="hc-editorial__notes">
-              <span>{focusItem.credit}</span>
-              <span>{focusItem.meta?.join(" — ") || "MOEZ THABET · DIGITAL"}</span>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <div className={"hc-ribbon " + (interacting ? "hc-ribbon--dragging" : "")}
-        style={{ top: "46%", height: cardH, perspective: Math.max(box.w, 700) + "px", touchAction: "pan-y" }}>
-        <div className="hc-ribbon__track" ref={trackRef} style={{ gap, width: step * 3 * count }}>
-          {slides.map((item, j) => {
-            const realIndex = j % count
-            const selected = realIndex === visualFocus
-            return <div key={j + "-" + String(item.id ?? realIndex)} ref={el => { cardRefs.current[j] = el }}
-              className={"hc-card " + (selected ? "hc-card--focused" : "")}
-              style={{ width: cardW, height: cardH, "--hc-accent": item.accent ?? "#855d78" } as React.CSSProperties}
-              aria-hidden={j < count || j >= count * 2 ? true : undefined}>
-              <div className="hc-card__mask" style={{ height: selected ? cardH : cardH * .52 }}>
-                <ServiceArtwork item={item} ordinal={realIndex}/>
-              </div>
-            </div>
-          })}
-        </div>
-      </div>
-
-      <div className="hc-bottom">
-        <div className="hc-bottom__counter"><span>{String(focus + 1).padStart(2, "0")}</span>
-          <div className="hc-bottom__rail" aria-hidden="true"><i style={{ left: 100 * focus / count + "%", width: 100 / count + "%" }} /></div>
-          <span>{String(count).padStart(2, "0")}</span>
-        </div>
-        <div className="hc-bottom__hint">{autoplay && !reduced ? "DÉFILEMENT CONTINU" : "NAVIGATION MANUELLE"} <b>·</b> GLISSEZ POUR EXPLORER <span>↔</span></div>
-      </div>
-    </section>
-  )
+      <span>{autoplay && !reduce ? "DÉFILEMENT AUTOMATIQUE · " : ""}GLISSER POUR EXPLORER ↔</span>
+    </div>
+  </section>
 }
