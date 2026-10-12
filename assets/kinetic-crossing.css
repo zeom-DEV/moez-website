@@ -32,3 +32,12 @@
 @media(max-width:600px){.kinetic-showcase{width:calc(100% - 26px);margin:24px auto 40px;padding:18px 14px;border-radius:15px}.kinetic-showcase__heading{margin-bottom:4px}.kinetic-showcase__heading>p{display:none}.kinetic-showcase__layout{gap:6px}.kinetic-showcase__copy{display:block}.kinetic-showcase__copy h2{font-size:35px;margin:10px 0}.kinetic-showcase__copy p{font-size:13px;line-height:1.6;max-width:none;min-height:0;margin-bottom:12px}.kinetic-showcase__cta{min-height:48px;font-size:12px}.kinetic-showcase__controls{display:inline-flex;vertical-align:middle;margin:0 0 0 11px}.kinetic-showcase__controls button{width:40px;height:44px}.kinetic-showcase__hint{display:none}.kinetic-showcase__stage{height:clamp(235px,67vw,315px)}.kinetic-showcase__card{width:clamp(134px,47vw,195px)}.kinetic-showcase__bottom{font-size:10px;flex-wrap:wrap}}
 @media(max-width:360px){.kinetic-showcase__copy h2{font-size:31px}.kinetic-showcase__cta{padding:10px 11px;font-size:11px}.kinetic-showcase__controls{margin-left:5px}.kinetic-showcase__controls button{width:35px}}
 @media(prefers-reduced-motion:reduce){.kinetic-showcase__card{will-change:auto}.kinetic-showcase__cta{transition:none}}
+
+/* Direct labels only on small screens, where overlapping cards must remain decorative. */
+.kinetic-showcase__choices{display:none}
+@media(max-width:600px){
+  .kinetic-showcase__choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:1px}
+  .kinetic-showcase__choices button{min-height:46px;padding:8px 6px;border:1px solid #b998a36e;background:#ffffff12;color:#e9dbe3;border-radius:6px;text-align:center;font:650 10px/1.35 var(--sans,system-ui);cursor:pointer}
+  .kinetic-showcase__choices button[aria-pressed="true"]{background:#f4dce5;color:#3a1426;border-color:#f4dce5;font-weight:800}
+  .kinetic-showcase__bottom{margin-top:12px}
+}
