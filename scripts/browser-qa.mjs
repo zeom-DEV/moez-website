@@ -18,6 +18,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
+ assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
