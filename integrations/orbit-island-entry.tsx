@@ -25,7 +25,6 @@ function App(){
   })
   const [playing,setPlaying]=React.useState(true)
   const intentAt=React.useRef(0)
-  const countRef=React.useRef(0)
   const indexRef=React.useRef(index)
   const reduce=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches
   const current=services[index]
@@ -42,13 +41,25 @@ function App(){
   function chosen(next:number){
     indexRef.current=next
     setIndex(next)
-    countRef.current++
     // Auto-rotation is cinematic, not navigation; never change the visitor's
     // detail panel or spawn notifications from passive autoplay.
     if(performance.now()-intentAt.current<2000){
       safeEvent("mt:journey-select",services[next].id)
       intentAt.current=0
     }
+  }
+  function stepBy(delta:number){
+    intent()
+    const next=(indexRef.current+delta+6)%6
+    indexRef.current=next
+    setIndex(next)
+    safeEvent("mt:journey-select",services[next].id)
+  }
+  function pick(i:number){
+    intent()
+    indexRef.current=i
+    setIndex(i)
+    safeEvent("mt:journey-select",services[i].id)
   }
   function openDetail(){
     intent()
@@ -76,8 +87,8 @@ function App(){
         <strong>{current.name}</strong>
       </div>
       <div className="mt-orbit__actions">
-        <button type="button" className="mt-orbit__nav" onClick={()=>{intent();setIndex(v=>{const next=(v+5)%6;safeEvent("mt:journey-select",services[next].id);return next})}} aria-label="Offre précédente">←</button>
-        <button type="button" className="mt-orbit__nav" onClick={()=>{intent();setIndex(v=>{const next=(v+1)%6;safeEvent("mt:journey-select",services[next].id);return next})}} aria-label="Offre suivante">→</button>
+        <button type="button" className="mt-orbit__nav" onClick={()=>stepBy(-1)} aria-label="Offre précédente">←</button>
+        <button type="button" className="mt-orbit__nav" onClick={()=>stepBy(1)} aria-label="Offre suivante">→</button>
         <button type="button" className="mt-orbit__pause" onClick={()=>setPlaying(p=>!p)}
           aria-pressed={!playing}>{playing&&!reduce?"Ⅱ Pause":"▷ Animer"}</button>
       </div>
@@ -88,7 +99,7 @@ function App(){
     </div>
     <nav className="mt-orbit__quicknav" aria-label="Accéder directement à l'une des six offres">
       {services.map((s,i)=><button type="button" key={s.id} aria-pressed={i===index}
-          onClick={()=>{intent();setIndex(i);safeEvent("mt:journey-select",s.id)}}>
+          onClick={()=>pick(i)}>
         <span>{String(i+1).padStart(2,"0")}</span><strong>{s.name}</strong>
       </button>)}
     </nav>
@@ -97,5 +108,6 @@ function App(){
 if(root) {
   createRoot(root).render(<App/>)
   document.documentElement.classList.add("mt-orbit-mounted")
+  root.closest(".mt-orbit-showcase")?.classList.add("mt-orbit-ready")
   window.dispatchEvent(new CustomEvent("mt:orbit-ready"))
 }
