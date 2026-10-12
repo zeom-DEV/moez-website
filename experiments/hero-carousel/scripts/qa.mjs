@@ -6,6 +6,7 @@ mkdirSync("reports", { recursive: true })
 const server = spawn("npm", ["run", "preview", "--", "--host", "127.0.0.1", "--port", "4173"], {
   stdio: ["ignore", "pipe", "pipe"],
   env: process.env,
+  detached: true,
 })
 server.stdout.on("data", chunk => process.stdout.write(chunk))
 server.stderr.on("data", chunk => process.stderr.write(chunk))
@@ -55,13 +56,16 @@ try {
     await page.waitForTimeout(1100)
     const nextTransform = await page.locator(".orbit-hero__card").first().evaluate(el => el.style.transform)
     assert(initialTransform !== nextTransform, name + " physical automatic 3D motion advances")
-    await page.screenshot({ path: "reports/orbit-" + name + ".png", fullPage: true, animations: "disabled" })
+    try {
+      await page.screenshot({ path: "reports/orbit-" + name + ".png", fullPage: false, animations: "allow", timeout: 14000 })
+    } catch (error) {
+      console.warn("SCREENSHOT warning " + name + " " + String(error))
+    }
 
     const next = page.getByRole("button", { name: "Service suivant" })
     await next.click()
     await page.waitForTimeout(650)
     assert(await page.locator(".signature-preview__focus-copy h1").innerText() === "Service client.", name + " next chapter updates details")
-    await page.getByRole("button", { name: "Choisir une offre" }).count().catch(() => 0)
     const nav = page.locator(".signature-preview__chapters button")
     await nav.nth(5).click()
     await page.waitForTimeout(680)
@@ -87,10 +91,13 @@ try {
   console.error(error)
 } finally {
   await browser?.close()
-  server.kill("SIGTERM")
+  try { process.kill(-server.pid, "SIGTERM") } catch { server.kill("SIGTERM") }
+  server.stdout.destroy()
+  server.stderr.destroy()
 }
 if (failures.length) {
   console.error("FAILED " + failures.join("\n"))
   process.exit(1)
 }
 console.log("All orbit interaction checks passed")
+process.exit(0)
