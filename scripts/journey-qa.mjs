@@ -39,8 +39,7 @@ try{
   await activeExplore.click();
   await page.locator('#solution-'+expected+'.is-active').waitFor({state:'visible'});
   const observedHash=new URL(page.url()).hash;
-  console.log('EXPLORER_TAP_DEBUG',name,JSON.stringify({expected,cardIndex,observedHash}));
-  check(new URL(page.url()).hash==='#solution-'+expected,name+' tapping a photographic card Explorer opens its matching service');
+  check(observedHash==='#solution-'+expected,name+' tapping the Explorer card opens its matching service ('+observedHash+')');
   await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>[...document.querySelectorAll('.orbit-hero__card-image')].length===6&&[...document.querySelectorAll('.orbit-hero__card-image')].every(img=>img.complete&&img.naturalWidth>0),{},{timeout:25000});
   check(true,name+' all six photographic assets really load');
