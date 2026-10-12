@@ -17,6 +17,15 @@ try{
   await page.goto(base+'/#offres',{waitUntil:'domcontentloaded'});
   await page.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:20000});
   check(await page.locator('.orbit-hero__card').count()===6,name+' uses original React six-image physics carousel');
+  if(name==='desktop'){
+    const before=await page.locator('.orbit-hero__card').first().evaluate(el=>el.style.transform);
+    await page.waitForTimeout(700);
+    const after=await page.locator('.orbit-hero__card').first().evaluate(el=>el.style.transform);
+    check(before!==after,'desktop 3D card position moves autonomously, not a static screenshot');
+  }
+  await page.waitForFunction(()=>[...document.querySelectorAll('.orbit-hero__card-image')].length===6&&[...document.querySelectorAll('.orbit-hero__card-image')].every(img=>img.complete&&img.naturalWidth>0),{},{timeout:25000});
+  check(true,name+' all six photographic assets really load');
+
   check(await page.locator('#solution-web').count()===1&&await page.locator('.offer-detail').count()===6,name+' original six detailed services retained');
   check(await page.locator('.mt-orbit__quicknav button').count()===6,name+' one directly usable illustrated selector');
   check(await page.locator('.works-wheel').isHidden(),name+' old repeated wheel hidden');
