@@ -62,20 +62,26 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await kinetic.locator('[data-kinetic-prev]').click();
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
- await kinetic.locator('[data-kinetic-stage]').scrollIntoViewIfNeeded();
- const visiblePoint=await page.evaluate(()=>{
-   const stage=document.querySelector('[data-kinetic-stage]');
-   const target=stage.querySelector('[data-kinetic-card="automation"]');
-   const a=stage.getBoundingClientRect(),b=target.getBoundingClientRect();
-   const y=b.top+b.height*.5,hits=[];
-   const left=Math.max(a.left+9,b.left+9),right=Math.min(a.right-9,b.right-9);
-   for(let x=left;x<right;x+=4){
-     if(document.elementFromPoint(x,y)?.closest('[data-kinetic-card]')===target)hits.push(x);
-   }
-   return hits.length>=6?{x:hits[Math.floor(hits.length/2)],y,width:hits[hits.length-1]-hits[0]}:null;
- });
- assert(visiblePoint&&visiblePoint.width>=20,size.name+': neighboring card needs a visible clickable edge');
- await page.mouse.click(visiblePoint.x,visiblePoint.y);
+ if(size.name==='small-mobile'){
+   const pills=kinetic.locator('[data-kinetic-choice]');
+   assert.equal(await pills.count(),6,'all six mobile choices');
+   await kinetic.locator('[data-kinetic-choice="automation"]').click();
+ }else{
+   await kinetic.locator('[data-kinetic-stage]').scrollIntoViewIfNeeded();
+   const visiblePoint=await page.evaluate(()=>{
+     const stage=document.querySelector('[data-kinetic-stage]');
+     const target=stage.querySelector('[data-kinetic-card="automation"]');
+     const a=stage.getBoundingClientRect(),b=target.getBoundingClientRect();
+     const y=b.top+b.height*.5,hits=[];
+     const left=Math.max(a.left+9,b.left+9),right=Math.min(a.right-9,b.right-9);
+     for(let x=left;x<right;x+=4){
+       if(document.elementFromPoint(x,y)?.closest('[data-kinetic-card]')===target)hits.push(x);
+     }
+     return hits.length>=6?{x:hits[Math.floor(hits.length/2)],y,width:hits[hits.length-1]-hits[0]}:null;
+   });
+   assert(visiblePoint&&visiblePoint.width>=20,size.name+': neighboring card needs a visible clickable edge');
+   await page.mouse.click(visiblePoint.x,visiblePoint.y);
+ }
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
  await kinetic.locator('[data-kinetic-cta]').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
