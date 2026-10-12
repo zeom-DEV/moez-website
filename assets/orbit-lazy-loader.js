@@ -19,6 +19,8 @@
  function start(){
    if(started)return;
    started=true;
+   const firstImage=section.querySelector('[data-orbit-poster-image]');
+   if(firstImage&&!firstImage.getAttribute('src'))firstImage.src=firstImage.dataset.src;
    const script=document.createElement('script');
    script.type='module';
    script.src='./assets/orbit-island.js?v=20261012-original';
