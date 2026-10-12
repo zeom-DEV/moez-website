@@ -8,7 +8,6 @@
  const html=document.documentElement;
  html.classList.add('mt-orbit-pending');
  let started=false,finished=false;
- const scrollLink=document.querySelector('.flagship-link[href="#kinetic-showcase"]');
  const timeout=()=>setTimeout(()=>{if(!finished)fallback()},18000);
  function fallback(){
    if(finished)return;
@@ -27,10 +26,6 @@
    timeout();
  }
  window.addEventListener('mt:orbit-ready',()=>{finished=true;section.classList.add('mt-orbit-ready')},{once:true});
- scrollLink?.addEventListener('pointerenter',start,{once:true});
- scrollLink?.addEventListener('focus',start,{once:true});
- scrollLink?.addEventListener('pointerdown',start,{once:true,passive:true});
- scrollLink?.addEventListener('click',start,{once:true});
  if('IntersectionObserver' in window){
    const watcher=new IntersectionObserver(entries=>{
      if(entries.some(e=>e.isIntersecting)){watcher.disconnect();start()}
