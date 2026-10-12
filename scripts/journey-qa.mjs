@@ -29,6 +29,8 @@ try{
     const after=await page.locator('.orbit-hero__card').first().evaluate(el=>el.style.transform);
     check(before!==after,'desktop 3D card position moves autonomously, not a static screenshot');
   }
+  await page.locator('.mt-orbit__pause').click();
+  await page.waitForTimeout(700); // The real physics settles before Playwright's strict stability check.
   const activeExplore=page.locator('.orbit-hero__card--active');
   const cardIndex=Number(await activeExplore.getAttribute('data-hero-card'));
   const expected=['web','sav','avis','prospects','crm','automation'][cardIndex];
@@ -50,7 +52,7 @@ try{
   check(await page.locator('[data-web-demo]').count()===0,name+' redundant web mockup removed without affecting original hero');
   check(await page.locator('#offers-five-title').count()===1,name+' accessible homepage H1 is retained');
   check(await page.locator('.mt-orbit__pause').count()===1,name+' visitor has actual autoplay control');
-  await page.locator('.mt-orbit__pause').click();
+  check((await page.locator('.mt-orbit__pause').getAttribute('aria-pressed'))==='true',name+' carousel pause remains controllable');
   await page.locator('.mt-orbit__quicknav button').last().click();
   await page.locator('.mt-orbit__quicknav button').last().waitFor({state:'visible'});
   check((await page.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'))==='true',name+' direct selection updates actual orbit');
