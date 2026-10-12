@@ -113,6 +113,10 @@ jobs:
             echo 'Compiled bundle already current'
           else
             git commit -m 'build(orbit): compile exact reference carousel for existing website'
+            # Other edits can land while compilation is running. Replay the
+            # generated-only commit on the newest branch head before pushing.
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Archive bundle for independent inspection
