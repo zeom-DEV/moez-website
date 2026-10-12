@@ -62,6 +62,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await kinetic.locator('[data-kinetic-prev]').click();
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
+ await kinetic.locator('[data-kinetic-stage]').scrollIntoViewIfNeeded();
  const visiblePoint=await page.evaluate(()=>{
    const stage=document.querySelector('[data-kinetic-stage]');
    const target=stage.querySelector('[data-kinetic-card="automation"]');
