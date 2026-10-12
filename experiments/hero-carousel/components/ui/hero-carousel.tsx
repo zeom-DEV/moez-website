@@ -1,25 +1,11 @@
 "use client"
 
-/**
- * HeroCarousel — filmstrip with a shared card top edge and cinematic colour
- * grading, adapted from the supplied component.
- *
- * Uses ResizeObserver, not fixed pixel dimensions. Only the focused card
- * unfurls to full height; adjacent cards retain half-height crops.
- */
 import * as React from "react"
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useMotionValue,
-  useReducedMotion,
-} from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 export interface HeroCarouselItem {
   id?: string | number
-  /** Use "\n" to separate headline reveal lines. */
   title: string
   image: string
   credit?: string
@@ -35,317 +21,319 @@ export interface HeroCarouselProps {
   brand?: React.ReactNode
   onBack?: () => void
   onMenu?: () => void
+  /** A continuously moving, seamless filmstrip; enabled by the demo. */
   autoplay?: boolean
+  /** Used as a speed multiplier: nominal duration of one card in milliseconds. */
   autoplayDelay?: number
   className?: string
 }
 
-const CARD_H = 0.264
-const CARD_AR = 0.75
-const GAP = 0.038
-const STRIP_TOP = 0.5
-const TITLE = 0.067
-const LABEL = 0.0103
-const PAD = 0.017
-const RAIL = 0.2
-const WHEEL_THRESHOLD = 60
-const WHEEL_COOLDOWN = 420
-const GRAIN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")"
-const clamp = (n: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, n))
+const mod = (n: number, size: number) => ((n % size) + size) % size
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n))
+const GRAIN = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.3'/%3E%3C/svg%3E\")"
+
+function ServiceArtwork({ item, ordinal }: { item: HeroCarouselItem; ordinal: number }) {
+  const kind = String(item.id ?? ordinal)
+  return (
+    <div className={"hc-art hc-art--" + kind} style={{ "--poster-accent": item.accent ?? "#ad7c96" } as React.CSSProperties}>
+      <img className="hc-art__image" src={item.image} alt="" loading="lazy" draggable={false} />
+      <div className="hc-art__light" aria-hidden="true" />
+      {kind === "web" && <div className="hc-ui hc-ui--web">
+        <div className="hc-ui__top"><i/><i/><i/><span>atelier / studio</span></div>
+        <div className="hc-web-visual"><span className="hc-web-orb"/><small>LA VITRINE QUI CONVAINC</small><strong>Votre idée.<br/>Notre prochain clic.</strong><b>EXPLORER ↗</b></div>
+      </div>}
+      {kind === "sav" && <div className="hc-ui hc-ui--chat">
+        <div className="hc-chat"><span>01 · MESSAGE REÇU</span><strong>Bonjour, j'ai une question.</strong><i>09:41</i></div>
+        <div className="hc-chat hc-chat--reply"><span>02 · RÉPONSE</span><strong>Je m'en occupe.</strong><i>✓ SUIVI EN COURS</i></div>
+      </div>}
+      {kind === "avis" && <div className="hc-ui hc-ui--review">
+        <span className="hc-review-star">✳</span><div className="hc-review-card"><small>AVIS CLIENTS</small><strong>★★★★★</strong><b>Écouter.<br/>Répondre.<br/>Progresser.</b><i>✓ RÉPONSE PRÉPARÉE</i></div>
+      </div>}
+      {kind === "prospects" && <div className="hc-ui hc-ui--phone">
+        <div className="hc-phone-ring"/><div className="hc-phone"><small>ÉCHANGE EN COURS</small><strong>↗</strong><span>PROCHAINE ÉTAPE</span></div><div className="hc-soundwave">{Array.from({ length: 14 }, (_, i) => <i key={i} style={{ "--wave": (i % 5) } as React.CSSProperties}/>)}</div>
+      </div>}
+      {kind === "crm" && <div className="hc-ui hc-ui--crm"><div className="hc-crm-top"><b>CRM / STUDIO</b><span>✓ EN SUIVI</span></div>
+        <div className="hc-crm-title">Tableau de suivi</div>
+        <div className="hc-crm-columns"><div><b>À FAIRE</b><span>Client 01</span><span>Client 04</span></div><div><b>EN COURS</b><span>Client 02</span><span>Client 05</span></div><div><b>TERMINÉ</b><span>Client 03</span></div></div>
+      </div>}
+      {kind === "automation" && <div className="hc-ui hc-ui--flow"><svg viewBox="0 0 340 250" aria-hidden="true"><path d="M65 126 C125 126 99 62 175 62 S235 125 281 125" /><path d="M65 126 C125 126 99 190 175 190 S235 125 281 125" /></svg><div className="hc-node hc-node--a">FORMULAIRE</div><div className="hc-node hc-node--b">CRM</div><div className="hc-node hc-node--c">EMAIL</div><div className="hc-node hc-node--d">✓ ACTION</div></div>}
+      <div className="hc-art__bottom"><span>{String(ordinal + 1).padStart(2, "0")} / 06</span><b>{["CRÉATION WEB","RELATION CLIENT","E-RÉPUTATION","PROSPECTION","ORGANISATION","WORKFLOWS"][ordinal] ?? "SOLUTION"}</b></div>
+    </div>
+  )
+}
 
 export function HeroCarousel({
-  items,
-  index: controlled,
-  defaultIndex = 0,
-  onIndexChange,
-  brand,
-  onBack,
-  onMenu,
-  autoplay = false,
-  autoplayDelay = 4000,
-  className,
+  items, index: controlled, defaultIndex = 0, onIndexChange, brand, onBack, onMenu,
+  autoplay = false, autoplayDelay = 4400, className,
 }: HeroCarouselProps) {
-  const stageRef = React.useRef<HTMLDivElement>(null)
-  const [box, setBox] = React.useState({ w: 0, h: 0 })
-  const [uncontrolled, setUncontrolled] = React.useState(defaultIndex)
-  const [dragging, setDragging] = React.useState(false)
-  const [paused, setPaused] = React.useState(false)
   const reduced = useReducedMotion()
-  const last = items.length - 1
-  const index = clamp(controlled ?? uncontrolled, 0, Math.max(0, last))
+  const stageRef = React.useRef<HTMLDivElement>(null)
+  const trackRef = React.useRef<HTMLDivElement>(null)
+  const cardRefs = React.useRef<(HTMLDivElement | null)[]>([])
+  const [box, setBox] = React.useState({ w: 0, h: 0 })
+  const [local, setLocal] = React.useState(defaultIndex)
+  const [visualFocus, setVisualFocus] = React.useState(defaultIndex)
+  const [interacting, setInteracting] = React.useState(false)
+  const position = React.useRef(0)
+  const target = React.useRef<number | null>(null)
+  const velocity = React.useRef(0)
+  const drag = React.useRef<{ x: number; pos: number; time: number; lastX: number; moved: boolean } | null>(null)
+  const suppressClick = React.useRef(false)
+  const focusRef = React.useRef(defaultIndex)
+  const hovered = React.useRef(false)
+  const focused = React.useRef(false)
+  const visible = React.useRef(true)
+  const pauseUntil = React.useRef(0)
+  const motionPaused = React.useRef(false)
+  const activeCallback = React.useRef(onIndexChange)
+  const count = items.length
+  const focus = clamp(controlled ?? local, 0, Math.max(0, count - 1))
+  const step = clamp(box.h * 0.475, 200, 455) * 0.72 + Math.max(9, box.w * 0.012)
+  const cardH = clamp(box.h * 0.475, 200, 455)
+  const cardW = cardH * 0.72
+  const gap = step - cardW
+  const cycle = step * count
+  const stageCenter = box.w / 2
+  const focusItem = items[focus] ?? items[0]
+  const slides = React.useMemo(() => [...items, ...items, ...items], [items])
 
-  const go = React.useCallback(
-    (next: number) => {
-      const clamped = clamp(next, 0, Math.max(0, last))
-      if (controlled === undefined) setUncontrolled(clamped)
-      if (clamped !== index) onIndexChange?.(clamped)
-    },
-    [controlled, index, last, onIndexChange]
-  )
+  React.useEffect(() => { activeCallback.current = onIndexChange }, [onIndexChange])
 
   React.useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
     const read = () => setBox({ w: stage.clientWidth, h: stage.clientHeight })
     read()
-    const ro = new ResizeObserver(read)
-    ro.observe(stage)
-    return () => ro.disconnect()
+    const observer = new ResizeObserver(read)
+    observer.observe(stage)
+    const watch = new IntersectionObserver(entries => {
+      visible.current = entries[0]?.isIntersecting ?? true
+    }, { threshold: .05 })
+    watch.observe(stage)
+    return () => { observer.disconnect(); watch.disconnect() }
   }, [])
 
-  const fullH = clamp(box.h * CARD_H, 96, 360)
-  const halfH = fullH / 2
-  const cardW = fullH * CARD_AR
-  const gap = Math.max(4, Math.round(cardW * GAP))
-  const step = cardW + gap
-  const pad = Math.max(16, Math.round(box.w * PAD))
-  const label = Math.max(9, Math.round(box.h * LABEL))
-  const xFor = React.useCallback(
-    (i: number) => box.w / 2 - (i * step + cardW / 2),
-    [box.w, step, cardW]
-  )
-  const x = useMotionValue(0)
-  const target = xFor(index)
-  const swing = reduced
-    ? { duration: 0 }
-    : { duration: 0.7, ease: "easeOut" as const }
-  const spring = reduced
-    ? { duration: 0 }
-    : { type: "spring" as const, stiffness: 260, damping: 34, mass: 0.9 }
-
+  const geometry = React.useRef({ step, cycle, cardW, stageCenter })
+  React.useEffect(() => { geometry.current = { step, cycle, cardW, stageCenter } }, [step, cycle, cardW, stageCenter])
   React.useEffect(() => {
-    if (dragging) return
-    const run = animate(x, target, spring)
-    return () => run.stop()
-  }, [target, dragging, reduced, x]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!step || !cycle) return
+    const newPos = clamp(focusRef.current, 0, count - 1) * step
+    if (position.current === 0 && focusRef.current !== 0) position.current = newPos
+  }, [step, cycle, count])
 
+  // The entire track translates at a constant velocity, without card-by-card stops.
+  // Three copies make modulo wrapping visually identical on both sides of a seam.
   React.useEffect(() => {
-    const stage = stageRef.current
-    if (!stage) return
-    let acc = 0
-    let until = 0
-    const onWheel = (e: WheelEvent) => {
-      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
-      const stuck = (delta > 0 && index === last) || (delta < 0 && index === 0)
-      if (stuck) {
-        acc = 0
-        return
+    if (count < 1) return
+    let raf = 0
+    let last = 0
+    const tick = (time: number) => {
+      const dt = clamp(time - (last || time), 0, 40)
+      last = time
+      const { step: s, cycle: c, cardW: w, stageCenter: center } = geometry.current
+      if (!s || !c) { raf = requestAnimationFrame(tick); return }
+      const pointer = drag.current
+      const frozen = hovered.current || focused.current || !visible.current || document.hidden
+      if (reduced) {
+        position.current = focusRef.current * s
+        target.current = null
+      } else if (!pointer) {
+        if (target.current !== null) {
+          position.current += (target.current - position.current) * (1 - Math.exp(-dt / 225))
+          if (Math.abs(target.current - position.current) < .35) {
+            position.current = target.current
+            target.current = null
+          }
+        } else if (Math.abs(velocity.current) > .5) {
+          position.current += velocity.current * (dt / 1000)
+          velocity.current *= Math.exp(-dt / 330)
+        } else if (autoplay && !frozen && time > pauseUntil.current && !motionPaused.current) {
+          // Speed is proportional to card size, not viewport pixels.
+          position.current += (s * dt) / Math.max(2200, autoplayDelay)
+        }
       }
+      const normalized = mod(position.current, c)
+      const translateX = center - w / 2 - (count * s + normalized)
+      if (trackRef.current) trackRef.current.style.transform = "translate3d(" + translateX.toFixed(2) + "px,0,0)"
+      // Subtle per-card optical bend, updated without React rendering.
+      cardRefs.current.forEach((card, i) => {
+        if (!card) return
+        const distance = (i - count) - normalized / s
+        const abs = Math.abs(distance)
+        if (abs > 4.3) {
+          card.style.visibility = "hidden"
+          return
+        }
+        card.style.visibility = "visible"
+        const bend = clamp(distance * -9, -22, 22)
+        card.style.transform = "translate3d(0," + (Math.min(abs * abs * 8, 42)).toFixed(1) + "px,0) rotateY(" + bend.toFixed(1) + "deg)"
+        card.style.opacity = String(clamp(1 - Math.max(0, abs - 2) * .29, .09, 1))
+      })
+      const next = mod(Math.round(normalized / s), count)
+      if (next !== focusRef.current && target.current === null && !pointer) {
+        focusRef.current = next
+        setVisualFocus(next)
+        if (controlled === undefined) setLocal(next)
+        activeCallback.current?.(next)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [count, autoplay, autoplayDelay, reduced, controlled])
+
+  const navigate = React.useCallback((next: number) => {
+    if (count < 1) return
+    const i = mod(next, count)
+    const { step: s, cycle: c } = geometry.current
+    if (!s || !c) return
+    const current = position.current
+    const nearest = i * s + Math.round((current - i * s) / c) * c
+    target.current = nearest
+    velocity.current = 0
+    pauseUntil.current = performance.now() + 2900
+    focusRef.current = i
+    setVisualFocus(i)
+    if (controlled === undefined) setLocal(i)
+    activeCallback.current?.(i)
+  }, [count, controlled])
+
+  React.useEffect(() => {
+    if (controlled === undefined || !count || !geometry.current.step) return
+    if (controlled !== focusRef.current) navigate(controlled)
+  }, [controlled, count, navigate, step])
+
+  React.useEffect(() => {
+    if (!stageRef.current) return
+    const stage = stageRef.current
+    // Only horizontal gestures control the ribbon; vertical scroll remains the page's.
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) * 1.3) return
       e.preventDefault()
-      const now = e.timeStamp
-      if (now < until) return
-      acc += delta
-      if (Math.abs(acc) < WHEEL_THRESHOLD) return
-      go(index + Math.sign(acc))
-      acc = 0
-      until = now + WHEEL_COOLDOWN
+      target.current = null
+      velocity.current = 0
+      position.current += e.deltaX * .8
+      pauseUntil.current = performance.now() + 1400
     }
     stage.addEventListener("wheel", onWheel, { passive: false })
     return () => stage.removeEventListener("wheel", onWheel)
-  }, [go, index, last])
+  }, [])
 
-  React.useEffect(() => {
-    if (!autoplay || paused || dragging || items.length < 2 || reduced) return
-    const id = window.setTimeout(
-      () => go(index === last ? 0 : index + 1),
-      autoplayDelay
-    )
-    return () => window.clearTimeout(id)
-  }, [autoplay, autoplayDelay, dragging, go, index, items.length, last, paused, reduced])
-
-  const active = items[index]
-  if (!active) return null
-  const lines = active.title.split("\n")
-  const accent = active.accent ?? "#8a8a8a"
+  if (!focusItem || !count) return null
+  const activeAccent = focusItem.accent ?? "#855d78"
 
   return (
-    <div
-      ref={stageRef}
-      tabIndex={0}
-      role="group"
-      aria-roledescription="carousel"
-      aria-label="Carrousel interactif des six services"
-      onKeyDown={(e) => {
-        const keys: Record<string, number> = {
-          ArrowLeft: index - 1,
-          ArrowRight: index + 1,
-          Home: 0,
-          End: last,
+    <section
+      className={cn("hc-stage relative isolate h-full w-full min-h-[24rem] overflow-hidden text-white", className)}
+      ref={stageRef} role="region" tabIndex={0} aria-roledescription="carrousel"
+      aria-label="Exploration automatique des six offres"
+      onPointerEnter={() => { hovered.current = true }}
+      onPointerLeave={() => { hovered.current = false }}
+      onFocusCapture={() => { focused.current = true }}
+      onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) focused.current = false }}
+      onKeyDown={e => {
+        if (e.key === "ArrowRight") { e.preventDefault(); navigate(focusRef.current + 1) }
+        if (e.key === "ArrowLeft") { e.preventDefault(); navigate(focusRef.current - 1) }
+        if (e.key === "Home") { e.preventDefault(); navigate(0) }
+        if (e.key === "End") { e.preventDefault(); navigate(count - 1) }
+      }}
+      onPointerDown={e => {
+        if (e.pointerType === "mouse" && e.button !== 0) return
+        drag.current = { x: e.clientX, lastX: e.clientX, pos: position.current, time: performance.now(), moved: false }
+        target.current = null
+        velocity.current = 0
+        setInteracting(true)
+        e.currentTarget.setPointerCapture(e.pointerId)
+      }}
+      onPointerMove={e => {
+        if (!drag.current) return
+        const dx = e.clientX - drag.current.x
+        drag.current.moved ||= Math.abs(dx) > 7
+        const now = performance.now()
+        const dt = Math.max(12, now - drag.current.time)
+        velocity.current = clamp(-(e.clientX - drag.current.lastX) / dt * 1000, -850, 850)
+        drag.current.lastX = e.clientX
+        drag.current.time = now
+        position.current = drag.current.pos - dx
+      }}
+      onPointerUp={e => {
+        const currentDrag = drag.current
+        if (!currentDrag) return
+        drag.current = null
+        try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* gesture cancelled */ }
+        setInteracting(false)
+        pauseUntil.current = performance.now() + 2200
+        if (currentDrag.moved) {
+          suppressClick.current = true
+          window.setTimeout(() => { suppressClick.current = false }, 250)
+        } else {
+          // Tap any visible card, including the left/right seamlessly repeated copies.
+          const rect = e.currentTarget.getBoundingClientRect()
+          const physical = e.clientX - rect.left
+          const s = geometry.current.step
+          navigate(Math.round((mod(position.current, geometry.current.cycle) + physical - rect.width / 2) / s))
         }
-        if (!(e.key in keys)) return
-        e.preventDefault()
-        go(keys[e.key]!)
       }}
-      onPointerEnter={() => setPaused(true)}
-      onPointerLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false)
-      }}
-      className={cn(
-        "relative h-full min-h-[24rem] w-full overflow-hidden bg-black text-white select-none",
-        "outline-none focus-visible:ring-1 focus-visible:ring-white/40 focus-visible:ring-inset",
-        className
-      )}
+      onPointerCancel={() => { drag.current = null; velocity.current = 0; setInteracting(false) }}
+      style={{ "--hc-accent": activeAccent } as React.CSSProperties}
     >
-      <AnimatePresence initial={false}>
-        <motion.div
-          key={index}
-          className="absolute inset-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={swing}
-        >
-          <motion.img
-            src={active.image}
-            alt=""
-            aria-hidden={true}
-            draggable={false}
-            className="absolute inset-0 h-full w-full object-cover"
-            initial={{ scale: reduced ? 1.28 : 1.42 }}
-            animate={{ scale: 1.28 }}
-            transition={reduced ? { duration: 0 } : { duration: 6, ease: "linear" }}
-          />
-          <div className="absolute inset-0"
-            style={{ backgroundColor: accent, mixBlendMode: "color" }} />
-          <div className="absolute inset-0 opacity-55"
-            style={{ backgroundColor: accent, mixBlendMode: "multiply" }} />
-        </motion.div>
-      </AnimatePresence>
-
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/45" />
-      <div aria-hidden={true}
-        className="pointer-events-none absolute inset-0 opacity-[0.22] mix-blend-overlay"
-        style={{ backgroundImage: GRAIN, backgroundSize: "180px 180px" }} />
-
-      <div className="absolute inset-x-0 flex items-center justify-center"
-        style={{ top: Math.max(16, box.h * 0.029), gap: Math.max(20, box.w * 0.06) + "px" }}>
-        {onBack ? (
-          <button type="button" onClick={onBack}
-            className="opacity-90 transition-opacity hover:opacity-100"
-            style={{ fontSize: label * 1.15 }}>
-            <span aria-hidden={true}>↖</span> Retour
-          </button>
-        ) : null}
-        {brand ? (
-          <div className="font-semibold tracking-[0.06em]" style={{ fontSize: label * 1.35 }}>
-            {brand}
-          </div>
-        ) : null}
-        {onMenu ? (
-          <button type="button" onClick={onMenu}
-            className="opacity-90 transition-opacity hover:opacity-100"
-            style={{ fontSize: label * 1.15 }}>
-            Menu <span aria-hidden={true}>☰</span>
-          </button>
-        ) : null}
+      <div aria-hidden="true" className="hc-backdrops">
+        <AnimatePresence initial={false}>
+          <motion.div key={String(focusItem.id ?? focus)} className="hc-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={reduced ? { duration: 0 } : { duration: 1.15 }}>
+            <img src={focusItem.image} alt="" className="hc-backdrop__image" draggable={false} />
+            <div className="hc-backdrop__tone" style={{ backgroundColor: activeAccent }} />
+          </motion.div>
+        </AnimatePresence>
+        <div className="hc-backdrop__veil" />
+        <div className="hc-backdrop__grain" style={{ backgroundImage: GRAIN }} />
       </div>
 
-      <div className="absolute inset-x-0 top-0 flex flex-col justify-end"
-        style={{
-          height: STRIP_TOP * 100 + "%",
-          paddingLeft: pad,
-          paddingRight: pad,
-          paddingBottom: Math.round(box.h * 0.028),
-        }}>
-        <div className="flex w-full flex-wrap items-end gap-x-[6vw] gap-y-2">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.h2 key={index}
-              className="font-semibold leading-[0.88] tracking-[-0.03em]"
-              style={{ fontSize: Math.max(24, Math.round(box.h * TITLE)) }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.18 } }}>
-              {lines.map((line, i) => (
-                <span key={i} className="block overflow-hidden">
-                  <motion.span className="block"
-                    initial={{ y: "110%" }} animate={{ y: 0 }}
-                    transition={reduced
-                      ? { duration: 0 }
-                      : { duration: 0.62, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}>
-                    {line}
-                  </motion.span>
-                </span>
-              ))}
-            </motion.h2>
-          </AnimatePresence>
+      <div className="hc-topbar">
+        <span className="hc-topbar__side">{onBack && <button onPointerDown={e => e.stopPropagation()} onClick={onBack}>← RETOUR</button>}</span>
+        <div className="hc-topbar__brand">{brand || "MOEZ THABET / SERVICES"}</div>
+        <span className="hc-topbar__side hc-topbar__side--right">{onMenu && <button onPointerDown={e => e.stopPropagation()} onClick={onMenu}>MENU ↗</button>}</span>
+      </div>
 
-          {active.credit ? (
-            <motion.p key={"credit-" + index}
-              className="font-mono uppercase tracking-[0.14em] opacity-80"
-              style={{ fontSize: label }}
-              initial={{ opacity: 0 }} animate={{ opacity: 0.8 }}
-              transition={{ duration: 0.5, delay: 0.1 }}>
-              {active.credit}
-            </motion.p>
-          ) : null}
-          {active.meta?.length ? (
-            <div className="ml-auto flex items-end"
-              style={{ gap: Math.max(16, box.w * 0.055) + "px" }}>
-              {active.meta.map((fact, i) => (
-                <motion.span key={index + "-" + fact}
-                  className="font-mono whitespace-nowrap uppercase tracking-[0.14em] opacity-80"
-                  style={{ fontSize: label }}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 0.8, y: 0 }}
-                  transition={reduced
-                    ? { duration: 0 }
-                    : { duration: 0.45, delay: 0.12 + i * 0.06 }}>
-                  {fact}
-                </motion.span>
-              ))}
+      <div className="hc-editorial" aria-live="off">
+        <span className="hc-editorial__eyebrow"><i /> EXPERTISES · SERVICES SUR MESURE</span>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={String(focusItem.id ?? focus)} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}
+            transition={reduced ? { duration: 0 } : { duration: .64, ease: [.22, 1, .36, 1] }} className="hc-editorial__content">
+            <h2>{focusItem.title.split("\n").map((line, i) => <span key={i}>{line}</span>)}</h2>
+            <div className="hc-editorial__notes">
+              <span>{focusItem.credit}</span>
+              <span>{focusItem.meta?.join(" — ") || "MOEZ THABET · DIGITAL"}</span>
             </div>
-          ) : null}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className={"hc-ribbon " + (interacting ? "hc-ribbon--dragging" : "")}
+        style={{ top: "46%", height: cardH, perspective: Math.max(box.w, 700) + "px", touchAction: "pan-y" }}>
+        <div className="hc-ribbon__track" ref={trackRef} style={{ gap, width: step * 3 * count }}>
+          {slides.map((item, j) => {
+            const realIndex = j % count
+            const selected = realIndex === visualFocus
+            return <div key={j + "-" + String(item.id ?? realIndex)} ref={el => { cardRefs.current[j] = el }}
+              className={"hc-card " + (selected ? "hc-card--focused" : "")}
+              style={{ width: cardW, height: cardH, "--hc-accent": item.accent ?? "#855d78" } as React.CSSProperties}
+              aria-hidden={j < count || j >= count * 2 ? true : undefined}>
+              <div className="hc-card__mask" style={{ height: selected ? cardH : cardH * .52 }}>
+                <ServiceArtwork item={item} ordinal={realIndex}/>
+              </div>
+            </div>
+          })}
         </div>
       </div>
 
-      <div className="absolute inset-x-0"
-        style={{ top: STRIP_TOP * 100 + "%", height: fullH }}>
-        <motion.div className="flex items-start"
-          style={{ gap, x, cursor: dragging ? "grabbing" : "grab" }}
-          drag="x" dragMomentum={false} dragElastic={0.08}
-          dragConstraints={{ left: xFor(last), right: xFor(0) }}
-          onDragStart={() => setDragging(true)}
-          onDragEnd={(_, info) => {
-            setDragging(false)
-            const thrown = x.get() + info.velocity.x * 0.12
-            go(Math.round((box.w / 2 - thrown - cardW / 2) / step))
-          }}>
-          {items.map((item, i) => (
-            <motion.button key={item.id ?? i}
-              type="button" aria-label={item.title.replace(/\n/g, " ")}
-              aria-current={i === index} onClick={() => go(i)}
-              className="relative shrink-0 overflow-hidden rounded-none bg-white/5"
-              style={{ width: cardW }}
-              animate={{ height: i === index ? fullH : halfH }}
-              transition={spring}>
-              <img src={item.image} alt="" draggable={false}
-                className="h-full w-full object-cover"
-                style={{ objectPosition: "50% 26%" }} />
-              <motion.span aria-hidden={true} className="absolute inset-0 bg-black"
-                animate={{ opacity: i === index ? 0 : 0.12 }}
-                transition={spring} />
-            </motion.button>
-          ))}
-        </motion.div>
-      </div>
-
-      <div className="absolute"
-        style={{ left: pad, bottom: Math.max(14, box.h * 0.022), width: box.w * RAIL }}>
-        <div className="flex justify-between font-mono tabular-nums opacity-80"
-          style={{ fontSize: label }}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <span>{String(items.length).padStart(2, "0")}</span>
+      <div className="hc-bottom">
+        <div className="hc-bottom__counter"><span>{String(focus + 1).padStart(2, "0")}</span>
+          <div className="hc-bottom__rail" aria-hidden="true"><i style={{ left: 100 * focus / count + "%", width: 100 / count + "%" }} /></div>
+          <span>{String(count).padStart(2, "0")}</span>
         </div>
-        <div className="relative mt-2 h-px w-full bg-white/25">
-          <motion.div className="absolute inset-y-0 bg-white"
-            style={{ width: 100 / items.length + "%" }}
-            animate={{ left: index / items.length * 100 + "%" }}
-            transition={spring} />
-        </div>
+        <div className="hc-bottom__hint">{autoplay && !reduced ? "DÉFILEMENT CONTINU" : "NAVIGATION MANUELLE"} <b>·</b> GLISSEZ POUR EXPLORER <span>↔</span></div>
       </div>
-    </div>
+    </section>
   )
 }
