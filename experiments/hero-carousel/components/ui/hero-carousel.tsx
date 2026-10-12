@@ -57,6 +57,7 @@ export function HeroCarousel({
   const height = clamp(size.height * .57, 260, 505)
   const width = height * .71
   const step = width + clamp(size.width * .012, 9, 20)
+  const gap = step - width
   const distance = step * n
 
   React.useEffect(() => { notified.current = onIndexChange }, [onIndexChange])
@@ -206,13 +207,13 @@ export function HeroCarousel({
     aria-label="Six services — carrousel photographique"
     className={cn("photo-carousel relative isolate h-full w-full overflow-hidden text-white", className)}
     style={{ "--photo-accent": active.accent ?? "#af745e" } as React.CSSProperties}
-    onPointerEnter={() => { hovering.current = true }}
+    onPointerEnter={() => { hovering.current = false }}
     onPointerLeave={() => { hovering.current = false }}
-    onFocusCapture={() => { focusing.current = true }}
+    onFocusCapture={() => { /* pointer selection should not freeze autoplay */ }}
     onBlurCapture={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) focusing.current = false }}
     onKeyDown={e => {
-      if (e.key === "ArrowRight") { e.preventDefault(); go(current.current + 1) }
-      if (e.key === "ArrowLeft") { e.preventDefault(); go(current.current - 1) }
+      if (e.key === "ArrowRight") { focusing.current = true; e.preventDefault(); go(current.current + 1) }
+      if (e.key === "ArrowLeft") { focusing.current = true; e.preventDefault(); go(current.current - 1) }
       if (e.key === "Home") { e.preventDefault(); go(0) }
       if (e.key === "End") { e.preventDefault(); go(n - 1) }
     }}
