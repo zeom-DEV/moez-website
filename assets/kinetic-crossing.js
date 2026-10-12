@@ -31,7 +31,7 @@
     if(delta>3)delta-=count;
     if(delta===0)return {x:0,y:0,z:180,ry:0,rz:0,scale:1.06,alpha:1};
     const w=stage.clientWidth;
-    const x1=Math.min(178,w*.28),x2=Math.min(257,w*.44),y1=Math.min(70,w*.14);
+    const x1=Math.min(205,w*.41),x2=Math.min(285,w*.48),y1=Math.min(70,w*.14);
     if(Math.abs(delta)===1)return {x:Math.sign(delta)*x1,y:-Math.sign(delta)*y1,z:0,ry:-Math.sign(delta)*24,rz:Math.sign(delta)*11,scale:.84,alpha:.87};
     if(Math.abs(delta)===2)return {x:Math.sign(delta)*x2,y:Math.sign(delta)*95,z:-160,ry:-Math.sign(delta)*45,rz:-Math.sign(delta)*13,scale:.68,alpha:.52};
     return {x:0,y:-126,z:-245,ry:0,rz:0,scale:.53,alpha:.17};
@@ -85,7 +85,7 @@
       if(choice!==-1)carousel.dispatchEvent(new CustomEvent('mt:kinetic-select',{detail:{index:choice}}));
     }
     if(reduce.matches||connection?.saveData||!visible){schedule();return;}
-    moving=true;
+    moving=true;root.dataset.kineticBusy='true';
     const all=cards.map((card,i)=>{
       let mid=interpolate(old[i],next[i],.5);
       if(i===previous)mid={x:dir*76,y:-dir*60,z:240,ry:dir*24,rz:dir*9,scale:1.12,alpha:.52};
@@ -98,7 +98,7 @@
       return anim.finished.catch(()=>{}).then(()=>anim.cancel());
     });
     Promise.all(all).then(()=>{
-      moving=false;render();
+      moving=false;root.dataset.kineticBusy='false';render();
       if(queued){const q=queued;queued=null;select(q.newIndex,q.manual,q.dir);}
       schedule();
     });
@@ -150,5 +150,5 @@
     const idx=offers.findIndex(o=>o.id===option?.dataset.offerLink);
     if(idx>=0&&idx!==active)select(idx,false,idx>active?1:-1);
   });
-  copy(false);render();
+  root.dataset.kineticBusy='false';copy(false);render();
 })();
