@@ -54,6 +54,7 @@
   carousel.querySelector('[data-carousel-prev]').addEventListener('click', () => select(current - 1));
   carousel.querySelector('[data-carousel-next]').addEventListener('click', () => select(current + 1));
   carousel.addEventListener('mt:wheel-select', event => select(event.detail.index));
+  carousel.addEventListener('mt:kinetic-select', event => select(event.detail.index));
   carousel.addEventListener('mt:wheel-details', () => {
     select(current);
     const target = panels[current].querySelector('h2');
