@@ -1,0 +1,53 @@
+/* Lightweight interpretation of Ruixen's Tilted Grid Hero: 3D card ribbon, all local media. */
+.tilted-grid-showcase{
+  --tg-card-w:clamp(128px,15vw,178px);
+  --tg-card-h:calc(var(--tg-card-w) * .7);
+  position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,225px) minmax(0,1fr);
+  align-items:center;gap:8px;min-width:0;height:198px;margin:-38px 0 66px;
+  overflow:hidden;border:1px solid #44353e;border-radius:13px;
+  background:radial-gradient(ellipse at 83% 34%,#522f44 0,transparent 56%),#17151a;color:#f8f4f4;
+  box-shadow:0 14px 35px #23151f15;
+}
+.tilted-grid-showcase__caption{position:relative;z-index:2;padding:22px 0 22px 25px;}
+.tilted-grid-showcase__caption span{display:block;margin-bottom:12px;color:#e0b5c4;font:800 10px/1.4 var(--sans,system-ui);letter-spacing:.13em;}
+.tilted-grid-showcase__caption strong{display:block;max-width:210px;color:#fff;font:780 clamp(20px,2.4vw,30px)/1.1 var(--sans,system-ui);letter-spacing:-.04em;}
+.tilted-grid-showcase__caption small{display:block;max-width:205px;margin-top:13px;color:#decfd7;font:500 11px/1.5 var(--sans,system-ui);}
+.tilted-grid-showcase__viewport{position:relative;min-width:0;height:100%;overflow:hidden;perspective:850px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 87%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 12%,#000 87%,transparent);}
+.tilted-grid-showcase__rail{position:absolute;top:36px;left:0;display:flex;width:max-content;height:136px;
+  transform-style:preserve-3d;animation:mt-tilted-flow 32s linear infinite;animation-play-state:paused;will-change:transform;}
+.tilted-grid-showcase.is-visible .tilted-grid-showcase__rail{animation-play-state:running;}
+.tilted-grid-showcase__set{display:flex;flex:none;align-items:center;gap:13px;padding-right:13px;}
+.tilted-grid-showcase__tile{--tilt:0deg;--lift:0px;--size:1;flex:0 0 var(--tg-card-w);
+  width:var(--tg-card-w);height:var(--tg-card-h);display:block;overflow:hidden;
+  border:1px solid #bca3af;border-radius:9px;background:#ddd2d5;
+  box-shadow:0 16px 24px #0005;transform:perspective(600px) rotateY(var(--tilt)) rotateZ(-3deg) translateY(var(--lift)) scale(var(--size));
+  backface-visibility:hidden;transform-origin:center;}
+.tilted-grid-showcase__tile:nth-child(6n + 1){--tilt:-20deg;--lift:18px;--size:.89;}
+.tilted-grid-showcase__tile:nth-child(6n + 2){--tilt:-10deg;--lift:8px;--size:.96;}
+.tilted-grid-showcase__tile:nth-child(6n + 3){--tilt:0deg;--lift:0px;--size:1.05;}
+.tilted-grid-showcase__tile:nth-child(6n + 4){--tilt:7deg;--lift:3px;--size:1.02;}
+.tilted-grid-showcase__tile:nth-child(6n + 5){--tilt:14deg;--lift:12px;--size:.95;}
+.tilted-grid-showcase__tile:nth-child(6n + 6){--tilt:24deg;--lift:19px;--size:.87;}
+.tilted-grid-showcase__tile img{display:block;width:100%;height:100%;object-fit:cover;}
+@keyframes mt-tilted-flow{
+  from{transform:translate3d(0,0,0) rotate(-3deg);}
+  to{transform:translate3d(-50%,0,0) rotate(-3deg);}
+}
+@media(max-width:700px){
+ .tilted-grid-showcase{grid-template-columns:1fr;height:174px;margin:-15px 0 42px;}
+ .tilted-grid-showcase__caption{position:absolute;left:0;top:0;bottom:0;width:42%;padding:19px 8px 15px 15px;
+  background:linear-gradient(90deg,#17151afc 60%,#17151a00);pointer-events:none;}
+ .tilted-grid-showcase__caption span{font-size:8px;margin-bottom:8px;}
+ .tilted-grid-showcase__caption strong{font-size:clamp(16px,4.1vw,22px);}
+ .tilted-grid-showcase__caption small{font-size:9px;margin-top:8px;}
+ .tilted-grid-showcase__viewport{width:100%;-webkit-mask-image:linear-gradient(90deg,transparent 8%,#000 45%,#000 91%,transparent);
+  mask-image:linear-gradient(90deg,transparent 8%,#000 45%,#000 91%,transparent);}
+ .tilted-grid-showcase__rail{top:30px;left:38%;height:112px;}
+ .tilted-grid-showcase{--tg-card-w:140px;}
+}
+@media(max-width:360px){.tilted-grid-showcase__caption{width:47%;}.tilted-grid-showcase__caption small{display:none;}}
+@media(prefers-reduced-motion:reduce){
+ .tilted-grid-showcase__rail{animation:none!important;transform:translate3d(0,0,0) rotate(-3deg)!important;will-change:auto;}
+}
