@@ -50,6 +50,24 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert(overviewBottom<=size.height,size.name+': all six solutions visible in first screen ('+overviewBottom+')');
  }
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
+ // New six-card kinetic stage: actual interactions, synced copy and linked detail.
+ const kinetic=page.locator('[data-kinetic-showcase]');
+ assert.equal(await kinetic.locator('[data-kinetic-card]').count(),6,size.name+': six cinematic cards');
+ await kinetic.scrollIntoViewIfNeeded();
+ assert.equal(await kinetic.locator('[data-kinetic-title]').textContent(),'Sites internet',size.name+': flagship active first');
+ await kinetic.locator('[data-kinetic-next]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
+ assert.equal(await kinetic.locator('[data-kinetic-cta]').getAttribute('href'),'#solution-automation',size.name+': linked service CTA');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation',size.name+': 3D card synchronizes detail');
+ await kinetic.locator('[data-kinetic-prev]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
+ await kinetic.locator('[data-kinetic-card="automation"]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
+ await kinetic.locator('[data-kinetic-cta]').click();
+ await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
+ await page.locator('[data-offer-link="web"]').click();
+ await page.screenshot({path:'reports/kinetic-'+size.name+'.png'});
+
  for(let step=0;step<3;step++){
   await page.locator('[data-web-stage]').nth(step).click();
   assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
