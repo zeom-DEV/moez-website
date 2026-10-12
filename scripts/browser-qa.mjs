@@ -62,7 +62,9 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await kinetic.locator('[data-kinetic-prev]').click();
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
- await kinetic.locator('[data-kinetic-card="automation"]').click({position:{x:150,y:45},force:true});
+ const edgeCard=kinetic.locator('[data-kinetic-card="automation"]');
+ const dimensions=await edgeCard.boundingBox();
+ await edgeCard.click({position:{x:dimensions.width*.9,y:dimensions.height*.5}});
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
  await kinetic.locator('[data-kinetic-cta]').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
