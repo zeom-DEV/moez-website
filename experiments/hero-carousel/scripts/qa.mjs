@@ -80,10 +80,16 @@ try {
       console.warn("SCREENSHOT warning " + name + " " + String(error))
     }
 
+    // Automatic motion may have advanced any number of services by now.
+    // Pause, choose a deterministic starting service, then test NEXT.
+    await page.locator(".signature-preview__pause").click()
+    await page.locator(".signature-preview__chapters button").first().click()
+    await page.waitForTimeout(240)
     const next = page.getByRole("button", { name: "Service suivant" })
     await next.click()
-    await page.waitForTimeout(650)
-    assert(await page.locator(".signature-preview__focus-copy h1").innerText() === "Service client.", name + " next chapter updates details")
+    await page.waitForTimeout(640)
+    assert((await page.locator(".signature-preview__focus-copy h1").innerText()).includes("Service client"), name + " next chapter updates details")
+    assert((await page.locator(".orbit-hero__narrative h2").innerText()).trim().length > 10, name + " visible hero title never disappears")
     const nav = page.locator(".signature-preview__chapters button")
     await nav.nth(5).click()
     await page.waitForTimeout(680)
