@@ -6,19 +6,27 @@ on:
       - feature/parcours-orchestre-site-existant-20261012
     paths:
       - 'index.html'
-      - 'assets/kinetic-crossing.js'
+      - 'assets/orbit-island.js'
+      - 'assets/orbit-island.css'
+      - 'assets/orbit-integration.css'
+      - 'integrations/orbit-island-entry.tsx'
       - 'assets/offer-inline-details.js'
       - 'assets/journey-orchestration.*'
       - 'scripts/journey-qa.mjs'
+      - 'scripts/browser-qa.mjs'
       - '.github/workflows/journey-qa.yml'
   pull_request:
     branches: [main]
     paths:
       - 'index.html'
-      - 'assets/kinetic-crossing.js'
+      - 'assets/orbit-island.js'
+      - 'assets/orbit-island.css'
+      - 'assets/orbit-integration.css'
+      - 'integrations/orbit-island-entry.tsx'
       - 'assets/offer-inline-details.js'
       - 'assets/journey-orchestration.*'
       - 'scripts/journey-qa.mjs'
+      - 'scripts/browser-qa.mjs'
   workflow_dispatch:
 
 permissions:
@@ -41,7 +49,8 @@ jobs:
       - name: Validate source syntax
         run: |
           node --check assets/journey-orchestration.js
-          node --check assets/kinetic-crossing.js
+          node --check assets/orbit-island.js
+          node --check assets/journey-orchestration.js
           node --check assets/offer-inline-details.js
       - name: Browser testing tools
         run: |
