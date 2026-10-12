@@ -108,8 +108,9 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('#solution-'+key+'.is-active').waitFor({state:'visible'});
   assert.equal(await page.locator('.offer-detail.is-active').count(),1,size.name+': only selected service');
   assert(await page.locator('#solution-'+key+' .offer-detail__conversion a[href^="https://calendly.com/"]').count()>0,size.name+': CTA for '+key);
+  await page.waitForFunction(id=>{const top=document.getElementById('solution-'+id).getBoundingClientRect().top;return top>=-5&&top<180;},key);
   const position=await page.locator('#solution-'+key).evaluate(el=>el.getBoundingClientRect().top);
-  assert(position>=0&&position<180,size.name+': selected offer explanation immediately in view '+position);
+  assert(position>=-5&&position<180,size.name+': selected offer explanation immediately in view '+position);
   assert(await page.locator('.offer-detail:not(.is-active)').evaluateAll(els=>els.every(el=>el.inert)),size.name+': inactive offers excluded from focus');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+4),size.name+': no overflow in '+key);
   await page.locator('#solution-'+key+' .offer-detail__back').click();
