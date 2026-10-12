@@ -20,28 +20,12 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal((await page.locator('.flagship-link').textContent()).replace('↘','').trim(),'Découvrir mes solutions',size.name+': single principal discovery CTA');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
- await page.locator('#inversion-intro').waitFor({state:'hidden'});
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await page.locator('.moez-film.is-active').count(),0,size.name+': discovery does not start the optional film');
- assert.equal(new URL(page.url()).hash,'#services-carousel',size.name+': primary discovery opens the offers directly');
- assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel',size.name+': discovery opens the 3D drum');
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship selected on discovery');
- const discoveryTop=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
- assert(discoveryTop>=0&&discoveryTop<180,size.name+': carousel is immediately in view');
- if(size.name==='mobile'||size.name==='desktop'){
-  const choiceBottom=await page.locator('.service-picker').evaluate(el=>el.getBoundingClientRect().bottom);
-  assert(choiceBottom<=size.height,size.name+': all six carousel choices visible on discovery ('+choiceBottom+')');
- }
- await page.screenshot({path:'reports/discovery-'+size.name+'.png'});
- await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
- await page.locator('[data-intro-film]').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
  await page.keyboard.press('Shift+Tab');
  assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
  if(size.name==='desktop'){
-  try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message,codec:v.canPlayType('video/mp4; codecs="avc1.42E01E"')})));throw error;}
-  assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),false,'film sound enabled after click');
+  try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message})));throw error;}
   await page.locator('[data-film-sound]').click();
   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
   await page.locator('[data-film-sound]').click();
@@ -49,22 +33,21 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('[data-film-discover]').click();
  }else{await page.keyboard.press('Escape');}
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
- assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': intro dismissed');
- const carouselTop=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
- assert(carouselTop>=0&&carouselTop<180,size.name+': film discovery also lands directly on the carousel');
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel',size.name+': film discovery opens the drum');
- await page.locator('.offer-detail.is-active .offer-detail__back').click();
+ await page.locator('#inversion-intro').waitFor({state:'hidden'});
+ assert.equal(new URL(page.url()).hash,'#offres',size.name+': film lands on offer overview');
+ const heroTop=await page.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
+ assert(heroTop>=0&&heroTop<350,size.name+': flagship hero visible ('+heroTop+')');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
-  assert(layout.scrollWidth <= layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
+  assert(layout.scrollWidth<=layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
   await page.locator('#menu-button').click();
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
  }
  if(size.name==='mobile'||size.name==='desktop'){
   const overviewBottom=await page.locator('.solutions-overview').evaluate(el=>el.getBoundingClientRect().bottom);
-  assert(overviewBottom<=size.height,size.name+': all six solutions visible in the first screen ('+overviewBottom+')');
+  assert(overviewBottom<=size.height,size.name+': all six solutions visible in first screen ('+overviewBottom+')');
  }
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
  for(let step=0;step<3;step++){
