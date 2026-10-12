@@ -1,157 +1,135 @@
-/* MOEZ / Journey orchestra. Every interruption follows a real visitor action.
-   Zero autoplay, zero fabricated activity, no network calls or trackers. */
-(() => {
-  'use strict';
-  const showcase=document.querySelector('[data-kinetic-showcase]');
-  const rail=document.querySelector('[data-journey-rail]');
-  const form=document.getElementById('brief-form');
-  const select=document.getElementById('brief-service');
-  const details=document.getElementById('details-offres');
-  if(!showcase||!rail||!form||!select||!details)return;
-  document.documentElement.classList.add('mt-journey-enabled');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  const names={
-    web:{name:'Sites internet',promise:'Pages claires, design personnalisé et contact testé.',label:'Création de sites web'},
-    sav:{name:'Service client',promise:'Demandes traitées et dossiers suivis.',label:'Gestion du service client'},
-    avis:{name:'Avis clients',promise:'Réponses adaptées et sujets à améliorer.',label:'Gestion des avis clients'},
-    prospects:{name:'Appels et relances',promise:'Contacts qualifiés et prochaines relances organisées.',label:'Appels et relances commerciales'},
-    crm:{name:'Dossiers clients',promise:'Informations structurées et échéances visibles.',label:'Organisation des dossiers clients'},
-    automation:{name:'Automatisation',promise:'Un workflow testé et documenté.',label:'Automatisation des workflows'}
-  };
-  let selected='web',signalTimeout=0,signalKey='',lastDetail='',introReady=false;
-  const progress=[...rail.querySelectorAll('[data-journey-progress]')];
-  const notify=document.createElement('aside');
-  notify.className='mt-signal';
-  notify.setAttribute('aria-label','Aide contextuelle');
-  notify.setAttribute('aria-live','polite');
-  notify.setAttribute('aria-atomic','true');
-  notify.hidden=true;
-  notify.innerHTML='<span class="mt-signal__orb" aria-hidden="true">✦</span><div class="mt-signal__content"><span class="mt-signal__eyebrow" data-signal-eyebrow></span><strong data-signal-title></strong><p data-signal-copy></p><a data-signal-action href="#details-offres">Continuer <span aria-hidden="true">↗</span></a></div><button type="button" class="mt-signal__close" aria-label="Fermer cette indication">×</button><div class="mt-signal__timeline" aria-hidden="true"></div>';
-  document.body.append(notify);
-  const action=notify.querySelector('[data-signal-action]');
-  const dismiss=()=>{clearTimeout(signalTimeout);notify.classList.remove('is-visible');notify.hidden=true;};
-  notify.querySelector('.mt-signal__close').addEventListener('click',dismiss);
-  function step(n){
-    progress.forEach((el,i)=>{
-      el.classList.toggle('is-current',i===n);
-      el.classList.toggle('is-done',i<n);
-      el.setAttribute('aria-current',i===n?'step':'false');
-    });
-    rail.dataset.step=String(n+1);
-  }
-  function inform(type,title,copy,actionText,url,key){
-    if(!introReady||document.body.classList.contains('moez-film-open'))return;
-    clearTimeout(signalTimeout);
-    signalKey=key;
-    dismiss();
-    notify.dataset.type=type;
-    notify.querySelector('[data-signal-eyebrow]').textContent=
-      type==='choice'?'01 / SOLUTION SÉLECTIONNÉE':
-      type==='detail'?'02 / VOICI LE RÉSULTAT':
-      type==='brief'?'03 / PASSER À L’ACTION':'MESSAGE PRÉPARÉ';
-    notify.querySelector('[data-signal-title]').textContent=title;
-    notify.querySelector('[data-signal-copy]').textContent=copy;
-    action.textContent=actionText+' ↗';
-    action.href=url;
-    notify.hidden=false;
-    // Force an intentional entrance, not a notification that silently remains.
-    void notify.offsetWidth;
-    notify.classList.add('is-visible');
-    signalTimeout=setTimeout(dismiss,10500);
-  }
-  const selectService=id=>{
-    if(!names[id])return;
-    selected=id;
-    select.value=names[id].label;
-    step(0);
-  };
-  function getId(){
-    const id=location.hash.replace('#solution-','');
-    return names[id]?id:selected;
-  }
-  function goBrief(){
-    if(names[selected])select.value=names[selected].label;
-    step(2);
-    history.replaceState(null,'','#contact');
-    const contact=document.getElementById('contact');
-    contact?.scrollIntoView({behavior:reduce.matches?'auto':'smooth',block:'start'});
-    const message=document.getElementById('brief-message');
-    if(message)setTimeout(()=>{message.focus({preventScroll:true});},reduce.matches?0:600);
-    inform('brief','Votre demande est prête à être précisée.',
-      'Le service '+names[selected].name+' est déjà sélectionné. Décrivez votre situation avant de préparer votre e-mail.',
-      'Compléter mon message','#brief-form','brief-'+selected);
-  }
-  action.addEventListener('click',event=>{
-    if(action.getAttribute('href')==='#contact'||action.getAttribute('href')==='#brief-form'){
-      event.preventDefault();
-      dismiss();
-      goBrief();
-    }else{dismiss();}
-  });
-  document.addEventListener('click',event=>{
-    const el=event.target.closest('[data-journey-brief]');
-    if(!el)return;
-    event.preventDefault();
-    const panel=el.closest('.offer-detail');
-    if(panel&&names[panel.id.replace('solution-','')])selectService(panel.id.replace('solution-',''));
-    dismiss();
-    goBrief();
-  });
-  window.addEventListener('mt:journey-select',event=>{
-    const id=event.detail?.id;
-    if(!names[id])return;
-    selectService(id);
-    showcase.dataset.selectedOffer=id;
-    inform('choice',names[id].name+' : découvrons le concret.',
-      names[id].promise,
-      'Voir les tâches et le résultat','#solution-'+id,'choice-'+id);
-  });
-  window.addEventListener('mt:journey-detail',event=>{
-    const id=event.detail?.id||getId();
-    if(!names[id])return;
-    selectService(id);
-    step(1);
-    const panel=document.getElementById('solution-'+id);
-    panel?.classList.remove('mt-detail-visible');
-    if(panel){void panel.offsetWidth;panel.classList.add('mt-detail-visible');}
-    if(lastDetail!==id){
-      lastDetail=id;
-      inform('detail','Vous savez ce que je peux livrer.',
-        names[id].promise+' Vous pouvez maintenant préparer une demande adaptée.',
-        'Préparer ma demande','#contact','detail-'+id);
-    }
-  });
-  window.addEventListener('mt:brief_generated',()=>{
-    step(2);
-    inform('complete','Votre texte est généré, pas envoyé.',
-      'Relisez-le, puis choisissez « Envoyer par e-mail » ou « Copier le texte ».',
-      'Voir le message','#brief-result','complete');
-  });
-  // A direct link or an existing visitor choice must retain its context.
-  // Each existing service gets a direct, prefilled-message CTA next to its booking link.
-  details.querySelectorAll('.offer-detail').forEach(panel=>{
-    const conversion=panel.querySelector('.offer-detail__conversion');
-    if(!conversion||conversion.querySelector('[data-journey-brief]'))return;
-    const button=document.createElement('button');
-    button.type='button';
-    button.className='mt-journey-brief';
-    button.setAttribute('data-journey-brief','');
-    button.textContent='Préparer une demande pour ce service ↗';
-    conversion.append(button);
-  });
-  const initial=location.hash.slice(1).replace('solution-','');
-  if(names[initial])selected=initial;
-  if(names[selected])select.value=names[selected].label;
-  step(0);
-  const intro=document.getElementById('inversion-intro');
-  introReady=!intro||intro.classList.contains('is-hidden');
-  if(!introReady&&intro){
-    const observer=new MutationObserver(()=>{
-      introReady=intro.classList.contains('is-hidden');
-      if(introReady)observer.disconnect();
-    });
-    observer.observe(intro,{attributes:true,attributeFilter:['class']});
-  }
-  // Keep the service coherent if a deep link or back/forward navigation is used.
-  window.addEventListener('popstate',()=>{const id=getId();if(names[id])selected=id;});
+/* Signal moments on the original website: no fake activity or autoplay notifications. */
+(()=>{
+ "use strict";
+ const island=document.getElementById("moez-orbit-root");
+ const select=document.getElementById("brief-service");
+ const form=document.getElementById("brief-form");
+ const details=document.getElementById("details-offres");
+ if(!island||!select||!form||!details)return;
+ const reduce=matchMedia("(prefers-reduced-motion: reduce)");
+ const names={
+   web:{name:"Sites internet",result:"Un site publié, avec vos services expliqués et un contact testé.",label:"Création de sites web"},
+   sav:{name:"Service client",result:"Des demandes traitées et les dossiers restants suivis.",label:"Gestion du service client"},
+   avis:{name:"Avis clients",result:"Des réponses préparées et les points à améliorer identifiés.",label:"Gestion des avis clients"},
+   prospects:{name:"Appels et relances",result:"Des contacts qualifiés et les prochaines relances planifiées.",label:"Appels et relances commerciales"},
+   crm:{name:"Dossiers clients",result:"Des dossiers structurés et des tâches faciles à retrouver.",label:"Organisation des dossiers clients"},
+   automation:{name:"Automatisation",result:"Un premier workflow testé avec un suivi des erreurs.",label:"Automatisation des workflows"}
+ };
+ let selected=names[location.hash.replace("#solution-","")]?location.hash.replace("#solution-",""):"web";
+ let timer=0,visibleKey="",introReady=false;
+ select.value=names[selected].label;
+ const signal=document.createElement("aside");
+ signal.className="mt-signal";
+ signal.setAttribute("aria-label","Prochaine étape proposée");
+ signal.setAttribute("aria-live","polite");
+ signal.setAttribute("aria-atomic","true");
+ signal.hidden=true;
+ signal.innerHTML='<span class="mt-signal__orb" aria-hidden="true">✦</span><div class="mt-signal__content"><span class="mt-signal__eyebrow" data-signal-eyebrow></span><strong data-signal-title></strong><p data-signal-copy></p><a data-signal-action href="#details-offres">Continuer ↗</a></div><button type="button" class="mt-signal__close" aria-label="Fermer cette indication">×</button><div class="mt-signal__timeline" aria-hidden="true"></div>';
+ document.body.append(signal);
+ const action=signal.querySelector("[data-signal-action]");
+ function close(){clearTimeout(timer);signal.classList.remove("is-visible");signal.hidden=true}
+ signal.querySelector(".mt-signal__close").addEventListener("click",close);
+ function canShow(){return introReady&&!document.querySelector(".moez-film.is-active")&&!document.hidden}
+ function notify(type,tag,title,copy,callToAction,url,key){
+   if(!canShow()||visibleKey===key&&signal.classList.contains("is-visible"))return;
+   close();visibleKey=key;
+   signal.dataset.type=type;
+   signal.querySelector("[data-signal-eyebrow]").textContent=tag;
+   signal.querySelector("[data-signal-title]").textContent=title;
+   signal.querySelector("[data-signal-copy]").textContent=copy;
+   action.textContent=callToAction+" ↗";
+   action.href=url;
+   signal.hidden=false;
+   void signal.offsetWidth;
+   signal.classList.add("is-visible");
+   timer=setTimeout(close,9100);
+ }
+ function track(id){if(!names[id])return false;selected=id;select.value=names[id].label;return true}
+ function chooseDetails(id){
+   if(!track(id))return;
+   close();
+   const el=document.querySelector('[data-offer-link="'+id+'"]');
+   if(el)el.click();
+   else {location.hash="#solution-"+id;document.getElementById("solution-"+id)?.scrollIntoView({behavior:reduce.matches?"auto":"smooth"})}
+ }
+ function toBrief(){
+   track(selected);
+   close();
+   if(location.hash!=="#contact")history.replaceState(null,"","#contact");
+   document.getElementById("contact")?.scrollIntoView({behavior:reduce.matches?"auto":"smooth",block:"start"});
+   const input=document.getElementById("brief-message");
+   setTimeout(()=>input?.focus({preventScroll:true}),reduce.matches?0:650);
+   notify("brief","03 / PASSER À L'ACTION","Votre besoin est déjà sélectionné.",
+     "Décrivez votre situation : votre e-mail sera préparé mais jamais envoyé sans votre action.",
+     "Rédiger ma demande","#brief-form","brief-"+selected);
+ }
+ action.addEventListener("click",event=>{
+   const href=action.getAttribute("href");
+   if(href?.startsWith("#solution-")){
+     event.preventDefault();chooseDetails(href.replace("#solution-",""));return;
+   }
+   if(href==="#contact"||href==="#brief-form"){
+     event.preventDefault();toBrief();return;
+   }
+   close();
+ });
+ document.addEventListener("click",event=>{
+   const target=event.target.closest?.("[data-journey-brief]");
+   if(!target)return;
+   event.preventDefault();
+   const parent=target.closest(".offer-detail");
+   if(parent)track(parent.id.replace("solution-",""));
+   toBrief();
+ });
+ window.addEventListener("mt:journey-select",event=>{
+   const id=event.detail?.id;
+   if(!track(id))return;
+   notify("choice","01 / VOTRE SÉLECTION",names[id].name,
+      names[id].result,"Voir les tâches concrètes","#solution-"+id,"orbit-"+id);
+ });
+ window.addEventListener("mt:journey-detail",event=>{
+   const id=event.detail?.id||location.hash.replace("#solution-","");
+   if(!track(id))return;
+   const panel=document.getElementById("solution-"+id);
+   panel?.classList.remove("mt-detail-visible");
+   if(panel){void panel.offsetWidth;panel.classList.add("mt-detail-visible")}
+   notify("detail","02 / LE RÉSULTAT","Voici ce que je réalise pour vous.",
+      names[id].result+" Votre demande peut être préparée en quelques secondes.",
+      "Préparer ma demande","#contact","detail-"+id);
+ });
+ form.addEventListener("submit",()=>setTimeout(()=>{
+   if(!document.getElementById("brief-result")?.hidden){
+     notify("complete","03 / MESSAGE PRÊT","Votre message est préparé, pas envoyé.",
+       "Relisez puis envoyez par e-mail, ou copiez le texte.","Voir mon message","#brief-result","brief-complete");
+   }
+ },120));
+ // Keep the original booking and service pages, but add a second useful route
+ // to a *prefilled* request instead of a new repeated services section.
+ details.querySelectorAll(".offer-detail").forEach(panel=>{
+   const target=panel.querySelector(".offer-detail__conversion");
+   if(!target||target.querySelector("[data-journey-brief]"))return;
+   const button=document.createElement("button");
+   button.type="button";button.className="mt-journey-brief";button.dataset.journeyBrief="";
+   button.textContent="Préparer une demande pour cette offre ↗";
+   target.append(button);
+ });
+ const intro=document.getElementById("inversion-intro");
+ introReady=!intro||intro.classList.contains("is-hidden");
+ if(!introReady&&intro){
+   const watcher=new MutationObserver(()=>{
+     introReady=intro.classList.contains("is-hidden");
+     if(introReady)watcher.disconnect();
+   });
+   watcher.observe(intro,{attributes:true,attributeFilter:["class"]});
+ }
+ // Useful discovery signal only if the visitor explicitly clicks the sole hero CTA.
+ document.querySelector(".flagship-link")?.addEventListener("click",()=>{
+   setTimeout(()=>notify("choice","LE PARCOURS COMMENCE","Vos six solutions prennent vie.",
+      "Faites glisser les photos, choisissez un service puis découvrez les tâches concrètes.",
+      "Explorer le service phare","#solution-web","intro-guide"),600);
+ });
+ window.addEventListener("popstate",()=>{
+   const id=location.hash.replace("#solution-","");
+   if(names[id])track(id);
+ });
 })();
