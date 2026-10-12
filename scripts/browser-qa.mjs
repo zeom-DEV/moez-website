@@ -92,77 +92,24 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('[data-web-stage]').nth(step).click();
   assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
  }
- // The reference's two distinct compositions must work with real input.
- const wheel=page.locator('[data-works-wheel]');
- const canvas=page.locator('[data-wheel-canvas]');
- await page.locator('[data-offer-link="web"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- if(size.name!=='small-mobile'){
-  await page.locator('[data-wheel-reset]').click();
-  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='circle');
-  const closedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
-  assert.equal(await page.locator('[data-wheel-card]').count(),6,'six illustrated wheel cards');
-  await page.screenshot({path:'reports/wheel-circle-'+size.name+'.png'});
-  if(size.name==='desktop'){
-   await canvas.hover();
-   await page.mouse.wheel(0,180);
-   await page.mouse.wheel(0,180);
-   await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='carousel');
-   const openedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
-   assert(openedCard.width>closedCard.width*1.3,'wheel opens into a larger front card');
-   const bounds=await canvas.boundingBox();
-   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2+60);
-   await page.mouse.down();
-   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2-60,{steps:12});
-   await page.mouse.up();
-   await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  }
- }
+ // The EXISTING site now has one meaningful motion selector, not a second animated wheel.
+ assert.equal(await page.locator('[data-wheel-canvas]').isHidden(),true,size.name+': redundant wheel is not displayed');
+ assert.equal(await page.locator('[data-journey-progress]').count(),3,size.name+': three useful steps');
  await page.locator('[data-offer-link="automation"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await wheel.getAttribute('data-wheel-mode'),'carousel','selected service opens the 3D drum');
- assert.equal(await page.locator('[data-wheel-title]').textContent(),'Automatisation','active wheel title');
- assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows','contact form follows the service');
- await page.screenshot({path:'reports/wheel-open-'+size.name+'.png'});
- await page.locator('[data-wheel-details]').click();
- const detailTop=await page.locator('#solution-title-automation').evaluate(el=>el.getBoundingClientRect().top);
- assert(detailTop>=0&&detailTop<180,'wheel opens the readable service details');
- assert(await page.locator('#solution-title-automation').evaluate(el=>el===document.activeElement),'details receive keyboard focus');
+ await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
+ assert.equal(await page.locator('[data-journey-rail]').getAttribute('data-step'),'2',size.name+': selected service opens explanation');
+ await page.locator('#solution-automation [data-journey-brief]').click();
+ assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows',size.name+': selected context reaches existing contact form');
+ assert.equal(await page.locator('[data-journey-rail]').getAttribute('data-step'),'3',size.name+': journey advances to contact');
  await page.locator('[data-offer-link="web"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- if(size.name==='mobile'){
-  await canvas.scrollIntoViewIfNeeded();
-  const rect=await canvas.boundingBox();
-  const cdp=await context.newCDPSession(page);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2+60,y:rect.y+rect.height/2}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:rect.x+rect.width/2-60,y:rect.y+rect.height/2}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  await page.locator('[data-offer-link="web"]').click();
-  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
-  await canvas.scrollIntoViewIfNeeded();
-  const verticalRect=await canvas.boundingBox();
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2+60}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2-60}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  const scrollBefore=await page.evaluate(()=>scrollY);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:8,y:650}]});
-  for(const y of [550,450,350,250])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:8,y}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(before=>scrollY>before,scrollBefore);
-  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','page scroll outside the canvas preserves the selected service');
-  await cdp.detach();
-  await page.locator('[data-offer-link="web"]').click();
- }
  const documentsBefore=await page.evaluate(()=>performance.getEntriesByType('navigation').length);
  for(const [key,file] of routes){
   await page.locator('[data-offer-link="'+key+'"]').click();
   await page.locator('#solution-'+key+'.is-active').waitFor({state:'visible'});
   assert.equal(await page.locator('.offer-detail.is-active').count(),1,size.name+': only selected service');
   assert(await page.locator('#solution-'+key+' .offer-detail__conversion a[href^="https://calendly.com/"]').count()>0,size.name+': CTA for '+key);
-  const position=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
-  assert(position>=0&&position<180,size.name+': selected offer immediately in view '+position);
+  const position=await page.locator('#solution-'+key).evaluate(el=>el.getBoundingClientRect().top);
+  assert(position>=0&&position<180,size.name+': selected offer explanation immediately in view '+position);
   assert(await page.locator('.offer-detail:not(.is-active)').evaluateAll(els=>els.every(el=>el.inert)),size.name+': inactive offers excluded from focus');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+4),size.name+': no overflow in '+key);
   await page.locator('#solution-'+key+' .offer-detail__back').click();
@@ -260,15 +207,15 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('#inversion-intro').waitFor({state:'hidden'});
  }
  await page.goto(BASE+'/#services-carousel',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel','shared discovery URL opens the drum');
+ await page.locator('.works-wheel__index.service-picker').waitFor({state:'visible'});
+ assert.equal(await page.locator('[data-wheel-canvas]').isHidden(),true,'shared discovery URL presents clear service shortcuts without duplicated motion');
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared discovery URL bypasses intro');
  await page.goto(BASE+'/#solution-web',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared offer bypasses intro');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','shared offer shown');
  assert.deepEqual(errors,[],size.name+': uncaught JS exceptions');
  await page.screenshot({path:'reports/'+size.name+'.png',fullPage:true});
- console.log('PASS',size.name,'6 services, 3D wheel, drag/swipe, film, keyboard, history, direct links, demos, web/automation brief and responsive layout');
+ console.log('PASS',size.name,'6 services, action-led 3D movement, guided contact, film, keyboard, history, direct links, demos, briefs and responsive layout');
  await context.close();
 }
 const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
