@@ -21,6 +21,9 @@
       if (index === current) choice.setAttribute('aria-current', 'location');
       else choice.removeAttribute('aria-current');
     });
+    // When a visitor follows a direct link or the browser Back button, keep
+    // the photographic hero synchronized with the actual detailed service.
+    if (index !== -1) window.dispatchEvent(new CustomEvent('mt:orbit-go', {detail:{id:ids[current].replace('solution-', '')}}));
     carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / ' + String(ids.length).padStart(2, '0');
     if (index !== -1 || id === 'offres' || id === 'services-carousel' || !id) {
       const brief = document.getElementById('brief-service');
