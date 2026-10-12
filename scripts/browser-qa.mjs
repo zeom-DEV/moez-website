@@ -249,14 +249,13 @@ await shortcut.keyboard.press('Tab');
 assert(await shortcut.locator('#intro-direct').evaluate(el=>el===document.activeElement),'intro shortcut reachable by keyboard');
 await shortcut.keyboard.press('Tab');
 assert(await shortcut.locator('#intro-flip').evaluate(el=>el===document.activeElement),'intro focus wraps');
-await shortcut.locator('#intro-flip').click();
-await shortcut.locator('#inversion-intro').waitFor({state:'hidden'});
-assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'primary discovery skips the optional film');
-assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film');
-assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
-const shortcutTop=await shortcut.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
-assert(shortcutTop>=0&&shortcutTop<180,'primary discovery lands on the carousel');
-await shortcutContext.close();
+await shortcut.locator('#intro-direct').click();
+ assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'direct film bypass dismisses the introduction');
+ assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film after secondary shortcut');
+ assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
+ const shortcutTop=await shortcut.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
+ assert(shortcutTop>=0&&shortcutTop<350,'secondary shortcut lands on flagship overview');
+ await shortcutContext.close();
 console.log('PASS direct discovery and intro keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
 finally{await browser.close();}
