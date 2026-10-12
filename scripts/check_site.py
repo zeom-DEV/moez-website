@@ -50,6 +50,18 @@ class QA(unittest.TestCase):
   self.assertIn('noindex',self.pages['experience-v5.html'])
   rules=json.loads((R/'vercel.json').read_text())['headers']
   self.assertTrue(any(h['key']=='X-Robots-Tag' and 'noindex' in h['value'] for rule in rules for h in rule['headers']))
+ def test_verified_profile_and_motion(self):
+  home=self.pages['index.html']
+  self.assertIn('id="professional-profile-title"',home)
+  self.assertIn('7 ans · Orange France',home)
+  self.assertIn('Teleperformance sur le compte Orange France',home)
+  self.assertIn('Shopify, Gorgias, Zendesk et Trustpilot',home)
+  self.assertEqual(home.count('data-profile-fact'),4)
+  self.assertIn('profile-motion-2026.css',home)
+  self.assertIn('profile-motion-2026.js',home)
+  self.assertNotIn('MOINS DE TÂCHES MANUELLES. DES COÛTS RÉDUITS.',home)
+  self.assertTrue((R/'assets/profile-motion-2026.css').stat().st_size>500)
+  self.assertTrue((R/'assets/profile-motion-2026.js').stat().st_size>100)
  def test_film(self):
   self.assertIn('preload="none"',self.pages['index.html'])
   self.assertGreater((R/'assets/moez-signature-teaser-12s.mp4').stat().st_size,100000)
