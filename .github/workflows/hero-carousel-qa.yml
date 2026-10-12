@@ -7,6 +7,12 @@ on:
     paths:
       - 'experiments/hero-carousel/**'
       - '.github/workflows/hero-carousel-qa.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'experiments/hero-carousel/**'
+      - '.github/workflows/hero-carousel-qa.yml'
   workflow_dispatch:
 
 permissions:
