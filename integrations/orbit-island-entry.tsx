@@ -68,8 +68,7 @@ function App(){
     // history, panels, form, keyboard and direct links working.
     const chooser=document.querySelector<HTMLAnchorElement>('[data-offer-link="'+id+'"]')
     if(chooser)chooser.click()
-    else{location.hash="#solution-"+id;document.getElementById("solution-"+id)?.scrollIntoView({behavior:reduce?"auto":"smooth"})}
-    safeEvent("mt:journey-detail",id)
+    else{location.hash="#solution-"+id;document.getElementById("solution-"+id)?.scrollIntoView({behavior:reduce?"auto":"smooth"});safeEvent("mt:journey-detail",id)}
   }
   return <>
     <div className="mt-orbit__viewport"
