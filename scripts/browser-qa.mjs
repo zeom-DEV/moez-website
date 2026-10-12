@@ -61,7 +61,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation',size.name+': 3D card synchronizes detail');
  await kinetic.locator('[data-kinetic-prev]').click();
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
- await kinetic.locator('[data-kinetic-card="automation"]').click();
+ await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
+ await kinetic.locator('[data-kinetic-card="automation"]').click({position:{x:150,y:45},force:true});
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
  await kinetic.locator('[data-kinetic-cta]').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
