@@ -29,8 +29,8 @@
 .mt-orbit__footerline i{height:7px;width:7px;background:#9bdbbb;border-radius:50%;box-shadow:0 0 0 4px #aee9bd21;display:inline-block;margin-right:7px}
 .mt-orbit__footerline em{font-style:normal;font-weight:500;color:#aaabae}
 /* Do not erase older animations globally. The duplicated wheel is the only visual we retire. */
-.mt-orbit-mounted .solutions-overview{display:none}
-.mt-orbit-mounted .works-wheel,.mt-orbit-mounted .carousel-toolbar,.mt-orbit-mounted .carousel-mobile-hint{display:none!important}
+.mt-orbit-mounted .solutions-overview,.mt-orbit-pending .solutions-overview{display:none}
+.mt-orbit-mounted .works-wheel,.mt-orbit-pending .works-wheel,.mt-orbit-mounted .carousel-toolbar,.mt-orbit-pending .carousel-toolbar,.mt-orbit-mounted .carousel-mobile-hint,.mt-orbit-pending .carousel-mobile-hint{display:none!important}
 .mt-orbit-mounted .services-carousel__intro{margin-bottom:18px}
 .mt-orbit-mounted .services-carousel__intro h2{font-size:clamp(30px,3vw,44px)}
 .mt-orbit-mounted .services-carousel__intro>p{max-width:540px}
@@ -88,3 +88,6 @@ html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!
 .mt-orbit-mounted .web-demo .mock-contact{animation:mt-contact-hint 3.9s ease-in-out infinite}
 @keyframes mt-contact-hint{0%,100%{box-shadow:0 0 0 0 #ffc3a200}54%{box-shadow:0 0 0 5px #d2a1b526}}
 @media(prefers-reduced-motion:reduce){.mt-orbit-mounted .web-demo .mock-contact{animation:none}}
+
+.mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
+.mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
