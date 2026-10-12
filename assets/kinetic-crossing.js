@@ -4,6 +4,7 @@
   if(!root)return;
   const stage=root.querySelector('[data-kinetic-stage]');
   const cards=[...root.querySelectorAll('[data-kinetic-card]')];
+  const directChoices=[...root.querySelectorAll('[data-kinetic-choice]')];
   const title=root.querySelector('[data-kinetic-title]');
   const pitch=root.querySelector('[data-kinetic-pitch]');
   const indexLabel=root.querySelector('[data-kinetic-counter]');
@@ -52,6 +53,7 @@
     indexLabel.textContent=String(active+1).padStart(2,'0')+' / 06';
     link.href='#solution-'+item.id;
     link.setAttribute('aria-label','Voir les détails du service : '+item.title);
+    directChoices.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.kineticChoice===item.id)));
     if(announce)live.textContent=item.title+', offre '+(active+1)+' sur six';
   }
   function render(){
@@ -112,6 +114,7 @@
     // Clicking the focused card opens its full service description.
     location.hash='#solution-'+offers[active].id;
   }));
+  directChoices.forEach(button=>button.addEventListener('click',()=>manualSelect(offers.findIndex(offer=>offer.id===button.dataset.kineticChoice))));
   root.querySelector('[data-kinetic-prev]').addEventListener('click',()=>manualSelect(active-1));
   root.querySelector('[data-kinetic-next]').addEventListener('click',()=>manualSelect(active+1));
   stage.addEventListener('keydown',e=>{
