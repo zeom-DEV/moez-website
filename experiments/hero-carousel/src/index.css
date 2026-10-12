@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{font-family:Inter,Arial,sans-serif;color:#1b1b1b;background:#f4f1ec}
+html{scroll-behavior:smooth}
+body{margin:0}
+button,a{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:2px solid #c33d54;outline-offset:3px}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:18px clamp(18px,4vw,70px);gap:12px}
+.preview-section{max-width:1320px;margin:0 auto;padding:28px clamp(18px,4vw,70px) 60px}
+.preview-service{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px}
+@media(max-width:700px){.preview-service{grid-template-columns:1fr}.preview-header{align-items:flex-start}}
