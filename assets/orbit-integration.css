@@ -67,7 +67,7 @@
  .mt-orbit__quicknav button strong{font-size:12px}
  .mt-orbit__footerline{margin:0 17px;flex-direction:column;align-items:flex-start;gap:6px;font-size:9px}
 }
-@media(prefers-reduced-motion:reduce){.mt-orbit__viewport *, .mt-orbit__actionbar button, .mt-orbit__quicknav button,.mt-orbit-mounted .offer-detail.is-active{animation:none!important;transition:none!important}.mt-orbit-mounted .web-demo:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.mt-orbit__viewport *, .mt-orbit__actionbar button, .mt-orbit__quicknav button,.mt-orbit-mounted .offer-detail.is-active{animation:none!important;transition:none!important}}
 
 /* In either cached/original bundle version, hide loading copy only after the React island mounts. */
 html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!important}
