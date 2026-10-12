@@ -1,0 +1,96 @@
+name: Build genuine cinematic carousel into the existing site
+
+on:
+  push:
+    branches: [feature/parcours-orchestre-site-existant-20261012]
+    paths:
+      - 'integrations/orbit-island-entry.tsx'
+      - 'assets/orbit-integration.css'
+      - '.github/workflows/build-orbit-island.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orbit-asset-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout existing website branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Checkout exact reference carousel source
+        uses: actions/checkout@v4
+        with:
+          ref: 48eb949a4fb80c00107cd27cf5689df6ce05c0b6
+          path: .orbit-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile the ORIGINAL React + framer-motion carousel
+        run: |
+          set -euxo pipefail
+          SOURCE=.orbit-source/experiments/hero-carousel
+          cp integrations/orbit-island-entry.tsx "$SOURCE/src/island-entry.tsx"
+          cat > "$SOURCE/island.html" <<'HTML'
+          <!doctype html><html lang="fr"><head><meta charset="utf-8"></head><body><div id="moez-orbit-root"></div><script type="module" src="/src/island-entry.tsx"></script></body></html>
+          HTML
+          cat > "$SOURCE/vite.island.config.ts" <<'TS'
+          import { defineConfig } from "vite"
+          import react from "@vitejs/plugin-react"
+          import { fileURLToPath, URL } from "node:url"
+          export default defineConfig({
+            plugins: [react()],
+            resolve: { alias: { "@": fileURLToPath(new URL("./", import.meta.url)) } },
+            base: "/assets/",
+            build: {
+              outDir: "dist-island",
+              emptyOutDir: true,
+              cssCodeSplit: false,
+              rollupOptions: {
+                input: "island.html",
+                output: {
+                  entryFileNames: "assets/orbit-island.js",
+                  assetFileNames: "assets/orbit-island[extname]",
+                  chunkFileNames: "assets/orbit-chunk-[name].js"
+                }
+              }
+            }
+          })
+          TS
+          (cd "$SOURCE" && npm install --no-audit --no-fund && npx vite build --config vite.island.config.ts)
+          cp "$SOURCE/dist-island/assets/orbit-island.js" assets/orbit-island.js
+          cp "$SOURCE/dist-island/assets/orbit-island.css" assets/orbit-island.css
+          test -s assets/orbit-island.js
+          test -s assets/orbit-island.css
+          node --check assets/orbit-island.js
+          wc -c assets/orbit-island.js assets/orbit-island.css
+      - name: Commit assets to this private preview branch only
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/orbit-island.js assets/orbit-island.css
+          if git diff --cached --quiet; then
+            echo 'Compiled bundle already current'
+          else
+            git commit -m 'build(orbit): compile exact reference carousel for existing website'
+            git push origin HEAD:feature/parcours-orchestre-site-existant-20261012
+          fi
+      - name: Archive bundle for independent inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-carousel-integration-bundle
+          path: |
+            assets/orbit-island.js
+            assets/orbit-island.css
+          if-no-files-found: warn
+          retention-days: 7
