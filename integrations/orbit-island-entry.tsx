@@ -61,15 +61,15 @@ function App(){
     setIndex(i)
     safeEvent("mt:journey-select",services[i].id)
   }
-  function openDetail(){
+  function openDetailFor(id:string){
     intent()
-    const id=current.id
     // Reuse the existing native six-service selector to keep the existing
     // history, panels, form, keyboard and direct links working.
     const chooser=document.querySelector<HTMLAnchorElement>('[data-offer-link="'+id+'"]')
     if(chooser)chooser.click()
     else{location.hash="#solution-"+id;document.getElementById("solution-"+id)?.scrollIntoView({behavior:reduce?"auto":"smooth"});safeEvent("mt:journey-detail",id)}
   }
+  function openDetail(){openDetailFor(current.id)}
   return <>
     <div className="mt-orbit__viewport"
        onPointerUpCapture={intent}
@@ -77,6 +77,7 @@ function App(){
        onKeyDownCapture={e=>{if(["ArrowLeft","ArrowRight","Home","End","Enter"," "].includes(e.key))intent()}}
        aria-label="Les six offres en images et en mouvement 3D">
       <HeroCarousel items={items} index={index} onIndexChange={chosen}
+          onExplore={(cardIndex:number)=>openDetailFor(services[cardIndex].id)}
           brand="MOEZ THABET — SIGNATURE MOTION"
           autoplay={playing&&!reduce} autoplayDelay={5900}/>
     </div>
