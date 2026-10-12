@@ -50,3 +50,9 @@
 .services-carousel__intro>p{max-width:410px}
 @media(max-width:760px){.professional-profile__facts{grid-template-columns:1fr}.professional-profile__facts li{min-height:100px}.professional-profile{margin-top:23px}.professional-profile h3{font-size:25px}}
 @media(prefers-reduced-motion:reduce){.professional-profile__facts li,.about-five__photo img,.offer-detail__conversion>a span,.kinetic-showcase__cta span{animation:none!important;transition:none!important;transform:none!important}.motion-scene.is-in-view .scene-web,.motion-scene.is-in-view .scene-web__contact,.motion-scene.is-in-view .scene-ticket,.motion-scene.is-in-view .scene-answer,.motion-scene.is-in-view .scene-review,.motion-scene.is-in-view .scene-call,.motion-scene.is-in-view .scene-table,.motion-scene.is-in-view .scene-folder,.motion-scene.is-in-view .workflow-example>div,.motion-scene.is-in-view .scene-flow>span,.motion-scene.is-in-view .scene-outcome{animation:none!important;transform:none!important;filter:none!important;opacity:1!important}}
+
+/* Contrast verified against the dark about section and pale credentials cards. */
+.about-five .professional-profile__eyebrow{color:#f3bacb!important}
+.about-five .professional-profile__facts li strong{color:#211b1e!important}
+.about-five .professional-profile__facts li span{color:#403338!important}
+.about-five .professional-profile__note,.about-five .profile-scope{color:#e7e2e3!important}
