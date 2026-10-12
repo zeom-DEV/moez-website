@@ -18,6 +18,11 @@ try{
   await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
   await page.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:20000});
   check(await page.locator('.orbit-hero__card').count()===6,name+' uses original React six-image physics carousel');
+  check(await page.locator('.orbit-hero__card').first().getAttribute('aria-label')===null,name+' photo-card accessible name includes visible text');
+  const obscured=await page.locator('.orbit-hero__card[aria-hidden="true"]').evaluateAll(els=>els.map(el=>({tabIndex:el.tabIndex,pointer:getComputedStyle(el).pointerEvents})));
+  check(obscured.length>=2&&obscured.every(el=>el.tabIndex===-1&&el.pointer==='none'),name+' obscured 3D cards never trap keyboard or pointer targets');
+  check(await page.locator('.mt-orbit__explore').getAttribute('aria-label')===null,name+' conversion CTA has matching visible/accessible label');
+
   if(name==='desktop'){
     const before=await page.locator('.orbit-hero__card').first().evaluate(el=>el.style.transform);
     await page.waitForTimeout(700);
