@@ -198,7 +198,15 @@ export function HeroCarousel({
     if (moved) {
       clickBlock.current = true
       window.setTimeout(() => { clickBlock.current = false }, 180)
-    } else momentum.current = 0
+    } else {
+      momentum.current = 0
+      const rect = e.currentTarget.getBoundingClientRect()
+      const g = geom.current
+      if (g.distance > 0 && g.step > 0) {
+        const touchedCard = Math.round((e.clientX - rect.left - rect.width / 2 + mod(position.current, g.distance)) / g.step)
+        go(mod(touchedCard, n))
+      }
+    }
   }
   const clickCard = (i: number) => { if (!clickBlock.current) go(i) }
 
