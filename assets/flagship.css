@@ -61,3 +61,6 @@ body .solutions-overview a:focus-visible{outline:3px solid #84263e!important;out
 
 button.intro-direct{border:0;background:transparent;width:calc(100% - 60px);text-align:left;cursor:pointer}
 @media(max-width:480px){button.intro-direct{width:calc(100% - 44px)}}
+
+/* Homepage without the redundant web mockup: the flagship copy uses the full column. */
+.offers-five .flagship-hero--solo{display:block;width:100%;max-width:950px}
