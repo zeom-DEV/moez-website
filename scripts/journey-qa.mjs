@@ -15,6 +15,7 @@ try{
   const context=await browser.newContext(opt),page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/#offres',{waitUntil:'domcontentloaded'});
+  await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
   await page.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:20000});
   check(await page.locator('.orbit-hero__card').count()===6,name+' uses original React six-image physics carousel');
   if(name==='desktop'){
@@ -60,6 +61,7 @@ try{
  }
  const context=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'}),page=await context.newPage();
  await page.goto(base+'/#offres',{waitUntil:'domcontentloaded'});
+ await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
  await page.locator('.mt-orbit__quicknav button').last().click();
  check(await page.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed')==='true','reduced-motion carousel remains usable');
  await context.close();
