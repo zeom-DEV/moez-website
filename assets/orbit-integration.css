@@ -40,8 +40,6 @@
 @keyframes mt-offer-reveal{from{opacity:.35;transform:translate3d(0,26px,0) scale(.989)}to{opacity:1;transform:none}}
 .mt-orbit-mounted .offer-graphic{transition:transform .4s cubic-bezier(.2,.8,.25,1),box-shadow .4s}
 .mt-orbit-mounted .offer-graphic:hover{transform:translate3d(0,-5px,0);box-shadow:0 20px 48px #170b1718}
-.mt-orbit-mounted .web-demo{transition:transform .35s cubic-bezier(.2,.8,.25,1),box-shadow .35s}
-.mt-orbit-mounted .web-demo:hover{transform:translate3d(0,-4px,0);box-shadow:0 30px 70px #38202d29}
 /* No carousel library load = preserve the original service overview and details. */
 .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{min-height:clamp(565px,75svh,810px)}
 .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport:after{content:"Les six offres en images arrivent…";position:absolute;inset:0;display:grid;place-items:center;color:#d6bba1;font-size:13px}
@@ -85,9 +83,6 @@ html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!
 .mt-orbit-mounted .mt-signal__content a{background:var(--signal-accent);color:#1c1717}
 .mt-orbit-mounted .mt-signal__content a:hover{background:#fff8e9}
 .mt-orbit-mounted .mt-signal__content p{color:#d3cec9}
-.mt-orbit-mounted .web-demo .mock-contact{animation:mt-contact-hint 3.9s ease-in-out infinite}
-@keyframes mt-contact-hint{0%,100%{box-shadow:0 0 0 0 #ffc3a200}54%{box-shadow:0 0 0 5px #d2a1b526}}
-@media(prefers-reduced-motion:reduce){.mt-orbit-mounted .web-demo .mock-contact{animation:none}}
 
 .mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
 .mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
