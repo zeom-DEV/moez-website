@@ -37,7 +37,8 @@ try{
   check(await page.locator('.mt-orbit__quicknav button').count()===6,name+' one directly usable illustrated selector');
   check(await page.locator('.works-wheel').isHidden(),name+' old repeated wheel hidden');
   check(await page.locator('.solutions-overview').isHidden(),name+' repeated service list hidden only after successful React mount');
-  check(await page.locator('.web-demo').isVisible(),name+' original web creation interactive demo preserved');
+  check(await page.locator('[data-web-demo]').count()===0,name+' redundant web mockup removed without affecting original hero');
+  check(await page.locator('#offers-five-title').count()===1,name+' flagship headline is retained');
   check(await page.locator('.mt-orbit__pause').count()===1,name+' visitor has actual autoplay control');
   await page.locator('.mt-orbit__pause').click();
   await page.locator('.mt-orbit__quicknav button').last().click();
