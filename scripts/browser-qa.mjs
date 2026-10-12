@@ -119,8 +119,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.evaluate(()=>performance.getEntriesByType('navigation').length),documentsBefore,size.name+': no navigation when switching offers');
  await page.locator('[data-offer-link="web"]').click();
  await page.locator('[data-kinetic-prev]').click();
- await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-automation');
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation','main 3D selector wraps backwards');
+ await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-crm');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-crm','main 3D selector wraps backwards to the last visible card');
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
  await page.locator('[data-kinetic-next]').click();
  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-web');
