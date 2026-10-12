@@ -311,15 +311,12 @@ export function HeroCarousel({
 
       <div className="orbit-hero__narrative" aria-live="off">
         <span className="orbit-hero__eyebrow"><i/> 01 — 06 / DES EXPERTISES QUI PRENNENT VIE</span>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={String(selected.id ?? currentIndex)}
-            initial={{ opacity: 0, y: 23 }} animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -11 }}
-            transition={reduced ? { duration: 0 } : { duration: .7, ease: [.22, 1, .36, 1] }}>
-            <h2>{selected.title.split("\n").map((line, j) => <span key={j}>{line}</span>)}</h2>
-            <p>{selected.credit ?? "MOEZ THABET · DIGITAL SERVICES"}</p>
-          </motion.div>
-        </AnimatePresence>
+        <motion.div key={String(selected.id ?? currentIndex)}
+          initial={false} animate={{ opacity: 1, y: 0 }}
+          transition={reduced ? { duration: 0 } : { duration: .34, ease: [.22, 1, .36, 1] }}>
+          <h2>{selected.title.split("\n").map((line, j) => <span key={j}>{line}</span>)}</h2>
+          <p>{selected.credit ?? "MOEZ THABET · DIGITAL SERVICES"}</p>
+        </motion.div>
       </div>
 
       <div className={"orbit-hero__world" + (isDragging ? " orbit-hero__world--dragging" : "")}
