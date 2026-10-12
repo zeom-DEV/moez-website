@@ -45,3 +45,16 @@ body:not(.intro-active) #site-shell{transition:none;will-change:auto}
 .solutions-overview a:hover{color:#84263e}
 body .solutions-overview a:focus-visible{outline:3px solid #84263e!important;outline-offset:3px!important}
 @media(max-width:800px){.solutions-overview{margin-top:20px;gap:0 14px}.solutions-overview a{min-height:68px}.flagship-notes{margin-top:16px}}
+
+/* Keep the six-service overview in the first screen on standard phone and desktop viewports. */
+.offers-five{padding-top:56px!important}
+.flagship-hero h1{font-size:clamp(48px,5.2vw,76px)}
+.solutions-overview strong{font-size:14px}
+.solutions-overview small{font-size:12px}
+@media(max-width:800px){
+ .offers-five{padding-top:28px!important}
+ .flagship-hero h1{margin:18px 0!important;font-size:clamp(43px,10vw,68px)}
+ .flagship-hero__copy>p{margin-bottom:20px}
+ .solutions-overview{margin-top:16px}
+ .solutions-overview a{padding:10px 0;min-height:64px}
+}

@@ -45,6 +45,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
  }
+ if(size.name==='mobile'||size.name==='desktop'){
+  const overviewBottom=await page.locator('.solutions-overview').evaluate(el=>el.getBoundingClientRect().bottom);
+  assert(overviewBottom<=size.height,size.name+': all six solutions visible in the first screen ('+overviewBottom+')');
+ }
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
  for(let step=0;step<3;step++){
   await page.locator('[data-web-stage]').nth(step).click();
