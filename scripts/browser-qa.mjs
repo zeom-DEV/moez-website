@@ -16,6 +16,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  page.setDefaultTimeout(15000);
  await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
+ assert.equal(await page.locator('.solutions-overview a').count(),6,size.name+': six immediately understandable solutions');
+ assert.equal((await page.locator('.flagship-link').textContent()).replace('↘','').trim(),'Découvrir mes solutions',size.name+': single principal discovery CTA');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
