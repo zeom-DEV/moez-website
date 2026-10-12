@@ -225,7 +225,7 @@ export function HeroCarousel({
   if (!n || !selected) return null
   const mobile = bounds.w < 650
   const cardW = clamp(mobile ? bounds.w * .55 : bounds.w * .285, 205, 385)
-  const cardH = clamp(mobile ? bounds.h * .52 : bounds.h * .55, mobile ? 245 : 300, mobile ? 360 : 485)
+  const cardH = clamp(bounds.h * .52, mobile ? 245 : 300, mobile ? 360 : 460)
 
   const beginDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse" && e.button !== 0) return
