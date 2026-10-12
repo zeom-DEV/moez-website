@@ -56,8 +56,26 @@ try {
     await page.waitForTimeout(1100)
     const nextTransform = await page.locator(".orbit-hero__card").first().evaluate(el => el.style.transform)
     assert(initialTransform !== nextTransform, name + " physical automatic 3D motion advances")
+    const frameStats = await page.evaluate(async () => new Promise(resolve => {
+      const intervals = []
+      let last = 0
+      let start = 0
+      const sample = (t) => {
+        if (!start) start = t
+        if (last) intervals.push(t - last)
+        last = t
+        if (t - start < 1400) requestAnimationFrame(sample)
+        else {
+          intervals.sort((a, b) => a - b)
+          const average = intervals.reduce((a,b) => a + b, 0) / Math.max(1, intervals.length)
+          resolve({ fps: Math.round(1000 / average), frameP95ms: Number((intervals[Math.floor(intervals.length * .95)] || 0).toFixed(1)), frames: intervals.length })
+        }
+      }
+      requestAnimationFrame(sample)
+    }))
+    console.log("FRAME_METRICS " + name + " " + JSON.stringify(frameStats))
     try {
-      await page.screenshot({ path: "reports/orbit-" + name + ".png", fullPage: false, animations: "allow", timeout: 14000 })
+      await page.screenshot({ path: "reports/orbit-" + name + ".png", fullPage: true, animations: "allow", timeout: 14000 })
     } catch (error) {
       console.warn("SCREENSHOT warning " + name + " " + String(error))
     }
