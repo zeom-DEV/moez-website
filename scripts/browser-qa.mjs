@@ -62,7 +62,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await kinetic.locator('[data-kinetic-prev]').click();
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
  await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
- if(size.name==='small-mobile'){
+ if(size.name==='small-mobile'||size.name==='landscape'){
    const pills=kinetic.locator('[data-kinetic-choice]');
    assert.equal(await pills.count(),6,'all six mobile choices');
    await kinetic.locator('[data-kinetic-choice="automation"]').click();
