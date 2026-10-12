@@ -1,0 +1,113 @@
+name: Build genuine cinematic carousel into the existing site
+
+on:
+  push:
+    branches: [feature/parcours-orchestre-site-existant-20261012]
+    paths:
+      - 'integrations/orbit-island-entry.tsx'
+      - 'assets/orbit-integration.css'
+      - '.github/workflows/build-orbit-island.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: orbit-asset-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout existing website branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Checkout exact reference carousel source
+        uses: actions/checkout@v4
+        with:
+          ref: 48eb949a4fb80c00107cd27cf5689df6ce05c0b6
+          path: .orbit-source
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile the ORIGINAL React + framer-motion carousel
+        run: |
+          set -euxo pipefail
+          SOURCE=.orbit-source/experiments/hero-carousel
+          cp integrations/orbit-island-entry.tsx "$SOURCE/src/island-entry.tsx"
+          # Only adjust accessibility of the source reference for this integrated build:
+          # keep its original artwork, photography and physics unchanged.
+          python3 - "$SOURCE/components/ui/hero-carousel.tsx" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1])
+          source=p.read_text()
+          source=''.join(line for line in source.splitlines(keepends=True) if 'aria-label={"Choisir le service "' not in line)
+          orig='data-hero-card={i}\n              onClick='
+          replacement='data-hero-card={i}\n              aria-hidden={i !== focusIndex && i !== mod(focusIndex + 1, n) && i !== mod(focusIndex - 1, n)}\n              tabIndex={i === focusIndex ? 0 : -1}\n              onClick='
+          assert orig in source
+          source=source.replace(orig,replacement)
+          a='style={{ width: cardW, height: cardH, "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
+          b='style={{ width: cardW, height: cardH, pointerEvents: (i === focusIndex || i === mod(focusIndex + 1, n) || i === mod(focusIndex - 1, n)) ? "auto" : "none", "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
+          assert a in source
+          p.write_text(source.replace(a,b))
+          PY
+          cat > "$SOURCE/island.html" <<'HTML'
+          <!doctype html><html lang="fr"><head><meta charset="utf-8"></head><body><div id="moez-orbit-root"></div><script type="module" src="/src/island-entry.tsx"></script></body></html>
+          HTML
+          cat > "$SOURCE/vite.island.config.ts" <<'TS'
+          import { defineConfig } from "vite"
+          import react from "@vitejs/plugin-react"
+          import { fileURLToPath, URL } from "node:url"
+          export default defineConfig({
+            plugins: [react()],
+            resolve: { alias: { "@": fileURLToPath(new URL("./", import.meta.url)) } },
+            base: "/assets/",
+            build: {
+              outDir: "dist-island",
+              emptyOutDir: true,
+              cssCodeSplit: false,
+              rollupOptions: {
+                input: "island.html",
+                output: {
+                  entryFileNames: "assets/orbit-island.js",
+                  assetFileNames: "assets/orbit-island[extname]",
+                  chunkFileNames: "assets/orbit-chunk-[name].js"
+                }
+              }
+            }
+          })
+          TS
+          (cd "$SOURCE" && npm install --no-audit --no-fund && npx vite build --config vite.island.config.ts)
+          cp "$SOURCE/dist-island/assets/orbit-island.js" assets/orbit-island.js
+          cp "$SOURCE/dist-island/assets/orbit-island.css" assets/orbit-island.css
+          test -s assets/orbit-island.js
+          test -s assets/orbit-island.css
+          node --check assets/orbit-island.js
+          wc -c assets/orbit-island.js assets/orbit-island.css
+      - name: Commit assets to this private preview branch only
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/orbit-island.js assets/orbit-island.css
+          if git diff --cached --quiet; then
+            echo 'Compiled bundle already current'
+          else
+            git commit -m 'build(orbit): compile exact reference carousel for existing website'
+            git push origin HEAD:feature/parcours-orchestre-site-existant-20261012
+          fi
+      - name: Archive bundle for independent inspection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-carousel-integration-bundle
+          path: |
+            assets/orbit-island.js
+            assets/orbit-island.css
+          if-no-files-found: warn
+          retention-days: 7

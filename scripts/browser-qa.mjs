@@ -45,140 +45,66 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
  }
- if(size.name==='mobile'||size.name==='desktop'){
-  const overviewBottom=await page.locator('.solutions-overview').evaluate(el=>el.getBoundingClientRect().bottom);
-  assert(overviewBottom<=size.height,size.name+': all six solutions visible in first screen ('+overviewBottom+')');
- }
+ // The primary discovery CTA exposes six photographic cards, not a second text list.
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
- // New six-card kinetic stage: actual interactions, synced copy and linked detail.
- const kinetic=page.locator('[data-kinetic-showcase]');
- assert.equal(await kinetic.locator('[data-kinetic-card]').count(),6,size.name+': six cinematic cards');
- await kinetic.scrollIntoViewIfNeeded();
- assert.equal(await kinetic.locator('[data-kinetic-title]').textContent(),'Sites internet',size.name+': flagship active first');
- await kinetic.locator('[data-kinetic-next]').click();
- await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
- assert.equal(await kinetic.locator('[data-kinetic-cta]').getAttribute('href'),'#solution-automation',size.name+': linked service CTA');
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation',size.name+': 3D card synchronizes detail');
- await kinetic.locator('[data-kinetic-prev]').click();
- await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Sites internet');
- await page.waitForFunction(()=>document.querySelector('[data-kinetic-showcase]').dataset.kineticBusy==='false');
- if(size.name==='small-mobile'){
-   const pills=kinetic.locator('[data-kinetic-choice]');
-   assert.equal(await pills.count(),6,'all six mobile choices');
-   await kinetic.locator('[data-kinetic-choice="automation"]').click();
- }else{
-   await kinetic.locator('[data-kinetic-stage]').scrollIntoViewIfNeeded();
-   const visiblePoint=await page.evaluate(()=>{
-     const stage=document.querySelector('[data-kinetic-stage]');
-     const target=stage.querySelector('[data-kinetic-card="automation"]');
-     const a=stage.getBoundingClientRect(),b=target.getBoundingClientRect();
-     const y=b.top+b.height*.5,hits=[];
-     const left=Math.max(a.left+9,b.left+9),right=Math.min(a.right-9,b.right-9);
-     for(let x=left;x<right;x+=4){
-       if(document.elementFromPoint(x,y)?.closest('[data-kinetic-card]')===target)hits.push(x);
-     }
-     return hits.length>=6?{x:hits[Math.floor(hits.length/2)],y,width:hits[hits.length-1]-hits[0]}:null;
-   });
-   assert(visiblePoint&&visiblePoint.width>=20,size.name+': neighboring card needs a visible clickable edge');
-   await page.mouse.click(visiblePoint.x,visiblePoint.y);
- }
- await page.waitForFunction(()=>document.querySelector('[data-kinetic-title]').textContent==='Automatisation');
- await kinetic.locator('[data-kinetic-cta]').click();
+ // The selected reference is the photographic React + framer-motion 3D carousel.
+ const orbit=page.locator('.mt-orbit-showcase');
+ await orbit.scrollIntoViewIfNeeded();
+ await orbit.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:25000});
+ assert.equal(await orbit.locator('.orbit-hero__card').count(),6,size.name+': six genuine photographic carousel cards');
+ assert.equal(await orbit.locator('.mt-orbit__quicknav button').count(),6,size.name+': six direct choices');
+ assert.equal(await page.locator('.works-wheel').isHidden(),true,size.name+': repeated wheel replaced');
+ assert.equal(await page.locator('.solutions-overview').isHidden(),true,size.name+': first repeated list is hidden');
+ await orbit.locator('.mt-orbit__pause').click();
+ await orbit.locator('.mt-orbit__quicknav button').last().click();
+ await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Automatisation');
+ assert.equal(await orbit.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'),'true',size.name+': selecting a photo updates current service');
+ await orbit.locator('.mt-orbit__explore').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
- await page.locator('[data-offer-link="web"]').click();
- await page.screenshot({path:'reports/kinetic-'+size.name+'.png'});
+ await page.screenshot({path:'reports/orbit-'+size.name+'.png'});
+ const selectFromLink=async id=>page.evaluate(id=>document.querySelector('[data-offer-link="'+id+'"]').click(),id);
+ await selectFromLink('web');
 
  for(let step=0;step<3;step++){
   await page.locator('[data-web-stage]').nth(step).click();
   assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
  }
- // The reference's two distinct compositions must work with real input.
- const wheel=page.locator('[data-works-wheel]');
- const canvas=page.locator('[data-wheel-canvas]');
- await page.locator('[data-offer-link="web"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- if(size.name!=='small-mobile'){
-  await page.locator('[data-wheel-reset]').click();
-  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='circle');
-  const closedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
-  assert.equal(await page.locator('[data-wheel-card]').count(),6,'six illustrated wheel cards');
-  await page.screenshot({path:'reports/wheel-circle-'+size.name+'.png'});
-  if(size.name==='desktop'){
-   await canvas.hover();
-   await page.mouse.wheel(0,180);
-   await page.mouse.wheel(0,180);
-   await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelMode==='carousel');
-   const openedCard=await page.locator('[data-wheel-card="web"]').boundingBox();
-   assert(openedCard.width>closedCard.width*1.3,'wheel opens into a larger front card');
-   const bounds=await canvas.boundingBox();
-   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2+60);
-   await page.mouse.down();
-   await page.mouse.move(bounds.x+bounds.width/2,bounds.y+bounds.height/2-60,{steps:12});
-   await page.mouse.up();
-   await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  }
- }
- await page.locator('[data-offer-link="automation"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await wheel.getAttribute('data-wheel-mode'),'carousel','selected service opens the 3D drum');
- assert.equal(await page.locator('[data-wheel-title]').textContent(),'Automatisation','active wheel title');
- assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows','contact form follows the service');
- await page.screenshot({path:'reports/wheel-open-'+size.name+'.png'});
- await page.locator('[data-wheel-details]').click();
- const detailTop=await page.locator('#solution-title-automation').evaluate(el=>el.getBoundingClientRect().top);
- assert(detailTop>=0&&detailTop<180,'wheel opens the readable service details');
- assert(await page.locator('#solution-title-automation').evaluate(el=>el===document.activeElement),'details receive keyboard focus');
- await page.locator('[data-offer-link="web"]').click();
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- if(size.name==='mobile'){
-  await canvas.scrollIntoViewIfNeeded();
-  const rect=await canvas.boundingBox();
-  const cdp=await context.newCDPSession(page);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:rect.x+rect.width/2+60,y:rect.y+rect.height/2}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:rect.x+rect.width/2-60,y:rect.y+rect.height/2}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  await page.locator('[data-offer-link="web"]').click();
-  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
-  await canvas.scrollIntoViewIfNeeded();
-  const verticalRect=await canvas.boundingBox();
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2+60}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2-60}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
-  const scrollBefore=await page.evaluate(()=>scrollY);
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:8,y:650}]});
-  for(const y of [550,450,350,250])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:8,y}]});
-  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
-  await page.waitForFunction(before=>scrollY>before,scrollBefore);
-  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','page scroll outside the canvas preserves the selected service');
-  await cdp.detach();
-  await page.locator('[data-offer-link="web"]').click();
- }
+ // The original site retains its complete web demo, service detail and contact flow.
+ assert.equal(await page.locator('.works-wheel').isHidden(),true,size.name+': second carousel removed');
+ await orbit.locator('.mt-orbit__quicknav button').last().click();
+ await orbit.locator('.mt-orbit__explore').click();
+ await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
+ await page.locator('#solution-automation [data-journey-brief]').click();
+ assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows',size.name+': selected service reaches the existing contact form');
+ await selectFromLink('web');
  const documentsBefore=await page.evaluate(()=>performance.getEntriesByType('navigation').length);
  for(const [key,file] of routes){
-  await page.locator('[data-offer-link="'+key+'"]').click();
+  await selectFromLink(key);
   await page.locator('#solution-'+key+'.is-active').waitFor({state:'visible'});
   assert.equal(await page.locator('.offer-detail.is-active').count(),1,size.name+': only selected service');
   assert(await page.locator('#solution-'+key+' .offer-detail__conversion a[href^="https://calendly.com/"]').count()>0,size.name+': CTA for '+key);
-  const position=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
-  assert(position>=0&&position<180,size.name+': selected offer immediately in view '+position);
+  assert.equal(await page.locator('#solution-'+key).getAttribute('aria-hidden'),'false',size.name+': chosen offer is exposed to assistive technology');
+  assert(await page.locator('#solution-'+key+' h2').count()>0,size.name+': chosen offer retains its detailed heading');
   assert(await page.locator('.offer-detail:not(.is-active)').evaluateAll(els=>els.every(el=>el.inert)),size.name+': inactive offers excluded from focus');
   assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+4),size.name+': no overflow in '+key);
   await page.locator('#solution-'+key+' .offer-detail__back').click();
   assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','web stays first');
  }
  assert.equal(await page.evaluate(()=>performance.getEntriesByType('navigation').length),documentsBefore,size.name+': no navigation when switching offers');
- await page.locator('[data-offer-link="web"]').click();
- await page.locator('[data-carousel-prev]').click();
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-automation','carousel wraps backwards');
- await page.locator('[data-carousel-next]').click();
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','carousel wraps forwards');
- await page.locator('[data-offer-link="web"]').focus();
+ await selectFromLink('web');
+ await orbit.locator('.mt-orbit__quicknav button').first().click();
+ await orbit.locator('.mt-orbit__nav').first().click();
+ await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Automatisation');
+ assert.equal(await orbit.locator('.mt-orbit__current strong').textContent(),'Automatisation','3D carousel wraps backwards');
+ await orbit.locator('.mt-orbit__nav').last().click();
+ await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Sites internet');
+ assert.equal(await orbit.locator('.mt-orbit__current strong').textContent(),'Sites internet','3D carousel wraps forwards');
+ await orbit.locator('.orbit-hero').focus();
  await page.keyboard.press('ArrowRight');
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','keyboard selection');
+ await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Service client');
  await page.keyboard.press('Home');
- assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','keyboard Home');
+ await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Sites internet');
+ await orbit.locator('.mt-orbit__explore').click();
  if(size.name==='mobile'){
   const graphic=page.locator('#solution-web .offer-graphic');
   await graphic.scrollIntoViewIfNeeded();
@@ -189,7 +115,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','real mobile swipe');
   await cdp.detach();
-  await page.locator('[data-offer-link="web"]').click();
+  await selectFromLink('web');
  }
 
  await page.locator('.offer-detail.is-active .offer-detail__other a[href="#solution-sav"]').click();
@@ -199,7 +125,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  if(await page.locator('#menu-button').isVisible()){await page.locator('#menu-button').click();await page.locator('#mobile-nav a[href="./#offres"]').click();}
  else await page.locator('.desktop-nav a[href="./#offres"]').click();
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','navigation selects flagship');
- await page.locator('[data-offer-link="crm"]').click();
+ await selectFromLink('crm');
  const announcementBefore=await page.locator('[data-carousel-live]').textContent();
  for(const anchor of ['methode','contact']){
   if(await page.locator('#menu-button').isVisible()){
@@ -224,7 +150,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.locator('#brief-copy').click();
  await page.waitForFunction(()=>/Copié|Sélectionné/.test(document.getElementById('brief-copy').textContent));
  if(size.name==='landscape'){
-  await page.locator('[data-offer-link="web"]').click();
+  await selectFromLink('web');
   const popupPromise=page.waitForEvent('popup');
   await page.locator('#solution-web [data-book]').click();
   const popup=await popupPromise;
@@ -233,7 +159,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await popup.close();
  }
  if(size.name==='desktop'){
-  await page.locator('[data-offer-link="web"]').click();
+  await selectFromLink('web');
   const book=page.locator('#solution-web [data-book]');
   await book.click();
   await page.locator('#booking-dialog').waitFor({state:'visible'});
@@ -260,15 +186,16 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.locator('#inversion-intro').waitFor({state:'hidden'});
  }
  await page.goto(BASE+'/#services-carousel',{waitUntil:'domcontentloaded'});
- await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
- assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel','shared discovery URL opens the drum');
+ await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
+ await page.locator('.orbit-hero__card').first().waitFor({state:'visible'});
+ assert.equal(await page.locator('.works-wheel').isHidden(),true,'shared discovery URL presents the single cinematic carousel');
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared discovery URL bypasses intro');
  await page.goto(BASE+'/#solution-web',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared offer bypasses intro');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','shared offer shown');
  assert.deepEqual(errors,[],size.name+': uncaught JS exceptions');
  await page.screenshot({path:'reports/'+size.name+'.png',fullPage:true});
- console.log('PASS',size.name,'6 services, 3D wheel, drag/swipe, film, keyboard, history, direct links, demos, web/automation brief and responsive layout');
+ console.log('PASS',size.name,'6 services, action-led 3D movement, guided contact, film, keyboard, history, direct links, demos, briefs and responsive layout');
  await context.close();
 }
 const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});

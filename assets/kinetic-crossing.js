@@ -24,7 +24,8 @@
   const count=offers.length;
   const key=location.hash.slice(1).replace(/^solution-/,'');
   let active=Math.max(0,offers.findIndex(o=>o.id===key));
-  let direction=1,visible=false,hover=false,focused=false,moving=false,timer=0,manualUntil=0;
+  let visible=true,moving=false,manualUntil=0; // Motion is driven by the visitor, never a decorative timer.
+  let lastSwipe=0;
   let queued=null;
   const mod=n=>(n%count+count)%count;
   function slot(index,center){
@@ -59,28 +60,19 @@
   function render(){
     cards.forEach((card,i)=>apply(card,slot(i,active),i));
   }
-  function canAuto(){return visible&&!hover&&!focused&&!document.hidden&&!reduce.matches&&!connection?.saveData&&Date.now()>=manualUntil;}
-  function schedule(){
-    clearTimeout(timer);
-    if(!visible||reduce.matches||connection?.saveData||document.hidden)return;
-    timer=setTimeout(()=>{
-      if(canAuto()&&!moving){
-        if(active===count-1)direction=-1;
-        else if(active===0)direction=1;
-        select(active+direction,false,direction);
-      }
-      schedule();
-    },4200);
-  }
+  function schedule(){ /* Deliberately no autoplay: selection must advance a visitor journey. */ }
   function select(newIndex,manual=false,dir=1){
     newIndex=mod(newIndex);
     if(manual){manualUntil=Date.now()+8000;live.textContent='';}
-    if(newIndex===active){if(manual)copy(true);schedule();return;}
+    if(newIndex===active){if(manual){copy(true);window.dispatchEvent(new CustomEvent('mt:journey-select',{detail:{id:offers[active].id,title:offers[active].title,pitch:offers[active].pitch}}));}return;}
     if(moving){queued={newIndex,manual,dir};return;}
     const previous=active;
     const old=cards.map((_,i)=>slot(i,previous));
     const next=cards.map((_,i)=>slot(i,newIndex));
     active=newIndex;copy(manual);
+    root.style.setProperty('--ks-accent', ['#d9f7a0','#e1b6ff','#96e0dc','#ffb8a6','#f8d49a','#a2c4ff'][active]);
+    root.classList.remove('ks-activated');void root.offsetWidth;root.classList.add('ks-activated');
+    if(manual)window.dispatchEvent(new CustomEvent('mt:journey-select',{detail:{id:offers[active].id,title:offers[active].title,pitch:offers[active].pitch}}));
     cards.forEach((card,i)=>apply(card,next[i],i));
     if(manual&&carousel){
       const choice=[...carousel.querySelectorAll('[data-offer-link]')].findIndex(el=>el.dataset.offerLink===offers[active].id);
@@ -90,13 +82,13 @@
     moving=true;root.dataset.kineticBusy='true';
     const all=cards.map((card,i)=>{
       let mid=interpolate(old[i],next[i],.5);
-      if(i===previous)mid={x:dir*76,y:-dir*60,z:240,ry:dir*24,rz:dir*9,scale:1.12,alpha:.52};
-      if(i===newIndex)mid={x:-dir*68,y:dir*66,z:270,ry:-dir*26,rz:-dir*9,scale:1.16,alpha:1};
+      if(i===previous)mid={x:dir*110,y:-dir*82,z:310,ry:dir*29,rz:dir*14,scale:1.18,alpha:.48};
+      if(i===newIndex)mid={x:-dir*104,y:dir*84,z:340,ry:-dir*29,rz:-dir*13,scale:1.22,alpha:1};
       const anim=card.animate([
         {transform:transform(old[i]),opacity:old[i].alpha,offset:0},
         {transform:transform(mid),opacity:mid.alpha,offset:.52},
         {transform:transform(next[i]),opacity:next[i].alpha,offset:1}
-      ],{duration:960,easing:'cubic-bezier(.24,.72,.22,1)',fill:'both'});
+      ],{duration:830,delay:(i===newIndex?60:i===previous?0:Math.abs(i-newIndex)*14),easing:'cubic-bezier(.18,.83,.21,1)',fill:'both'});
       return anim.finished.catch(()=>{}).then(()=>anim.cancel());
     });
     Promise.all(all).then(()=>{
@@ -112,7 +104,7 @@
   cards.forEach((card,i)=>card.addEventListener('click',()=>{
     if(i!==active){manualSelect(i);return;}
     // Clicking the focused card opens its full service description.
-    location.hash='#solution-'+offers[active].id;
+    if(performance.now()-lastSwipe>450)location.hash='#solution-'+offers[active].id;
   }));
   directChoices.forEach(button=>button.addEventListener('click',()=>manualSelect(offers.findIndex(offer=>offer.id===button.dataset.kineticChoice))));
   root.querySelector('[data-kinetic-prev]').addEventListener('click',()=>manualSelect(active-1));
@@ -130,28 +122,18 @@
   stage.addEventListener('touchend',e=>{
     if(!touch)return;
     const t=e.changedTouches[0],dx=t.clientX-touch.x,dy=t.clientY-touch.y;touch=null;
-    if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.25)manualSelect(active+(dx<0?1:-1));
+    if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.25){lastSwipe=performance.now();manualSelect(active+(dx<0?1:-1));}
   },{passive:true});
-  root.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hover=true;clearTimeout(timer);}});
-  root.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'){hover=false;schedule();}});
-  root.addEventListener('focusin',()=>{focused=true;clearTimeout(timer);});
-  root.addEventListener('focusout',()=>{queueMicrotask(()=>{focused=root.contains(document.activeElement);schedule();});});
-  if('IntersectionObserver' in window){
-    const observer=new IntersectionObserver(entries=>{
-      visible=entries.some(entry=>entry.isIntersecting);
-      if(!visible)clearTimeout(timer);else schedule();
-    },{threshold:.12});
-    observer.observe(root);
-  }else{visible=true;schedule();}
+  // No hover/focus autoplay: visitors remain in control.
   window.addEventListener('resize',render,{passive:true});
-  document.addEventListener('visibilitychange',schedule);
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)root.classList.remove('ks-activated');});
   reduce.addEventListener?.('change',()=>{render();schedule();});
-  connection?.addEventListener?.('change',schedule);
+  connection?.addEventListener?.('change',render);
   // Reuse the established six-offer selection when the visitor navigates by URL or the wheel.
   carousel?.addEventListener('mt:offer-select',e=>{
     const option=carousel.querySelectorAll('[data-offer-link]')[e.detail.index];
     const idx=offers.findIndex(o=>o.id===option?.dataset.offerLink);
     if(idx>=0&&idx!==active)select(idx,false,idx>active?1:-1);
   });
-  root.dataset.kineticBusy='false';copy(false);render();
+  root.dataset.kineticBusy='false';root.dataset.journeyMode='intentional';copy(false);render();
 })();

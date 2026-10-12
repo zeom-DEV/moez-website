@@ -21,6 +21,9 @@
       if (index === current) choice.setAttribute('aria-current', 'location');
       else choice.removeAttribute('aria-current');
     });
+    // When a visitor follows a direct link or the browser Back button, keep
+    // the photographic hero synchronized with the actual detailed service.
+    if (index !== -1) window.dispatchEvent(new CustomEvent('mt:orbit-go', {detail:{id:ids[current].replace('solution-', '')}}));
     carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / ' + String(ids.length).padStart(2, '0');
     if (index !== -1 || id === 'offres' || id === 'services-carousel' || !id) {
       const brief = document.getElementById('brief-service');
@@ -30,10 +33,12 @@
     if (announce && (index !== -1 || id === 'offres' || id === 'services-carousel')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur ' + ids.length + '.';
     if (!focus || (!ids.includes(id) && id !== 'offres' && id !== 'services-carousel')) return;
     const home = id === 'offres';
-    (home ? document.getElementById('offers-five-title') : carousel).scrollIntoView({behavior: 'instant', block: 'start'});
-    const target = home ? document.getElementById('offers-five-title') : id === 'services-carousel' ? document.getElementById('services-carousel-title') : choices[current];
-    if (home || id === 'services-carousel') target.tabIndex = -1;
-    target.focus({preventScroll: true});
+    const detail = index !== -1;
+    const destination = home ? document.getElementById('offers-five-title') : detail ? panels[current] : carousel;
+    destination.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+    const target = home ? document.getElementById('offers-five-title') : detail ? panels[current].querySelector('h2') : document.getElementById('services-carousel-title');
+    if (target) { target.tabIndex = -1; target.focus({preventScroll: true}); }
+    if (detail) window.dispatchEvent(new CustomEvent('mt:journey-detail', {detail:{id:ids[current].replace('solution-', ''),index:current}}));
   }
   function select(index, focus = false) {
     const selected = (index + ids.length) % ids.length, hash = '#' + ids[selected];

@@ -1,0 +1,93 @@
+/* Real moezthabet.com: one full-width cinematic service selector. */
+.mt-orbit-showcase{position:relative;isolation:isolate;width:100vw;max-width:none;margin:clamp(36px,5vw,85px) calc(50% - 50vw) clamp(28px,4vw,55px);color:#f6ede5;background:#090b10;box-shadow:0 30px 80px #09060944;font-family:'DM Sans',system-ui,sans-serif;overflow:hidden}
+.mt-orbit-showcase:before{content:"";position:absolute;z-index:1;top:0;left:0;width:5px;height:100%;background:linear-gradient(#eed0aa,#9ad5c0,#d3afe8);opacity:.65;pointer-events:none}
+.mt-orbit__viewport{height:clamp(565px,75svh,810px);position:relative;background:#090b10;overflow:hidden}
+.mt-orbit__viewport .orbit-hero{height:100%;min-height:0;width:100%;position:relative;color:#fff}
+.mt-orbit__viewport .orbit-hero__narrative h2{color:#fffcf7;margin:16px 0 12px}
+.mt-orbit__viewport button{font-family:inherit}
+.mt-orbit__viewport .orbit-hero__card{-webkit-tap-highlight-color:transparent}
+.mt-orbit__actionbar{position:relative;z-index:25;display:grid;grid-template-columns:minmax(160px,.8fr) auto minmax(280px,1.2fr);align-items:center;gap:24px;padding:21px clamp(18px,5vw,88px);background:linear-gradient(105deg,#131923,#101218);border-top:1px solid #ffffff24;border-bottom:1px solid #ffffff1c}
+.mt-orbit__current{display:grid;gap:6px;min-width:0}
+.mt-orbit__current small{font-size:9px;font-weight:850;letter-spacing:.2em;color:#dab89c}
+.mt-orbit__current strong{font-size:clamp(16px,2vw,23px);font-weight:800;line-height:1.2;letter-spacing:-.03em;color:#fffbf5}
+.mt-orbit__actions{display:flex;gap:7px;justify-content:center}
+.mt-orbit__actions button{cursor:pointer;border:1px solid #be9b7b7a;background:#1d1c23;color:#fff5e8;min-width:47px;min-height:47px;border-radius:4px;transition:background .22s,border-color .22s,transform .25s}
+.mt-orbit__actions button:hover{background:#4e342b;border-color:#e5bb94;transform:translateY(-2px)}
+.mt-orbit__actions .mt-orbit__pause{padding:0 14px;font-weight:800;font-size:10px;letter-spacing:.1em;min-width:92px}
+.mt-orbit__explore{display:flex;min-height:57px;align-items:center;justify-content:space-between;gap:15px;padding:12px 24px;border:1px solid #efd2b0;color:#171212;background:#f0c9a0;font-weight:800;font-size:13px;text-align:left;cursor:pointer;border-radius:3px;box-shadow:0 11px 40px #f5ae8629;transition:transform .25s,background .25s}
+.mt-orbit__explore:hover{transform:translateY(-3px);background:#ffe8ca}
+.mt-orbit__explore span{font-size:23px;font-weight:400}
+.mt-orbit__quicknav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:0 clamp(18px,5vw,88px);border-top:1px solid #e6bea94f;background:#090b10}
+.mt-orbit__quicknav button{display:flex;align-items:flex-start;flex-direction:column;gap:9px;text-align:left;min-width:0;min-height:86px;padding:17px 10px 12px;background:transparent;color:#d0bfb1;border:0;border-bottom:3px solid transparent;border-right:1px solid #ffffff16;cursor:pointer;transition:background .22s,color .22s,border-color .22s}
+.mt-orbit__quicknav button:first-child{padding-left:2px}
+.mt-orbit__quicknav button:last-child{border-right:0}
+.mt-orbit__quicknav button:hover{background:#f3bf9b14;color:#fff}
+.mt-orbit__quicknav button[aria-pressed=true]{color:#ffe5c7;background:#fae1b910;border-bottom-color:#e5b88d}
+.mt-orbit__quicknav button span{font-size:10px;font-weight:850;letter-spacing:.17em;color:#d6af86}
+.mt-orbit__quicknav button strong{font-size:clamp(10px,.95vw,14px);line-height:1.3;font-weight:750}
+.mt-orbit__footerline{display:flex;gap:15px;align-items:center;justify-content:space-between;margin:0 clamp(18px,5vw,88px);padding:14px 0 21px;border-top:1px solid #ffffff23;font-size:10px;font-weight:750;letter-spacing:.08em;color:#cbb8a4}
+.mt-orbit__footerline i{height:7px;width:7px;background:#9bdbbb;border-radius:50%;box-shadow:0 0 0 4px #aee9bd21;display:inline-block;margin-right:7px}
+.mt-orbit__footerline em{font-style:normal;font-weight:500;color:#aaabae}
+/* Do not erase older animations globally. The duplicated wheel is the only visual we retire. */
+.mt-orbit-mounted .solutions-overview,.mt-orbit-pending .solutions-overview{display:none}
+.mt-orbit-mounted .works-wheel,.mt-orbit-pending .works-wheel,.mt-orbit-mounted .carousel-toolbar,.mt-orbit-pending .carousel-toolbar,.mt-orbit-mounted .carousel-mobile-hint,.mt-orbit-pending .carousel-mobile-hint{display:none!important}
+.mt-orbit-mounted .services-carousel__intro{margin-bottom:18px}
+.mt-orbit-mounted .services-carousel__intro h2{font-size:clamp(30px,3vw,44px)}
+.mt-orbit-mounted .services-carousel__intro>p{max-width:540px}
+.mt-orbit-mounted #details-offres{scroll-margin-top:100px}
+.mt-orbit-mounted .offer-detail{scroll-margin-top:105px}
+.mt-orbit-mounted .offer-detail.is-active{animation:mt-offer-reveal .62s cubic-bezier(.2,.9,.25,1) both}
+@keyframes mt-offer-reveal{from{opacity:.35;transform:translate3d(0,26px,0) scale(.989)}to{opacity:1;transform:none}}
+.mt-orbit-mounted .offer-graphic{transition:transform .4s cubic-bezier(.2,.8,.25,1),box-shadow .4s}
+.mt-orbit-mounted .offer-graphic:hover{transform:translate3d(0,-5px,0);box-shadow:0 20px 48px #170b1718}
+.mt-orbit-mounted .web-demo{transition:transform .35s cubic-bezier(.2,.8,.25,1),box-shadow .35s}
+.mt-orbit-mounted .web-demo:hover{transform:translate3d(0,-4px,0);box-shadow:0 30px 70px #38202d29}
+/* No carousel library load = preserve the original service overview and details. */
+.mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{min-height:clamp(565px,75svh,810px)}
+.mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport:after{content:"Les six offres en images arrivent…";position:absolute;inset:0;display:grid;place-items:center;color:#d6bba1;font-size:13px}
+@media(max-width:930px){
+ .mt-orbit__actionbar{grid-template-columns:minmax(0,1fr) auto;gap:13px}
+ .mt-orbit__explore{grid-column:1/-1}
+ .mt-orbit__quicknav{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .mt-orbit__quicknav button{min-height:70px}
+ .mt-orbit__quicknav button:nth-child(3){border-right:0}
+}
+@media(max-width:650px){
+ .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{min-height:clamp(505px,74svh,715px)}
+ .mt-orbit__viewport{height:clamp(505px,74svh,715px)}
+ .mt-orbit__actionbar{padding:15px 17px;gap:12px}
+ .mt-orbit__current small{font-size:8px}
+ .mt-orbit__current strong{font-size:17px}
+ .mt-orbit__actions{gap:4px}
+ .mt-orbit__actions button{min-width:42px;min-height:44px}
+ .mt-orbit__actions .mt-orbit__pause{min-width:77px;font-size:9px;padding:0 8px}
+ .mt-orbit__explore{font-size:12px;min-height:54px;padding:12px 14px}
+ .mt-orbit__quicknav{grid-template-columns:repeat(2,minmax(0,1fr));margin:0 17px}
+ .mt-orbit__quicknav button{min-height:57px;gap:5px;padding:10px 8px}
+ .mt-orbit__quicknav button:nth-child(3){border-right:1px solid #ffffff16}
+ .mt-orbit__quicknav button:nth-child(2n){border-right:0}
+ .mt-orbit__quicknav button strong{font-size:12px}
+ .mt-orbit__footerline{margin:0 17px;flex-direction:column;align-items:flex-start;gap:6px;font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.mt-orbit__viewport *, .mt-orbit__actionbar button, .mt-orbit__quicknav button,.mt-orbit-mounted .offer-detail.is-active{animation:none!important;transition:none!important}.mt-orbit-mounted .web-demo:hover{transform:none}}
+
+/* In either cached/original bundle version, hide loading copy only after the React island mounts. */
+html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!important}
+
+/* The original photography-led carousel defines the palette; contextual messages
+   now look like part of the same cinematic world, never like unrelated widgets. */
+.mt-orbit-mounted .mt-signal{--signal-accent:#f3cda5;border-color:#e1b68b9c;background:linear-gradient(138deg,#241e22fa,#10151df7);box-shadow:0 28px 78px #050609a8,0 0 0 1px #dcb48d26 inset}
+.mt-orbit-mounted .mt-signal[data-type=choice]{--signal-accent:#f3cda5}
+.mt-orbit-mounted .mt-signal[data-type=detail]{--signal-accent:#e9d5b9}
+.mt-orbit-mounted .mt-signal[data-type=brief]{--signal-accent:#a4d2dd}
+.mt-orbit-mounted .mt-signal[data-type=complete]{--signal-accent:#a8d8c2}
+.mt-orbit-mounted .mt-signal__orb{box-shadow:0 0 26px #daa87e3a;background:#f1bb881a}
+.mt-orbit-mounted .mt-signal__content a{background:var(--signal-accent);color:#1c1717}
+.mt-orbit-mounted .mt-signal__content a:hover{background:#fff8e9}
+.mt-orbit-mounted .mt-signal__content p{color:#d3cec9}
+.mt-orbit-mounted .web-demo .mock-contact{animation:mt-contact-hint 3.9s ease-in-out infinite}
+@keyframes mt-contact-hint{0%,100%{box-shadow:0 0 0 0 #ffc3a200}54%{box-shadow:0 0 0 5px #d2a1b526}}
+@media(prefers-reduced-motion:reduce){.mt-orbit-mounted .web-demo .mock-contact{animation:none}}
+
+.mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
+.mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
