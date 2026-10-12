@@ -36,7 +36,17 @@ try{
   const expected=['web','sav','avis','prospects','crm','automation'][cardIndex];
   check((await activeExplore.locator('.orbit-hero__card-line b').textContent())?.trim()==='EXPLORER',name+' photographic card displays the Explorer action');
   check((await activeExplore.locator('.orbit-hero__card-line b').evaluate(el=>getComputedStyle(el).animationName)).includes('mt-explore-glow'),name+' visible Explorer CTA pulses gently');
-  await activeExplore.click();
+  await page.evaluate(()=>{
+    window.__exploreEvents=[];
+    for(const type of ['pointerdown','pointermove','pointerup','click'])
+      document.addEventListener(type,event=>{
+        const target=event.target;
+        if(target instanceof Element && (target.closest('[data-hero-card]')||target.closest('.orbit-hero__world')))
+          window.__exploreEvents.push({type,target:target.className?.toString().slice(0,65),card:target.closest('[data-hero-card]')?.getAttribute('data-hero-card'),hash:location.hash});
+      },true);
+  });
+  await activeExplore.locator('.orbit-hero__card-line b').click();
+  console.log('EXPLORER_EVENTS',name,JSON.stringify(await page.evaluate(()=>window.__exploreEvents)));
   await page.locator('#solution-'+expected+'.is-active').waitFor({state:'visible'});
   const observedHash=new URL(page.url()).hash;
   check(observedHash==='#solution-'+expected,name+' tapping the Explorer card opens its matching service ('+observedHash+')');
