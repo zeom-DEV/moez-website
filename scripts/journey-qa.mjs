@@ -35,6 +35,8 @@ try{
     await page.locator('[data-kinetic-next]').scrollIntoViewIfNeeded();
     await page.locator('[data-kinetic-next]').click();
     await page.locator('[data-kinetic-title]').getByText('Automatisation').waitFor();
+    const headingLines=await page.locator('[data-kinetic-title]').evaluate(el=>{const style=getComputedStyle(el);return {height:el.getBoundingClientRect().height,lineHeight:parseFloat(style.lineHeight)}});
+    assert(headingLines.height<=headingLines.lineHeight*1.3,name+' long service title stays on one intentional line '+JSON.stringify(headingLines));
     assert(await page.locator('.mt-signal').isVisible(),name+' contextual notification from real selection');
     assert((await page.locator('.mt-signal [data-signal-copy]').innerText()).includes('workflow'),name+' signal contains service-specific tangible result');
     await page.screenshot({path:'reports/journey/'+name+'-chosen.png',animations:'disabled',timeout:15000});
