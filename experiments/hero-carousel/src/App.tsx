@@ -3,7 +3,15 @@ import { HeroCarousel, type HeroCarouselItem } from "@/components/ui/hero-carous
 import "./hero-carousel.css"
 
 const ROOT = "https://moezthabet.com"
-const art = (id: string) => ROOT + "/assets/service-wheel/" + id + ".svg"
+const photographIds: Record<string,string> = {
+  web: "photo-1778146476147-5f8d4bd03c79",
+  sav: "photo-1712159018726-4564d92f3ec2",
+  avis: "photo-1633613286991-611fe299c4be",
+  prospects: "photo-1758876204242-787309002a8f",
+  crm: "photo-1770681381576-f1fdceb2ea01",
+  automation: "photo-1773966071293-bea3d7646fd1",
+}
+const art = (id: string) => "https://images.unsplash.com/" + photographIds[id] + "?auto=format&fit=crop&w=800&h=1200&q=78"
 const services = [
   {
     id: "web",
@@ -133,7 +141,7 @@ export function App() {
             </button>
           ))}
         </div>
-        <p className="mt-8 text-xs leading-6 text-stone-600">Le ruban avance automatiquement et boucle sans interruption. Touchez une carte, glissez horizontalement ou utilisez les flèches du clavier pour explorer librement. Le site public moezthabet.com reste inchangé.</p>
+        <p className="mt-8 text-xs leading-6 text-stone-600">Le ruban défile automatiquement et boucle sans interruption. Glissez ou utilisez les flèches du clavier pour explorer les services. Photographies d’illustration sous licence Unsplash, sans prétention de représentation des réalisations clients. Site public inchangé.</p>
       </section>
       <footer className="border-t border-stone-300 px-5 py-5 text-center text-[10px] font-bold tracking-[.14em] text-stone-600">PROTOTYPE TECHNIQUE · MAIN ET MOEZTHABET.COM INCHANGÉS</footer>
     </div>
