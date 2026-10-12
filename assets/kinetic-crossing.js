@@ -45,6 +45,7 @@
     card.style.zIndex=String(index===active?20:Math.round(pos.alpha*10));
     card.dataset.active=String(index===active);
     card.setAttribute('aria-pressed',String(index===active));
+    card.setAttribute('aria-label',offers[index].title+' '+String(index+1).padStart(2,'0')+' — sélectionner cette offre');
   }
   function copy(announce){
     const item=offers[active];
@@ -52,7 +53,7 @@
     pitch.textContent=item.pitch;
     indexLabel.textContent=String(active+1).padStart(2,'0')+' / 06';
     link.href='#solution-'+item.id;
-    link.setAttribute('aria-label','Voir les détails du service : '+item.title);
+    link.setAttribute('aria-label','Voir cette solution — '+item.title);
     directChoices.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.kineticChoice===item.id)));
     if(announce)live.textContent=item.title+', offre '+(active+1)+' sur six';
   }
