@@ -16,7 +16,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  page.setDefaultTimeout(15000);
  await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
- assert.equal(await page.locator('.solutions-overview a').count(),6,size.name+': six immediately understandable solutions');
+ assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
