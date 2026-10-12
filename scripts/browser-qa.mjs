@@ -65,11 +65,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  const selectFromLink=async id=>page.evaluate(id=>document.querySelector('[data-offer-link="'+id+'"]').click(),id);
  await selectFromLink('web');
 
- for(let step=0;step<3;step++){
-  await page.locator('[data-web-stage]').nth(step).click();
-  assert.equal(await page.locator('[data-web-stage]').nth(step).getAttribute('aria-pressed'),'true','web creation stages');
- }
- // The original site retains its complete web demo, service detail and contact flow.
+ assert.equal(await page.locator('[data-web-demo]').count(),0,size.name+': redundant three-step web mockup completely removed');
+ // The original site retains the film, 3D carousel, service details and contact flow, without the redundant mockup.
  assert.equal(await page.locator('.works-wheel').isHidden(),true,size.name+': second carousel removed');
  await orbit.locator('.mt-orbit__quicknav button').last().click();
  await orbit.locator('.mt-orbit__explore').click();
