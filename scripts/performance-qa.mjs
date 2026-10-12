@@ -2,8 +2,8 @@ import {execFileSync} from 'node:child_process';
 import {mkdirSync,readFileSync} from 'node:fs';
 const base=process.env.QA_BASE_URL||'http://127.0.0.1:8765';
 mkdirSync('reports',{recursive:true});
-for(const [name,path] of [['intro','/'],['offers','/#offres'],['website','/site-signature.html'],['sav','/sav-ecommerce.html'],['avis','/e-reputation.html'],['prospects','/televente.html'],['crm','/crm-reporting.html']]){
- for(const form of (['intro','offers','website'].includes(name)?['mobile','desktop']:['mobile'])){
+for(const [name,path] of [['intro','/'],['offers','/#offres'],['wheel','/#services-carousel'],['website','/site-signature.html'],['automation','/automatisation-workflows.html'],['sav','/sav-ecommerce.html'],['avis','/e-reputation.html'],['prospects','/televente.html'],['crm','/crm-reporting.html']]){
+ for(const form of (['intro','offers','wheel','website'].includes(name)?['mobile','desktop']:['mobile'])){
   const output='reports/lighthouse-'+name+'-'+form+'.json';
   const args=[base+path,'--chrome-flags=--headless --no-sandbox','--only-categories=performance,accessibility,best-practices,seo','--output=json','--output-path='+output,'--quiet'];
   if(form==='desktop')args.push('--preset=desktop');

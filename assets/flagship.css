@@ -35,3 +35,13 @@ body[data-page=service] .benefit{background:#f1e9ed}body[data-page=service] .ben
 #calendly-slot iframe{min-height:0}
 /* End the inverted shell transition before calculating a landing anchor. */
 body:not(.intro-active) #site-shell{transition:none;will-change:auto}
+
+/* A compact, readable index puts all six services beside the flagship promise. */
+.solutions-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;margin-top:24px;border-top:1px solid #d3c8cc}
+.solutions-overview a{display:flex;align-items:flex-start;gap:10px;min-height:62px;padding:13px 0;border-bottom:1px solid #d3c8cc;color:#33282d;transition:color .18s}
+.solutions-overview a>span:first-child{color:#84263e;font-size:10px;padding-top:3px;font-weight:750}
+.solutions-overview strong{display:block;font-size:13px;line-height:1.4}
+.solutions-overview small{display:block;margin-top:3px;font-size:11px;line-height:1.5;color:#67575f}
+.solutions-overview a:hover{color:#84263e}
+body .solutions-overview a:focus-visible{outline:3px solid #84263e!important;outline-offset:3px!important}
+@media(max-width:800px){.solutions-overview{margin-top:20px;gap:0 14px}.solutions-overview a{min-height:68px}.flagship-notes{margin-top:16px}}
