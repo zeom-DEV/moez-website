@@ -128,6 +128,17 @@
       'Voir le message','#brief-result','complete');
   });
   // A direct link or an existing visitor choice must retain its context.
+  // Each existing service gets a direct, prefilled-message CTA next to its booking link.
+  details.querySelectorAll('.offer-detail').forEach(panel=>{
+    const conversion=panel.querySelector('.offer-detail__conversion');
+    if(!conversion||conversion.querySelector('[data-journey-brief]'))return;
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='mt-journey-brief';
+    button.setAttribute('data-journey-brief','');
+    button.textContent='Préparer une demande pour ce service ↗';
+    conversion.append(button);
+  });
   const initial=location.hash.slice(1).replace('solution-','');
   if(names[initial])selected=initial;
   if(names[selected])select.value=names[selected].label;
