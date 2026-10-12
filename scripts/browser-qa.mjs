@@ -20,6 +20,21 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal((await page.locator('.flagship-link').textContent()).replace('↘','').trim(),'Découvrir mes solutions',size.name+': single principal discovery CTA');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
+ await page.locator('#inversion-intro').waitFor({state:'hidden'});
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ assert.equal(await page.locator('.moez-film.is-active').count(),0,size.name+': discovery does not start the optional film');
+ assert.equal(new URL(page.url()).hash,'#services-carousel',size.name+': primary discovery opens the offers directly');
+ assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel',size.name+': discovery opens the 3D drum');
+ assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship selected on discovery');
+ const discoveryTop=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
+ assert(discoveryTop>=0&&discoveryTop<180,size.name+': carousel is immediately in view');
+ if(size.name==='mobile'||size.name==='desktop'){
+  const choiceBottom=await page.locator('.service-picker').evaluate(el=>el.getBoundingClientRect().bottom);
+  assert(choiceBottom<=size.height,size.name+': all six carousel choices visible on discovery ('+choiceBottom+')');
+ }
+ await page.screenshot({path:'reports/discovery-'+size.name+'.png'});
+ await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
+ await page.locator('[data-intro-film]').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
  await page.keyboard.press('Shift+Tab');
@@ -35,15 +50,21 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  }else{await page.keyboard.press('Escape');}
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': intro dismissed');
- await page.locator('#offers-five-title').waitFor({state:'visible'});
- const heroTop=await page.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
- assert(heroTop>=0&&heroTop<350,size.name+': film lands on flagship hero, not below it ('+heroTop+')');
+ const carouselTop=await page.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
+ assert(carouselTop>=0&&carouselTop<180,size.name+': film discovery also lands directly on the carousel');
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel',size.name+': film discovery opens the drum');
+ await page.locator('.offer-detail.is-active .offer-detail__back').click();
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
   assert(layout.scrollWidth <= layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
   await page.locator('#menu-button').click();
   assert.equal(await page.locator('#menu-button').getAttribute('aria-expanded'),'true');
   await page.locator('#menu-button').click();
+ }
+ if(size.name==='mobile'||size.name==='desktop'){
+  const overviewBottom=await page.locator('.solutions-overview').evaluate(el=>el.getBoundingClientRect().bottom);
+  assert(overviewBottom<=size.height,size.name+': all six solutions visible in the first screen ('+overviewBottom+')');
  }
  await page.screenshot({path:'reports/home-'+size.name+'.png'});
  for(let step=0;step<3;step++){
@@ -96,6 +117,20 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:rect.x+rect.width/2-60,y:rect.y+rect.height/2}]});
   await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
+  await page.locator('[data-offer-link="web"]').click();
+  await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+  await canvas.scrollIntoViewIfNeeded();
+  const verticalRect=await canvas.boundingBox();
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2+60}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:verticalRect.x+verticalRect.width/2,y:verticalRect.y+verticalRect.height/2-60}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await page.waitForFunction(()=>document.querySelector('.offer-detail.is-active').id==='solution-sav');
+  const scrollBefore=await page.evaluate(()=>scrollY);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:8,y:650}]});
+  for(const y of [550,450,350,250])await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:8,y}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+  await page.waitForFunction(before=>scrollY>before,scrollBefore);
+  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-sav','page scroll outside the canvas preserves the selected service');
   await cdp.detach();
   await page.locator('[data-offer-link="web"]').click();
  }
@@ -203,6 +238,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
   await page.waitForURL(BASE+'/#offres',{waitUntil:'domcontentloaded'});
   await page.locator('#inversion-intro').waitFor({state:'hidden'});
  }
+ await page.goto(BASE+'/#services-carousel',{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>document.querySelector('[data-works-wheel]').dataset.wheelSettled==='true');
+ assert.equal(await page.locator('[data-works-wheel]').getAttribute('data-wheel-mode'),'carousel','shared discovery URL opens the drum');
+ assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared discovery URL bypasses intro');
  await page.goto(BASE+'/#solution-web',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('#inversion-intro').isVisible(),false,'shared offer bypasses intro');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','shared offer shown');
@@ -227,14 +266,15 @@ await shortcut.keyboard.press('Tab');
 assert(await shortcut.locator('#intro-direct').evaluate(el=>el===document.activeElement),'intro shortcut reachable by keyboard');
 await shortcut.keyboard.press('Tab');
 assert(await shortcut.locator('#intro-flip').evaluate(el=>el===document.activeElement),'intro focus wraps');
-await shortcut.locator('#intro-direct').click();
-assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'direct flagship skips film');
+await shortcut.locator('#intro-flip').click();
+await shortcut.locator('#inversion-intro').waitFor({state:'hidden'});
+assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'primary discovery skips the optional film');
 assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film');
 assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
 const shortcutTop=await shortcut.locator('#services-carousel').evaluate(el=>el.getBoundingClientRect().top);
-assert(shortcutTop>=0&&shortcutTop<180,'direct shortcut lands on the carousel');
+assert(shortcutTop>=0&&shortcutTop<180,'primary discovery lands on the carousel');
 await shortcutContext.close();
-console.log('PASS direct flagship shortcut and intro keyboard');
+console.log('PASS direct discovery and intro keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
 finally{await browser.close();}
 if(failed)process.exit(1);

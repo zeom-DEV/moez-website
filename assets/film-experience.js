@@ -9,7 +9,7 @@ node.setAttribute('role','dialog');
 node.setAttribute('aria-modal','true');
 node.setAttribute('aria-label','Film Signature de Moez');
 node.setAttribute('aria-hidden','true');
-node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"none\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / CRÉATION DE SITES INTERNET</span><h2>UN SITE CLAIR.<br>UNE ACTION ÉVIDENTE.</h2><p>Découvrez les six services proposés et choisissez celui qui correspond à votre projet.</p><div class=\"moez-film__buttons\"><a href=\"#offres\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a></div></div>";
+node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"none\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-900.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / CRÉATION DE SITES INTERNET</span><h2>UN SITE CLAIR.<br>UNE ACTION ÉVIDENTE.</h2><p>Découvrez les six services proposés et choisissez celui qui correspond à votre projet.</p><div class=\"moez-film__buttons\"><a href=\"#services-carousel\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a></div></div>";
 document.body.append(node);
 const skip=document.createElement('button');skip.type='button';skip.className='moez-film__skip';skip.textContent='Passer le film →';node.querySelector('.moez-film__controls').append(skip);
 const video=node.querySelector('video'),sound=node.querySelector('[data-film-sound]'),end=node.querySelector('[data-film-end]'),loading=node.querySelector('[data-film-loading]'),progress=node.querySelector('[data-film-progress]');
@@ -73,7 +73,7 @@ function play(fromIntro){
  }catch(e){busy(false);sound.textContent='DÉMARRER LE FILM ▶';}
  watchdog=setTimeout(()=>{if(open&&!started)fail();},12000);
 }
-trigger.addEventListener('click',()=>play(true));
+// The principal discovery action opens the offers; the film is optional.
 document.querySelectorAll('[data-replay-film]').forEach(b=>b.addEventListener('click',()=>play(false)));
 video.addEventListener('playing',()=>{
  started=true;clearWatch();busy(false);
@@ -105,7 +105,15 @@ sound.addEventListener('click',()=>{
  }else{video.muted=!video.muted;setSound();}
 });
 
-function discover(){close(false);if(intro&&!intro.classList.contains('is-hidden')){intro.classList.add('is-hidden');intro.setAttribute('aria-hidden','true');document.body.classList.remove('intro-active','intro-righting');document.getElementById('intro-cinema-video')?.pause();}const shell=document.getElementById('site-shell');if(shell)shell.inert=false;document.getElementById('offres')?.scrollIntoView({behavior:'instant',block:'start'});const h=document.getElementById('offers-five-title');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}}
+function discover(){
+ close(false);
+ if(intro&&!intro.classList.contains('is-hidden')){intro.classList.add('is-hidden');intro.setAttribute('aria-hidden','true');document.body.classList.remove('intro-active','intro-righting');document.getElementById('intro-cinema-video')?.pause();}
+ const shell=document.getElementById('site-shell');if(shell)shell.inert=false;
+ if(location.hash!=='#services-carousel')history.pushState(null,'','#services-carousel');
+ window.dispatchEvent(new CustomEvent('mt:discover-solutions'));
+ document.getElementById('services-carousel')?.scrollIntoView({behavior:'instant',block:'start'});
+ const title=document.getElementById('services-carousel-title');if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
+}
 node.querySelector('[data-film-discover]').addEventListener('click',e=>{e.preventDefault();discover();});skip.addEventListener('click',discover);
 
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&open)video.pause();});

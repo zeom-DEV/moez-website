@@ -10,7 +10,7 @@
     const id = location.hash.slice(1);
     const index = ids.indexOf(id);
     if (index !== -1) current = index;
-    else if (id === 'offres' || !id) current = 0;
+    else if (id === 'offres' || id === 'services-carousel' || !id) current = 0;
     panels.forEach((panel, index) => {
       const selected = index === current;
       panel.classList.toggle('is-active', selected);
@@ -22,17 +22,17 @@
       else choice.removeAttribute('aria-current');
     });
     carousel.querySelector('[data-carousel-count]').textContent = String(current + 1).padStart(2, '0') + ' / ' + String(ids.length).padStart(2, '0');
-    if (index !== -1 || id === 'offres' || !id) {
+    if (index !== -1 || id === 'offres' || id === 'services-carousel' || !id) {
       const brief = document.getElementById('brief-service');
       if (brief && choices[current].dataset.serviceValue) brief.value = choices[current].dataset.serviceValue;
-      carousel.dispatchEvent(new CustomEvent('mt:offer-select', {detail: {index: current, open: index !== -1}}));
+      carousel.dispatchEvent(new CustomEvent('mt:offer-select', {detail: {index: current, open: index !== -1 || id === 'services-carousel'}}));
     }
-    if (announce && (index !== -1 || id === 'offres')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur ' + ids.length + '.';
-    if (!focus || (!ids.includes(id) && id !== 'offres')) return;
+    if (announce && (index !== -1 || id === 'offres' || id === 'services-carousel')) carousel.querySelector('[data-carousel-live]').textContent = names[current] + ', service ' + (current + 1) + ' sur ' + ids.length + '.';
+    if (!focus || (!ids.includes(id) && id !== 'offres' && id !== 'services-carousel')) return;
     const home = id === 'offres';
     (home ? document.getElementById('offers-five-title') : carousel).scrollIntoView({behavior: 'instant', block: 'start'});
-    const target = home ? document.getElementById('offers-five-title') : choices[current];
-    if (home) target.tabIndex = -1;
+    const target = home ? document.getElementById('offers-five-title') : id === 'services-carousel' ? document.getElementById('services-carousel-title') : choices[current];
+    if (home || id === 'services-carousel') target.tabIndex = -1;
     target.focus({preventScroll: true});
   }
   function select(index, focus = false) {
@@ -46,7 +46,7 @@
     const url = new URL(link.href, location.href);
     if (url.origin !== location.origin || url.pathname !== location.pathname || url.search !== location.search) return;
     const id = url.hash.slice(1);
-    if (!ids.includes(id) && id !== 'offres') return;
+    if (!ids.includes(id) && id !== 'offres' && id !== 'services-carousel') return;
     event.preventDefault();
     if (location.hash !== url.hash) history.pushState(null, '', url.hash);
     sync(true, true);
@@ -81,6 +81,10 @@
   });
   window.addEventListener('popstate', () => sync(true, true));
   window.addEventListener('hashchange', () => sync(true, true));
+  window.addEventListener('mt:discover-solutions', () => {
+    if (location.hash !== '#services-carousel') history.pushState(null, '', '#services-carousel');
+    sync(true, true);
+  });
   carousel.dataset.ready = 'true';
-  sync(ids.includes(location.hash.slice(1)));
+  sync(ids.includes(location.hash.slice(1)) || location.hash === '#services-carousel');
 })();

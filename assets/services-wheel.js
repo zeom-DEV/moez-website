@@ -131,7 +131,7 @@
     }
   }, {passive: false});
   canvas.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || event.isPrimary === false) return;
     drag = {id: event.pointerId, x: event.clientX, y: event.clientY, startTurn: targetTurn, startProgress: targetProgress, active: false, touch: event.pointerType === 'touch'};
   });
   canvas.addEventListener('pointermove', event => {
@@ -139,14 +139,15 @@
     const dx = event.clientX - drag.x, dy = event.clientY - drag.y;
     if (!drag.active) {
       if (Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
-      if (drag.touch && Math.abs(dy) > Math.abs(dx) * 1.1) { drag = null; return; }
+      if (drag.touch && drag.startProgress < .9 && Math.abs(dy) > Math.abs(dx) * 1.1) { drag = null; return; }
       drag.active = true;
       canvas.setPointerCapture(event.pointerId);
       canvas.dataset.dragging = 'true';
     }
     if (drag.touch) {
       targetProgress = 1;
-      targetTurn = drag.startTurn - dx / Math.max(85, canvas.clientWidth * .3);
+      const delta = Math.abs(dy) > Math.abs(dx) ? dy : dx;
+      targetTurn = drag.startTurn - delta / Math.max(85, canvas.clientWidth * .3);
     } else if (drag.startProgress < .9) {
       targetProgress = Math.max(0, Math.min(1, drag.startProgress + (Math.abs(dx) + Math.abs(dy)) / 130));
     } else {
@@ -178,5 +179,5 @@
     else start();
   });
   measure();
-  change(active, location.hash.startsWith('#solution-'));
+  change(active, location.hash.startsWith('#solution-') || location.hash === '#services-carousel');
 })();

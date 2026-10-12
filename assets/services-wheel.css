@@ -258,3 +258,13 @@ body .works-wheel__card:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .works-wheel__card, .works-wheel__selected, .works-wheel__center { transition: none !important; }
 }
+
+/* Service names and the selected pitch remain readable beside the illustrations. */
+.works-wheel__index.service-picker strong{font-size:14px;line-height:1.45}
+.works-wheel__selected p{font-size:14px;line-height:1.6}
+@media(max-width:600px){.works-wheel__index.service-picker strong{font-size:14px}}
+
+/* Discovery opens the 3D drum; on phones the six choices precede the scene. */
+.works-wheel[data-wheel-mode=carousel] .works-wheel__canvas{touch-action:pinch-zoom}
+@media(max-width:980px){.works-wheel__index.service-picker{order:-1}.works-wheel__index.service-picker>a:first-child{grid-column:auto}.works-wheel__selected{order:1}}
+@media(max-width:600px){.works-wheel__view{font-size:10px}}
