@@ -74,7 +74,17 @@ function App(){
   return <>
     <div className="mt-orbit__viewport"
        onPointerDownCapture={e=>{
-         const card=(e.target as Element).closest<HTMLButtonElement>("[data-hero-card]")
+         // Perspective-transformed cards occasionally hit-test as the world
+         // in Chromium. Resolve the *visible* card under the pointer by its
+         // projected rectangle and front-to-back depth instead.
+         const direct=(e.target as Element).closest<HTMLButtonElement>("[data-hero-card]")
+         const candidates=[...e.currentTarget.querySelectorAll<HTMLButtonElement>(".orbit-hero__card")].filter(card=>{
+           if(card.getAttribute("aria-hidden")==="true"||getComputedStyle(card).pointerEvents==="none")return false
+           const r=card.getBoundingClientRect()
+           return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom
+         })
+         candidates.sort((a,b)=>(Number(b.style.zIndex)||0)-(Number(a.style.zIndex)||0))
+         const card=direct||candidates[0]
          cardPointer.current=card ? {index:Number(card.dataset.heroCard),x:e.clientX,y:e.clientY,moved:false} : null
        }}
        onPointerMoveCapture={e=>{
