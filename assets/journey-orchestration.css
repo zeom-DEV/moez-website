@@ -70,7 +70,12 @@
 @keyframes mt-task-advance{from{opacity:.25;transform:translate3d(20px,0,0)}to{opacity:1;transform:none}}
 .mt-journey-brief{grid-column:1 / -1;width:100%;min-height:56px;padding:13px 18px;border:1px solid #d9ffb0;background:#d9ffb0;color:#0f2118;font-weight:800;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:20px;justify-content:space-between;box-shadow:0 6px 25px #c0ff9638;transition:transform .2s,background .2s}
 .mt-journey-brief:hover{transform:translateY(-3px);background:#fff}
-@media(max-width:900px){.mt-journey-enabled .works-wheel__index.service-picker{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){
+ .mt-journey-enabled .works-wheel__index.service-picker{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .kinetic-showcase__choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+ .kinetic-showcase__choices button{min-height:48px;padding:11px 7px;border:1px solid #b998a36e;background:#ffffff12;color:#f2e9ef;border-radius:9px;text-align:center;font:700 11px/1.35 var(--sans,system-ui);cursor:pointer}
+ .kinetic-showcase__choices button[aria-pressed=true]{background:#d8f4ad;color:#102116;border-color:#d8f4ad;font-weight:850}
+}
 @media(max-width:600px){
  .kinetic-showcase__stage{height:clamp(240px,68vw,310px)}
  .kinetic-showcase__controls button{min-width:46px;min-height:46px}
