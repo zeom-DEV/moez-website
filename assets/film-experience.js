@@ -119,7 +119,7 @@ function discover(){
  if(intro&&!intro.classList.contains('is-hidden')){intro.classList.add('is-hidden');intro.setAttribute('aria-hidden','true');document.body.classList.remove('intro-active','intro-righting');document.getElementById('intro-cinema-video')?.pause();}
  const shell=document.getElementById('site-shell');if(shell)shell.inert=false;
  if(location.hash!=='#offres')history.pushState(null,'','#offres');
- window.dispatchEvent(new CustomEvent('mt:discover-solutions'));
+ // The offer overview is the destination; do not invoke the old carousel shortcut.
  document.getElementById('offres')?.scrollIntoView({behavior:'instant',block:'start'});
  const title=document.getElementById('offers-five-title');if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
 }
