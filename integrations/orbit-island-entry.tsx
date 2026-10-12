@@ -26,6 +26,7 @@ function App(){
   const [playing,setPlaying]=React.useState(true)
   const intentAt=React.useRef(0)
   const indexRef=React.useRef(index)
+  const cardPointer=React.useRef<{index:number;x:number;y:number;moved:boolean}|null>(null)
   const reduce=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches
   const current=services[index]
   const intent=()=>{intentAt.current=performance.now()}
@@ -72,8 +73,32 @@ function App(){
   function openDetail(){openDetailFor(current.id)}
   return <>
     <div className="mt-orbit__viewport"
+       onPointerDownCapture={e=>{
+         const card=(e.target as Element).closest<HTMLButtonElement>("[data-hero-card]")
+         cardPointer.current=card ? {index:Number(card.dataset.heroCard),x:e.clientX,y:e.clientY,moved:false} : null
+       }}
+       onPointerMoveCapture={e=>{
+         const card=cardPointer.current
+         if(card && (Math.abs(e.clientX-card.x)>10 || Math.abs(e.clientY-card.y)>10))card.moved=true
+       }}
+       onPointerCancelCapture={()=>{cardPointer.current=null}}
        onPointerUpCapture={intent}
-       onClickCapture={intent}
+       onClickCapture={e=>{
+         intent()
+         // Pointer capture belongs to the physics layer. Catch a real tap
+         // before its click is retargeted to that layer; do not intercept swipes.
+         const target=(e.target as Element).closest<HTMLButtonElement>("[data-hero-card]")
+         const gesture=cardPointer.current
+         const index=target ? Number(target.dataset.heroCard) : gesture?.index
+         const moved=gesture?.moved
+         cardPointer.current=null
+         if(index!==undefined && index>=0 && index<services.length && !moved){
+           e.preventDefault()
+           e.stopPropagation()
+           const id=services[index].id
+           if(location.hash!=="#solution-"+id)openDetailFor(id)
+         }
+       }}
        onKeyDownCapture={e=>{if(["ArrowLeft","ArrowRight","Home","End","Enter"," "].includes(e.key))intent()}}
        aria-label="Les six offres en images et en mouvement 3D">
       <HeroCarousel items={items} index={index} onIndexChange={chosen}
