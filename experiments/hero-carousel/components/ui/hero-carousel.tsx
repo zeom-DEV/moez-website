@@ -59,7 +59,7 @@ export function HeroCarousel({
   const phase = React.useRef(defaultIndex)
   const springTo = React.useRef<number | null>(null)
   const angularVelocity = React.useRef(0)
-  const drag = React.useRef<{ startX: number; origin: number; lastX: number; lastT: number; moved: boolean } | null>(null)
+  const drag = React.useRef<{ startX: number; origin: number; lastX: number; lastT: number; moved: boolean; tapIndex: number | null } | null>(null)
   const pauseUntil = React.useRef(0)
   const focusRef = React.useRef(defaultIndex)
   const reducedRef = React.useRef(Boolean(reduced))
@@ -230,7 +230,9 @@ export function HeroCarousel({
   const beginDrag = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse" && e.button !== 0) return
     const now = performance.now()
-    drag.current = { startX: e.clientX, origin: phase.current, lastX: e.clientX, lastT: now, moved: false }
+    const clicked = e.target instanceof Element ? e.target.closest("[data-hero-card]") : null
+    const tapIndex = clicked ? Number(clicked.getAttribute("data-hero-card")) : null
+    drag.current = { startX: e.clientX, origin: phase.current, lastX: e.clientX, lastT: now, moved: false, tapIndex }
     springTo.current = null
     angularVelocity.current = 0
     setIsDragging(true)
@@ -267,6 +269,11 @@ export function HeroCarousel({
     pauseUntil.current = performance.now() + 1900
     if (!info.moved) {
       angularVelocity.current = 0
+      if (info.tapIndex !== null) {
+        suppressed.current = true
+        choose(info.tapIndex)
+        window.setTimeout(() => { suppressed.current = false }, 180)
+      }
     } else {
       suppressed.current = true
       window.setTimeout(() => { suppressed.current = false }, 200)
