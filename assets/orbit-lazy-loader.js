@@ -53,5 +53,5 @@
  }else{
    addEventListener('scroll',()=>{if(section.getBoundingClientRect().top<innerHeight+350)relevant()},{passive:true,once:true});
  }
- if(location.hash==='#kinetic-showcase'||location.hash==='#offres'||location.hash.startsWith('#solution-'))start();
+ if(location.hash==='#kinetic-showcase'||location.hash==='#offres')start();
 })();
