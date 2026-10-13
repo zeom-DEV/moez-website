@@ -58,6 +58,18 @@ class QA(unittest.TestCase):
   self.assertIn('data-offer-link="web"',homepage)
   self.assertIn('Ouvrir ma messagerie',homepage)
   self.assertIn('Copier le message',homepage)
+ def test_audit_critical_contracts(self):
+  homepage=self.pages['index.html']
+  self.assertIn("document.body.classList.add('mt-direct-entry')", homepage, 'The film must not block the initial view')
+  self.assertIn('data-replay-film',homepage,'Keep the film optional and accessible')
+  self.assertIn('id="realisations"',homepage,'Show one verifiable personal project')
+  self.assertIn('réalisation pour un client',homepage,'Do not invent customer proof')
+  self.assertIn('github.com/zeom-DEV/moez-website',homepage)
+  self.assertEqual(homepage.count('class="mt-contact-alt"'),6,'Every service provides a direct email route')
+  self.assertIn('mt-web-reference',self.pages['site-signature.html'])
+  self.assertIn('0.1', (R/'scripts/performance-qa.mjs').read_text(),'CLS must be checked in performance QA')
+  self.assertIn('assets/premium-system.css',homepage,'Ensure shared visual identity is loaded')
+
  def test_error_and_social_pages(self):
   page=(R/'404.html').read_text()
   self.assertIn('noindex,follow',page)
