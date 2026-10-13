@@ -445,3 +445,16 @@ body[data-page=service] .service-offer-cta__box a:hover{
   background:var(--mt-gold-bright);
   color:var(--mt-ink);
 }
+
+/* Secondary contact route: no required third-party account or JS. */
+body[data-page=service] .service-offer-cta__box a.service-offer-cta__email{
+ display:inline-flex;align-items:center;justify-content:center;
+ margin:12px auto 0;padding:9px 0;min-height:44px;max-width:100%;
+ background:none;border:0;box-shadow:none;
+ font-size:13px;font-weight:650;line-height:1.5;
+ color:var(--mt-gold-bright);text-decoration:underline;text-underline-offset:5px;
+ white-space:normal;
+}
+body[data-page=service] .service-offer-cta__box a.service-offer-cta__email:hover{
+ background:none;color:var(--mt-paper);
+}
