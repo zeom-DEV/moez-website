@@ -50,6 +50,26 @@ class QA(unittest.TestCase):
   self.assertIn('noindex',self.pages['experience-v5.html'])
   rules=json.loads((R/'vercel.json').read_text())['headers']
   self.assertTrue(any(h['key']=='X-Robots-Tag' and 'noindex' in h['value'] for rule in rules for h in rule['headers']))
+ def test_clean_service_navigation(self):
+  homepage=self.pages['index.html']
+  self.assertNotIn('data-wheel-card=',homepage,'Old wheel must not duplicate the photo carousel')
+  self.assertNotIn('class="flagship-proof"',homepage,'Avoid a repeated promo between carousel and details')
+  self.assertIn('data-carousel-live',homepage)
+  self.assertIn('data-offer-link="web"',homepage)
+  self.assertIn('Ouvrir ma messagerie',homepage)
+  self.assertIn('Copier le message',homepage)
+ def test_error_and_social_pages(self):
+  page=(R/'404.html').read_text()
+  self.assertIn('noindex,follow',page)
+  self.assertIn('href="/#offres"',page)
+  self.assertIn('href="/#contact"',page)
+  for p in ('site-signature.html','automatisation-workflows.html'):
+   self.assertIn('property="og:image"',self.pages[p])
+   self.assertIn('name="twitter:card"',self.pages[p])
+ def test_intro_performance_guard(self):
+  script=(R/'scripts/performance-qa.mjs').read_text()
+  self.assertNotIn("name!=='intro'&&report.categories.performance",script)
+  self.assertNotIn("name!=='intro'&&report.categories.accessibility",script)
  def test_film(self):
   self.assertIn('preload="none"',self.pages['index.html'])
   self.assertGreater((R/'assets/moez-signature-teaser-12s.mp4').stat().st_size,100000)
