@@ -454,7 +454,8 @@ body.intro-active #kinetic-showcase {
 /* QUALITY PASS: the six photographic cards lead directly to their detailed
    panels, without an additional visible title or repeated selection screen.
    Keep the fallback picker and heading visible when the 3D module is absent. */
-html.mt-orbit-mounted .services-carousel__intro{
+html.mt-orbit-mounted .services-carousel__intro,
+html.mt-orbit-pending .services-carousel__intro{
   position:absolute!important;width:1px!important;height:1px!important;
   overflow:hidden!important;clip-path:inset(50%)!important;
   padding:0!important;margin:-1px!important;border:0!important;
