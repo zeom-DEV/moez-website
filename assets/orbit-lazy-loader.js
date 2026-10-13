@@ -41,7 +41,8 @@
    if(matchMedia('(max-width:800px)').matches){
      if(mobileStartPending||started)return;
      mobileStartPending=true;
-     setTimeout(start,1050);
+     // Allow the preloaded photographic poster to paint before mounting the 3D engine.
+     setTimeout(start, location.hash ? 1050 : 1800);
      return;
    }
    start();
