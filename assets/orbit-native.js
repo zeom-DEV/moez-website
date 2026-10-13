@@ -20,7 +20,7 @@
   const fromHash = items.findIndex(item => location.hash === "#solution-" + item.id);
   let selected = fromHash >= 0 ? fromHash : 0;
   let paused = false, dragging = false, activePointer = null;
-  let offset = selected, destination = selected, previousTime = 0, holdUntil = performance.now() + 1300;
+  let offset = selected, destination = selected, previousTime = 0, holdUntil = performance.now();
   let lastX = 0, dragOrigin = selected, dragStart = 0, dragTime = 0, pointerVelocity = 0;
   let dragDistance = 0, suppressClick = false, sceneVisible = true;
   let pointerX = 0, pointerY = 0, parallaxX = 0, parallaxY = 0;
@@ -228,7 +228,7 @@
     }
     if (dragDistance>9) {
       suppressClick = true;
-      setTimeout(() => {suppressClick=false;},220);
+      setTimeout(() => {suppressClick=false;dragDistance=0;},220);
       const next= Math.round(offset + pointerVelocity*.11);
       selected=mod(next);
       destination=next;
