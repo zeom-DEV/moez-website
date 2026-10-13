@@ -233,6 +233,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
+  if(key==='web'){
+   assert(await page.locator('.web-proof-section').innerText().then(t=>t.includes('PROJET RÉEL')&&t.includes('Ce n’est pas une réalisation commandée par un client.')),size.name+': portfolio identifies demonstrator correctly');
+   assert(await page.locator('.service-offer-cta__email[href^="mailto:"]').count()===1,size.name+': direct email alternative to booking');
+  }
   const premiumService=await page.evaluate(()=>{
    const color=selector=>getComputedStyle(document.querySelector(selector)).backgroundColor;
    return {announcement:color('.announcement'),benefit:color('.benefit'),steps:color('.inner-steps')};
