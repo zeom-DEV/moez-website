@@ -39,6 +39,11 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
+ const detailEdges=await page.locator('#solution-web').evaluate(el=>{
+  const b=el.getBoundingClientRect(); return {left:b.left,right:b.right,viewport:innerWidth};
+ });
+ assert(detailEdges.left>=12&&detailEdges.right<=detailEdges.viewport-12,
+  size.name+': service detail has visible side gutters '+JSON.stringify(detailEdges));
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
   assert(layout.scrollWidth<=layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
@@ -54,6 +59,13 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await orbit.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:25000});
  assert.equal(await orbit.locator('.orbit-hero__card').count(),6,size.name+': six genuine photographic carousel cards');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').count(),6,size.name+': six direct choices');
+ if(size.name==='desktop'){
+  const movingCard=orbit.locator('.orbit-hero__card').first();
+  const before=await movingCard.evaluate(el=>el.style.transform);
+  await page.waitForTimeout(260);
+  const after=await movingCard.evaluate(el=>el.style.transform);
+  assert.notEqual(before,after,'desktop carousel moves continuously while visible');
+ }
  assert.equal(await page.locator('.works-wheel').isHidden(),true,size.name+': repeated wheel replaced');
  assert.equal(await page.locator('.solutions-overview').count(),0,size.name+': old service index removed with white hero');
  await orbit.locator('.mt-orbit__pause').click();
