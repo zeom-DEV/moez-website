@@ -29,11 +29,12 @@
   const announce = name => window.dispatchEvent(new CustomEvent(name,{detail:{id:items[selected].id}}));
 
   function card(item, i) {
+    const exposed = i === selected || i === mod(selected+1) || i === mod(selected-1);
     return "<button class='orbit-hero__card' type='button' data-hero-card='" + i +
       "' aria-pressed='" + (i === selected) + "' aria-hidden='" + (i !== selected && i !== mod(selected+1) && i !== mod(selected-1)) +
       "' tabindex='" + (i === selected ? "0" : "-1") + "' style='--card-accent:" + item.accent + ";pointer-events:" +
       (i === selected || i === mod(selected+1) || i === mod(selected-1) ? "auto" : "none") + "'>" +
-      "<img class='orbit-hero__card-image' src='" + image(item.id) + "' alt='' loading='eager' decoding='async' fetchpriority='" +
+      "<img class='orbit-hero__card-image' " + (exposed ? "src" : "data-src") + "='" + image(item.id) + "' alt='' loading='eager' decoding='async' fetchpriority='" +
       (i === selected ? "high" : "low") + "' draggable='false'>" +
       "<div class='orbit-hero__card-tint'></div><div class='orbit-hero__card-top'><span>" +
       String(i+1).padStart(2,"0") + " / 06</span><span>↗</span></div>" +
@@ -109,10 +110,28 @@
       card.tabIndex = active ? 0 : -1;
       card.style.pointerEvents = exposed ? "auto" : "none";
       photos[i].fetchPriority = active ? "high" : "low";
+      if (exposed && !photos[i].getAttribute("src")) photos[i].src = photos[i].dataset.src;
     });
     quicknav.forEach((button,i) => button.setAttribute("aria-pressed",String(i === selected)));
     progress.forEach((dot,i) => dot.classList.toggle("active",i === selected));
   }
+
+  // Hidden back-facing photographs are not needed for first paint.
+  // Load them after the focused photograph, without dropping any of the six.
+  let remainingStarted = false;
+  function loadRemainingPhotos() {
+    if (remainingStarted) return;
+    remainingStarted = true;
+    const run = () => photos.forEach(photo => {
+      if (!photo.getAttribute("src") && photo.dataset.src) photo.src = photo.dataset.src;
+    });
+    if ("requestIdleCallback" in window) requestIdleCallback(run,{timeout:1200});
+    else setTimeout(run,160);
+  }
+  const focusedPhoto = photos[selected];
+  if (focusedPhoto.complete && focusedPhoto.naturalWidth) setTimeout(loadRemainingPhotos,700);
+  else focusedPhoto.addEventListener("load",()=>setTimeout(loadRemainingPhotos,700),{once:true});
+  setTimeout(loadRemainingPhotos,2600);
 
   function choice(index, notify = false, resetHold = true) {
     index = mod(index);
