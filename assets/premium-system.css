@@ -385,3 +385,25 @@ body[data-page=service] .service-offer-cta a{
   #inversion-intro.is-ready .intro-flip{animation:none!important}
   body[data-page] .nav-book{transition:none}
 }
+
+/* Polish remaining legacy teal sections and quiet secondary copy. */
+body[data-page] .privacy-note,
+body[data-page] .section-lead{color:var(--mt-copy)}
+body[data-page=home] .services-carousel__intro>p{color:var(--mt-copy)}
+body[data-page=service] .inner-steps .step-item{
+  border-top-color:#e6bf8761;
+}
+body[data-page=service] .inner-steps .step-item h3{color:var(--mt-paper)}
+body[data-page=service] .inner-close{
+  background:var(--mt-night);
+  color:var(--mt-paper);
+  border-top:1px solid #e6bf8730;
+}
+body[data-page=service] .inner-close p{color:#d7ccc0}
+body[data-page=service] .inner-close a{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+body[data-page=service] .inner-hero .breadcrumbs{color:#dccdbb}
+body[data-page=service] .inner-hero .breadcrumbs a:hover{color:var(--mt-gold-bright)}
