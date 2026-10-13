@@ -67,10 +67,9 @@ try{
   await page.locator('.mt-orbit__quicknav button').last().click();
   await page.locator('.mt-orbit__quicknav button').last().waitFor({state:'visible'});
   check((await page.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'))==='true',name+' direct selection updates actual orbit');
-  await page.locator('.mt-signal.is-visible').waitFor({state:'visible'});
-  check((await page.locator('[data-signal-copy]').innerText()).includes('workflow'),name+' photo selection triggers useful non-fabricated notification');
+  check(await page.locator('.mt-signal.is-visible').count()===0,name+' selecting an offer never covers the carousel with a popup');
   await page.screenshot({path:'reports/orbit/'+name+'-hero.png',animations:'disabled'});
-  await page.locator('[data-signal-action]').click();
+  await page.locator('.mt-orbit__explore').click();
   await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
   check(await page.locator('#brief-service').inputValue()==='Automatisation des workflows',name+' detailed offer prefills original form');
   await page.locator('#solution-automation [data-journey-brief]').click();

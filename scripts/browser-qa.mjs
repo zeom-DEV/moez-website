@@ -60,6 +60,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await orbit.locator('.mt-orbit__quicknav button').last().click();
  await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Automatisation');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'),'true',size.name+': selecting a photo updates current service');
+ assert.equal(await page.locator('.mt-signal.is-visible').count(),0,size.name+': choosing an offer does not cover the carousel with a popup');
  await orbit.locator('.mt-orbit__explore').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
  await page.screenshot({path:'reports/orbit-'+size.name+'.png'});
