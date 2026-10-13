@@ -445,3 +445,17 @@ body[data-page="home"] #offres>.mt-orbit-showcase{margin-top:0}
 #moez-orbit-root{background:#090b10;min-height:calc(clamp(565px,75svh,810px) + 190px)}
 @media(max-width:930px){#moez-orbit-root{min-height:calc(clamp(565px,75svh,810px) + 285px)}}
 @media(max-width:650px){#moez-orbit-root{min-height:calc(clamp(505px,74svh,715px) + 330px)}}
+
+/* During the upside-down introduction, freeze the photographic hero's geometry.
+   Async noncritical stylesheet arrival must not shift the visible inverted scene.
+   Normal sizing and every interactive motion return when the intro is dismissed. */
+body.intro-active #kinetic-showcase {
+  height:calc(clamp(565px,75svh,810px) + 365px);
+  contain:layout size paint;
+  overflow:hidden;
+}
+@media(max-width:650px) {
+  body.intro-active #kinetic-showcase {
+    height:calc(clamp(505px,74svh,715px) + 380px);
+  }
+}
