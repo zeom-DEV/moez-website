@@ -60,9 +60,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await orbit.locator('.mt-orbit__quicknav button').last().click();
  await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Automatisation');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'),'true',size.name+': selecting a photo updates current service');
- assert.equal(await page.locator('.mt-signal.is-visible').count(),0,size.name+': choosing an offer does not cover the carousel with a popup');
+ assert.equal(await page.locator('.mt-signal').count(),0,size.name+': choosing an offer does not cover the carousel with a popup');
  await orbit.locator('.mt-orbit__explore').click();
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
+ assert.equal(await page.locator('.mt-signal').count(),0,size.name+': details show without covering popup');
  await page.screenshot({path:'reports/orbit-'+size.name+'.png'});
  const selectFromLink=async id=>page.evaluate(id=>document.querySelector('[data-offer-link="'+id+'"]').click(),id);
  await selectFromLink('web');
@@ -75,6 +76,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.locator('#solution-automation.is-active').waitFor({state:'visible'});
  await page.locator('#solution-automation [data-journey-brief]').click();
  assert.equal(await page.locator('#brief-service').inputValue(),'Automatisation des workflows',size.name+': selected service reaches the existing contact form');
+ assert.equal(await page.locator('.mt-signal').count(),0,size.name+': contact CTA does not create a popup');
  await selectFromLink('web');
  const documentsBefore=await page.evaluate(()=>performance.getEntriesByType('navigation').length);
  for(const [key,file] of routes){
