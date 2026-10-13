@@ -44,6 +44,26 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  });
  assert(detailEdges.left>=12&&detailEdges.right<=detailEdges.viewport-12,
   size.name+': service detail has visible side gutters '+JSON.stringify(detailEdges));
+
+ // Check the actual post-offer text and CTA, not just scrollWidth: overflow:hidden can mask clipping.
+ const followup=await page.locator('.offers-five__after').evaluate(el=>{
+  const rect=node=>{const r=node.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};};
+  const paragraph=el.querySelector('p'),link=el.querySelector('a');
+  const method=document.querySelector('#methode .about-five__copy');
+  return {root:rect(el),paragraph:rect(paragraph),link:rect(link),method:rect(method),viewport:innerWidth};
+ });
+ const sideGap=size.width<=400?14:size.width<=800?18:32;
+ assert(followup.root.left>=sideGap-2 &&
+  followup.root.right<=followup.viewport-sideGap+2,
+  size.name+': follow-up section respects content gutters '+JSON.stringify(followup));
+ for(const key of ['paragraph','link','method']){
+  const r=followup[key];
+  assert(r.left>=10&&r.right<=followup.viewport-10,
+   size.name+': '+key+' fits on screen '+JSON.stringify(followup));
+ }
+ assert(Math.abs(followup.root.left-detailEdges.left)<=5,
+  size.name+': follow-up text aligns with service card '+JSON.stringify(followup));
+
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
   assert(layout.scrollWidth<=layout.innerWidth+4,size.name+': horizontal overflow '+JSON.stringify(layout));
