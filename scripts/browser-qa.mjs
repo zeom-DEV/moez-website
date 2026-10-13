@@ -16,6 +16,13 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  page.setDefaultTimeout(15000);
  await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
+ const premiumHome=await page.evaluate(()=>{
+  const color=sel=>getComputedStyle(document.querySelector(sel)).backgroundColor;
+  return {announcement:color('.announcement'),header:color('.site-header'),themeLinked:!!document.querySelector('link[href*="premium-system.css"]')};
+ });
+ assert(premiumHome.themeLinked,size.name+': one shared premium stylesheet is loaded');
+ assert.equal(premiumHome.announcement,'rgb(23, 26, 32)',size.name+': ink announcement');
+
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
@@ -39,6 +46,14 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
+ const premiumDetails=await page.evaluate(()=>{
+  const color=sel=>getComputedStyle(document.querySelector(sel)).backgroundColor;
+  return {paper:color('.offers-five'),card:color('#solution-web'),cta:color('#solution-web .offer-detail__conversion>a')};
+ });
+ assert.equal(premiumDetails.paper,'rgb(246, 243, 237)',size.name+': ivory homepage sections');
+ assert.equal(premiumDetails.card,'rgb(255, 253, 249)',size.name+': consistent ivory service card');
+ assert.equal(premiumDetails.cta,'rgb(230, 191, 135)',size.name+': champagne service CTA');
+
  const detailEdges=await page.locator('#solution-web').evaluate(el=>{
   const b=el.getBoundingClientRect(); return {left:b.left,right:b.right,viewport:innerWidth};
  });
@@ -202,6 +217,14 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
+  const premiumService=await page.evaluate(()=>{
+   const color=selector=>getComputedStyle(document.querySelector(selector)).backgroundColor;
+   return {announcement:color('.announcement'),benefit:color('.benefit'),steps:color('.inner-steps')};
+  });
+  assert.equal(premiumService.announcement,'rgb(23, 26, 32)',size.name+': consistent header '+file);
+  assert.equal(premiumService.benefit,'rgb(255, 253, 249)',size.name+': same stone/ivory system '+file);
+  assert.equal(premiumService.steps,'rgb(32, 35, 43)',size.name+': consistent charcoal method '+file);
+
   await page.screenshot({path:'reports/'+key+'-'+size.name+'.png'});
   assert(await page.locator('a[href^="https://calendly.com/"]').count()>0,size.name+': booking '+file);
   assert(await page.locator('a[href="./#offres"]').count()>0,size.name+': offers return '+file);
