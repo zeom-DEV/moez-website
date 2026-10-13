@@ -23,7 +23,7 @@
    if(firstImage&&!firstImage.getAttribute('src')){const source=firstImage.dataset.src;firstImage.src=matchMedia('(max-width: 650px)').matches?source.replace('web-desktop.webp','web-mobile.webp'):source;}
    const script=document.createElement('script');
    script.type='module';
-   script.src='./assets/orbit-native.js?v=20261013-responsive-motion1';
+   script.src='./assets/orbit-native.js?v=20261013-editorial1';
    script.addEventListener('error',fallback,{once:true});
    document.body.append(script);
    timeout();

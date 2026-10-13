@@ -8,12 +8,12 @@
   const html = document.documentElement;
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const items = [
-    {id:"web",name:"Sites internet",title:"Votre activité.\nUne présence remarquable.",credit:"CRÉATION DE SITES WEB — OFFRE PHARE",tag:"UN SITE PENSÉ POUR CONVAINCRE",accent:"#e6b288"},
-    {id:"sav",name:"Service client",title:"Une vraie réponse.\nÀ chaque demande.",credit:"ASSISTANCE & RELATION CLIENT",tag:"UN CLIENT BIEN ACCOMPAGNÉ",accent:"#9bcbbb"},
-    {id:"avis",name:"Avis clients",title:"Les avis parlent.\nJe vous aide à écouter.",credit:"E-RÉPUTATION & AMÉLIORATION",tag:"DES RETOURS QUI COMPTENT",accent:"#ddbc8b"},
-    {id:"prospects",name:"Appels et relances",title:"Chaque contact.\nUne prochaine action.",credit:"PROSPECTION & SUIVI",tag:"UNE RELANCE AU BON MOMENT",accent:"#c3add6"},
-    {id:"crm",name:"Dossiers clients",title:"Moins de désordre.\nPlus de maîtrise.",credit:"CRM & ORGANISATION",tag:"DES DOSSIERS SOUS CONTRÔLE",accent:"#abc7de"},
-    {id:"automation",name:"Automatisation",title:"Vos outils connectés.\nVotre temps retrouvé.",credit:"WORKFLOWS & PRODUCTIVITÉ",tag:"DES TÂCHES QUI AVANCENT",accent:"#9cccca"}
+    {id:"web",name:"Sites internet",title:"Votre activité.\nUne présence remarquable.",credit:"CRÉATION DE SITES WEB — OFFRE PHARE",tag:"UN SITE PENSÉ POUR CONVAINCRE",accent:"#dcb181"},
+    {id:"sav",name:"Service client",title:"Une vraie réponse.\nÀ chaque demande.",credit:"ASSISTANCE & RELATION CLIENT",tag:"UN CLIENT BIEN ACCOMPAGNÉ",accent:"#a6ada1"},
+    {id:"avis",name:"Avis clients",title:"Les avis parlent.\nJe vous aide à écouter.",credit:"E-RÉPUTATION & AMÉLIORATION",tag:"DES RETOURS QUI COMPTENT",accent:"#d3b992"},
+    {id:"prospects",name:"Appels et relances",title:"Chaque contact.\nUne prochaine action.",credit:"PROSPECTION & SUIVI",tag:"UNE RELANCE AU BON MOMENT",accent:"#c3a58e"},
+    {id:"crm",name:"Dossiers clients",title:"Moins de désordre.\nPlus de maîtrise.",credit:"CRM & ORGANISATION",tag:"DES DOSSIERS SOUS CONTRÔLE",accent:"#a9b5b9"},
+    {id:"automation",name:"Automatisation",title:"Vos outils connectés.\nVotre temps retrouvé.",credit:"WORKFLOWS & PRODUCTIVITÉ",tag:"DES TÂCHES QUI AVANCENT",accent:"#91aaa5"}
   ];
   const image = id => "./assets/orbit-photos/" + id + "-" + (matchMedia("(max-width: 650px)").matches ? "mobile" : "desktop") + ".webp";
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));

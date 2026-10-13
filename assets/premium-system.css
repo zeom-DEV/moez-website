@@ -1,0 +1,447 @@
+/* MOEZ — one visual language across the existing static website.
+   Palette: ink, warm ivory, graphite and champagne. The photographic 3D
+   carousel keeps individual category tones without changing its behaviour. */
+:root{
+  --mt-ink:#171a20;
+  --mt-night:#10131a;
+  --mt-panel:#20232b;
+  --mt-ivory:#f6f3ed;
+  --mt-paper:#fffdf9;
+  --mt-stone:#eee8df;
+  --mt-border:#d9cfc1;
+  --mt-copy:#52514f;
+  --mt-subtle:#cfc7bb;
+  --mt-copper:#805032;
+  --mt-gold:#e6bf87;
+  --mt-gold-bright:#f2d7ad;
+  --ink:var(--mt-ink);
+  --ink2:var(--mt-panel);
+  --cream:var(--mt-ivory);
+  --paper:var(--mt-paper);
+  --lime:var(--mt-gold);
+  --orange:var(--mt-copper);
+  --muted:#5c605f;
+  --line:var(--mt-border);
+  --web-accent:var(--mt-copper);
+  --web-soft:var(--mt-stone);
+}
+html{color-scheme:light}
+body[data-page]{background:var(--mt-ivory);color:var(--mt-ink)}
+body[data-page] .announcement{
+  background:var(--mt-ink);
+  color:var(--mt-gold-bright);
+  border-bottom:1px solid #e6bf872f;
+}
+body[data-page] .announcement .microdot{
+  background:var(--mt-gold);
+  box-shadow:0 0 0 4px #e6bf8722;
+}
+body[data-page] .site-progress{background:var(--mt-gold)}
+body[data-page] .site-header{
+  background:rgba(250,247,241,.97);
+  color:var(--mt-ink);
+  border-bottom:1px solid var(--mt-border);
+  box-shadow:0 4px 18px #10131a09;
+}
+body[data-page] .monogram i,
+body[data-page] .footer-big span{color:var(--mt-gold)}
+body[data-page] .brand-label small{color:#66625c}
+body[data-page] .desktop-nav a:hover,
+body[data-page] .mobile-nav a:hover{color:var(--mt-copper)}
+body[data-page] .menu-button{
+  background:transparent;
+  border-color:var(--mt-ink);
+  color:var(--mt-ink);
+}
+body[data-page] .nav-book{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border:1px solid var(--mt-ink);
+  transition:background .22s,border-color .22s,transform .22s;
+}
+body[data-page] .nav-book:hover{
+  background:#343038;
+  border-color:var(--mt-copper);
+  transform:translateY(-2px);
+}
+body[data-page] .nav-book i{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+}
+body[data-page] :is(a,button,input,textarea,select,summary):focus-visible{
+  outline:3px solid var(--mt-copper);
+  outline-offset:3px;
+}
+body[data-page] .button-lime{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+body[data-page] .button-lime:hover{background:var(--mt-gold-bright);border-color:var(--mt-gold-bright)}
+body[data-page] .button-dark{background:var(--mt-ink);border-color:var(--mt-ink);color:var(--mt-paper)}
+body[data-page] .footer{
+  background:var(--mt-night);
+  color:#e8e2d8;
+  border-top:1px solid #e6bf872f;
+}
+body[data-page] .footer-meta{color:#c5beb4;border-top-color:#e6bf8736}
+body[data-page] .footer-meta a:hover,
+body[data-page] .footer-top a:hover{color:var(--mt-gold-bright)}
+body[data-page] .footer-top p{color:#c5beb4!important}
+
+/* Cinematic entry: exchange the old flashing red for calm champagne energy. */
+#inversion-intro .intro-dialog{
+  background:var(--mt-paper)!important;
+  color:var(--mt-ink);
+  border:1px solid var(--mt-gold);
+  border-radius:4px;
+}
+#inversion-intro .intro-label,
+#inversion-intro .intro-eyebrow{color:var(--mt-copper)}
+#inversion-intro .intro-dialog-top{border-color:var(--mt-border)}
+#inversion-intro .intro-flip{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border:1px solid var(--mt-gold);
+}
+#inversion-intro .intro-flip:before{border-color:var(--mt-gold);opacity:.62}
+#inversion-intro .intro-flip:after{
+  background:var(--mt-gold);
+  box-shadow:0 0 18px #e6bf8770;
+}
+#inversion-intro.is-ready .intro-flip{
+  animation:mt-champagne-pulse 2.8s ease-in-out infinite!important;
+}
+#inversion-intro .intro-flip:hover{background:#303037!important}
+#inversion-intro .intro-direct{color:var(--mt-copper)}
+#inversion-intro .intro-cinema__live i{
+  background:var(--mt-gold);
+  box-shadow:0 0 0 5px #e6bf8735;
+}
+@keyframes mt-champagne-pulse{
+  0%,100%{box-shadow:0 10px 22px #10131a24,0 0 0 0 #e6bf8740}
+  50%{box-shadow:0 15px 35px #10131a36,0 0 0 5px #e6bf8714}
+}
+
+/* Photography remains the leading design element; bring the chrome in line. */
+body[data-page=home] .mt-orbit-showcase{background:var(--mt-night)}
+body[data-page=home] .mt-orbit-showcase:before{
+  background:linear-gradient(var(--mt-gold-bright),var(--mt-copper),var(--mt-gold));
+}
+body[data-page=home] .mt-orbit__actionbar{
+  background:linear-gradient(110deg,#171a22,#11131a);
+  border-color:#e6bf8730;
+}
+body[data-page=home] .mt-orbit__actions button{
+  background:#22232a;
+  border-color:#e6bf8768;
+  color:var(--mt-paper);
+}
+body[data-page=home] .mt-orbit__actions button:hover{
+  background:#42352d;
+  border-color:var(--mt-gold);
+}
+body[data-page=home] .mt-orbit__explore{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold-bright);
+  box-shadow:0 10px 28px #e6bf8725;
+}
+body[data-page=home] .mt-orbit__explore:hover{background:var(--mt-gold-bright)}
+body[data-page=home] .mt-orbit__quicknav{
+  background:var(--mt-night);
+  border-top-color:#e6bf873b;
+}
+body[data-page=home] .mt-orbit__quicknav button{color:#d1c5b7}
+body[data-page=home] .mt-orbit__quicknav button span{color:var(--mt-gold)}
+body[data-page=home] .mt-orbit__quicknav button[aria-pressed=true]{
+  background:#e6bf8717;
+  color:var(--mt-paper);
+  border-bottom-color:var(--mt-gold);
+}
+body[data-page=home] .mt-orbit__current small{color:var(--mt-gold-bright)}
+body[data-page=home] .mt-orbit__footerline{border-color:#e6bf8736;color:#e1d1bd}
+body[data-page=home] .mt-orbit__viewport .orbit-hero__card-line b{
+  border-color:var(--mt-gold);
+  background:#2c2523dc;
+  color:var(--mt-paper);
+  text-shadow:none;
+}
+
+/* Six service details: stone surfaces, dark copy and one copper hierarchy. */
+body[data-page=home] .offers-five{
+  background:var(--mt-ivory)!important;
+  color:var(--mt-ink)!important;
+}
+body[data-page=home] .services-carousel__intro h2{color:var(--mt-ink)}
+body[data-page=home] .flagship-kicker,
+body[data-page=home] .offer-detail__eyebrow,
+body[data-page=home] .offer-detail__bar,
+body[data-page=home] .offer-detail__problem>span,
+body[data-page=home] .offer-detail__tasks>span,
+body[data-page=home] .offer-detail__result>span{
+  color:var(--mt-copper);
+}
+body[data-page=home] .offer-detail{
+  background:var(--mt-paper);
+  color:var(--mt-ink);
+  border:1px solid var(--mt-border);
+  box-shadow:0 18px 58px #1b1a1812;
+}
+body[data-page=home] .offer-detail__bar,
+body[data-page=home] .offer-detail__footer,
+body[data-page=home] .offer-detail__tasks li{border-color:var(--mt-border)}
+body[data-page=home] .offer-detail__heading>p,
+body[data-page=home] .offer-detail__problem .offer-example{color:var(--mt-copy)}
+body[data-page=home] .offer-detail__columns>div{
+  background:#f8f5ef;
+  border-color:var(--mt-border);
+}
+body[data-page=home] .offer-detail__result{
+  background:var(--mt-stone);
+  border-left:3px solid var(--mt-copper);
+}
+body[data-page=home] .offer-detail__result small{color:var(--mt-copy)}
+body[data-page=home] .offer-detail__tasks li b{color:var(--mt-copper)}
+body[data-page=home] .offer-graphic{
+  background:#eee7dc;
+  border-color:#d8c7b2;
+  color:var(--mt-ink);
+}
+body[data-page=home] .offer-graphic :is(.scene-web,.scene-ticket,.scene-review,.scene-call,.scene-table){
+  background:var(--mt-paper);
+  border-color:var(--mt-border);
+  color:var(--mt-ink);
+}
+body[data-page=home] .offer-graphic :is(.scene-avatar,.scene-outcome,.scene-folder){
+  background:#dfc7aa;
+  color:#35291e;
+}
+body[data-page=home] .offer-graphic :is(.scene-web__label,.scene-notes b,.scene-review>span i,.scene-flow i){
+  color:var(--mt-copper);
+}
+body[data-page=home] .offer-graphic .scene-web__contact{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+}
+body[data-page=home] .offer-graphic .scene-device{
+  border-color:var(--mt-copper);
+  background:#e7d9c7;
+}
+body[data-page=home] .offer-graphic .scene-wave i{background:var(--mt-copper)}
+body[data-page=home] .offer-detail__conversion{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border:1px solid #bc9671;
+}
+body[data-page=home] .offer-detail__conversion>div>span{color:var(--mt-gold-bright)}
+body[data-page=home] .offer-detail__conversion p{color:#ded5c9}
+body[data-page=home] .offer-detail__conversion>a{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+  box-shadow:none;
+}
+body[data-page=home] .offer-detail__conversion>a:hover{background:var(--mt-gold-bright)}
+body[data-page=home] .offer-detail__other a{
+  color:var(--mt-ink);
+  background:var(--mt-paper);
+  border-color:var(--mt-border);
+}
+body[data-page=home] .offer-detail__other a:hover{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border-color:var(--mt-ink);
+}
+body[data-page=home] .service-picker>a[aria-current]{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border-color:var(--mt-ink);
+}
+body[data-page=home] .service-picker>a:hover{border-color:var(--mt-copper)}
+body[data-page=home] .offers-five__after a{color:var(--mt-copper)}
+body[data-page=home] .about-five{
+  background:var(--mt-night);
+  color:var(--mt-paper);
+}
+body[data-page=home] .about-five__eyebrow{color:var(--mt-gold-bright)}
+body[data-page=home] .about-five__copy>p{color:#d6cdc2}
+body[data-page=home] .about-five__copy li{border-top-color:#73675b}
+
+/* Conversion, FAQ and footer: no disconnected green form or dark teal. */
+body[data-page] .contact{
+  background:radial-gradient(ellipse at 7% 9%,#30271f 0%,var(--mt-night) 46%,#10131a 100%);
+  color:var(--mt-paper);
+}
+body[data-page] .contact .overline,
+body[data-page] .contact h2 em{color:var(--mt-gold)}
+body[data-page] .contact-copy>p{color:#ddd4c8}
+body[data-page] .contact-person small{color:#c2b8aa}
+body[data-page] .brief{
+  background:var(--mt-paper);
+  color:var(--mt-ink);
+  border:1px solid #d4bf9f;
+  box-shadow:0 18px 44px #0002;
+}
+body[data-page] .brief-overline{color:var(--mt-copper)}
+body[data-page] .brief-desc{color:var(--mt-copy)}
+body[data-page] .brief :is(input,select,textarea){
+  background:#fff;
+  color:var(--mt-ink);
+  border:1px solid #cbbfae;
+}
+body[data-page] .brief :is(input,select,textarea):focus{
+  outline:2px solid var(--mt-copper);
+  outline-offset:2px;
+}
+body[data-page] .brief-result{background:#eee5d7}
+body[data-page] .brief-result-actions :is(a,button){
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+}
+body[data-page] .faq{background:var(--mt-paper);color:var(--mt-ink)}
+body[data-page] .faq details,
+body[data-page] .faq details:last-child{border-color:var(--mt-border)}
+body[data-page] .faq details p{color:var(--mt-copy)}
+
+/* Individual service pages inherit the same hero, feature and CTA treatment. */
+body[data-page=service] .inner-hero{
+  background:radial-gradient(ellipse at 86% 15%,#3a302a 0%,var(--mt-night) 56%);
+  color:var(--mt-paper);
+}
+body[data-page=service] .inner-hero:after{
+  border-color:#e6bf8745;
+  box-shadow:0 0 0 85px #e6bf8709,0 0 0 170px #e6bf8706;
+}
+body[data-page=service] .inner-hero h1 em,
+body[data-page=service] .inner-hero .overline{color:var(--mt-gold)}
+body[data-page=service] .inner-hero p{color:#d7ccc0}
+body[data-page=service] .inner-hero :is(.button,.btn){
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+body[data-page=service] .inner-hero :is(.button,.btn):hover{background:var(--mt-gold-bright)}
+body[data-page=service] .inner-benefits{background:var(--mt-ivory)}
+body[data-page=service] .benefit{
+  background:var(--mt-paper);
+  color:var(--mt-ink);
+  border:1px solid var(--mt-border);
+}
+body[data-page=service] .benefit>b{color:var(--mt-copper)}
+body[data-page=service] .benefit p{color:var(--mt-copy)}
+body[data-page=service] .service-deliverable{
+  background:var(--mt-stone);
+  border-left-color:var(--mt-copper);
+  color:var(--mt-ink);
+}
+body[data-page=service] .inner-steps{
+  background:var(--mt-panel);
+  color:var(--mt-paper);
+}
+body[data-page=service] .inner-steps .step-item b{color:var(--mt-gold-bright)}
+body[data-page=service] .inner-steps .step-item p{color:#ded3c5}
+body[data-page=service] .service-demo{
+  background:var(--mt-night);
+  color:var(--mt-paper);
+}
+body[data-page=service] .service-demo__screen{
+  background:var(--mt-panel);
+  border-color:#817466;
+}
+body[data-page=service] .service-demo__steps>button{
+  background:var(--mt-panel);
+  border-color:#4e4a46;
+  color:#ddd3c6;
+}
+body[data-page=service] .service-demo__steps>button[aria-pressed=true]{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+}
+body[data-page=service] .service-demo__visual>i:nth-child(3){background:var(--mt-copper)}
+body[data-page=service] .service-demo__scene{color:var(--mt-paper)}
+body[data-page=service] .service-offer-cta{
+  background:var(--mt-ivory);
+  color:var(--mt-ink);
+}
+body[data-page=service] .service-offer-cta__box{
+  background:var(--mt-ink);
+  color:var(--mt-paper);
+  border-color:#b59268;
+}
+body[data-page=service] .service-offer-cta__kicker{color:var(--mt-gold-bright)}
+body[data-page=service] .service-offer-cta a{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+
+/* Keep the original mobile geometry and respect the visitor's motion setting. */
+@media(max-width:800px){
+  body[data-page] .site-header{box-shadow:none}
+  body[data-page=home] .offer-detail{box-shadow:0 10px 30px #1b1a180c}
+}
+@media(prefers-reduced-motion:reduce){
+  #inversion-intro.is-ready .intro-flip{animation:none!important}
+  body[data-page] .nav-book{transition:none}
+}
+
+/* Polish remaining legacy teal sections and quiet secondary copy. */
+body[data-page] .privacy-note,
+body[data-page] .section-lead{color:var(--mt-copy)}
+body[data-page=home] .services-carousel__intro>p{color:var(--mt-copy)}
+body[data-page=service] .inner-steps .step-item{
+  border-top-color:#e6bf8761;
+}
+body[data-page=service] .inner-steps .step-item h3{color:var(--mt-paper)}
+body[data-page=service] .inner-close{
+  background:var(--mt-night);
+  color:var(--mt-paper);
+  border-top:1px solid #e6bf8730;
+}
+body[data-page=service] .inner-close p{color:#d7ccc0}
+body[data-page=service] .inner-close a{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+body[data-page=service] .inner-hero .breadcrumbs{color:#dccdbb}
+body[data-page=service] .inner-hero .breadcrumbs a:hover{color:var(--mt-gold-bright)}
+
+/* Green legacy journey CTA was still visible below some service sheets. */
+body[data-page=home] .mt-journey-brief,
+body[data-page=home] .kinetic-showcase__cta{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+  box-shadow:0 8px 25px #80503227;
+}
+body[data-page=home] .mt-journey-brief:hover,
+body[data-page=home] .kinetic-showcase__cta:hover{
+  background:var(--mt-gold-bright);
+  color:var(--mt-ink);
+}
+body[data-page=home] .mt-journey-rail__step.is-current{
+  background:#e6bf871d;
+  border-color:var(--mt-gold);
+}
+body[data-page=home] .mt-journey-rail__step.is-current .mt-journey-rail__number{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
+
+/* Dedicated service contact panel: light copy on charcoal, never gray-on-black. */
+body[data-page=service] .service-offer-cta__box{
+  padding:clamp(28px,5vw,66px);
+  border-radius:14px;
+}
+body[data-page=service] .service-offer-cta__box h2{color:var(--mt-paper)}
+body[data-page=service] .service-offer-cta__box p,
+body[data-page=service] .service-offer-cta__box small{
+  color:#d7ccc0;
+}
+body[data-page=service] .service-offer-cta__box a:hover{
+  background:var(--mt-gold-bright);
+  color:var(--mt-ink);
+}
