@@ -29,6 +29,28 @@ try{
     const after=await page.locator('.orbit-hero__card').first().evaluate(el=>el.style.transform);
     check(before!==after,'desktop 3D card position moves autonomously, not a static screenshot');
   }
+  await page.locator('.mt-orbit__pause').click();
+  await page.waitForTimeout(700); // The real physics settles before Playwright's strict stability check.
+  const activeExplore=page.locator('.orbit-hero__card--active');
+  const cardIndex=Number(await activeExplore.getAttribute('data-hero-card'));
+  const expected=['web','sav','avis','prospects','crm','automation'][cardIndex];
+  check((await activeExplore.locator('.orbit-hero__card-line b').textContent())?.trim()==='EXPLORER',name+' photographic card displays the Explorer action');
+  check((await activeExplore.locator('.orbit-hero__card-line b').evaluate(el=>getComputedStyle(el).animationName)).includes('mt-explore-glow'),name+' visible Explorer CTA pulses gently');
+  await page.evaluate(()=>{
+    window.__exploreEvents=[];
+    for(const type of ['pointerdown','pointermove','pointerup','click'])
+      document.addEventListener(type,event=>{
+        const target=event.target;
+        if(target instanceof Element && (target.closest('[data-hero-card]')||target.closest('.orbit-hero__world')))
+          window.__exploreEvents.push({type,target:target.className?.toString().slice(0,65),card:target.closest('[data-hero-card]')?.getAttribute('data-hero-card'),hash:location.hash});
+      },true);
+  });
+  await activeExplore.locator('.orbit-hero__card-line b').click();
+  console.log('EXPLORER_EVENTS',name,JSON.stringify(await page.evaluate(()=>window.__exploreEvents)));
+  await page.locator('#solution-'+expected+'.is-active').waitFor({state:'visible'});
+  const observedHash=new URL(page.url()).hash;
+  check(observedHash==='#solution-'+expected,name+' tapping the Explorer card opens its matching service ('+observedHash+')');
+  await page.locator('#kinetic-showcase').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>[...document.querySelectorAll('.orbit-hero__card-image')].length===6&&[...document.querySelectorAll('.orbit-hero__card-image')].every(img=>img.complete&&img.naturalWidth>0),{},{timeout:25000});
   check(true,name+' all six photographic assets really load');
   await page.locator('.mt-orbit__viewport').screenshot({path:'reports/orbit/'+name+'-cinematic-stage.png',animations:'disabled'});
@@ -36,11 +58,12 @@ try{
   check(await page.locator('#solution-web').count()===1&&await page.locator('.offer-detail').count()===6,name+' original six detailed services retained');
   check(await page.locator('.mt-orbit__quicknav button').count()===6,name+' one directly usable illustrated selector');
   check(await page.locator('.works-wheel').isHidden(),name+' old repeated wheel hidden');
-  check(await page.locator('.solutions-overview').isHidden(),name+' repeated service list hidden only after successful React mount');
+  check(await page.locator('.solutions-overview').count()===0,name+' old white hero and duplicate list are removed');
+  check(await page.locator('.flagship-hero').count()===0,name+' carousel replaces the previous static homepage hero');
   check(await page.locator('[data-web-demo]').count()===0,name+' redundant web mockup removed without affecting original hero');
-  check(await page.locator('#offers-five-title').count()===1,name+' flagship headline is retained');
+  check(await page.locator('#offers-five-title').count()===1,name+' accessible homepage H1 is retained');
   check(await page.locator('.mt-orbit__pause').count()===1,name+' visitor has actual autoplay control');
-  await page.locator('.mt-orbit__pause').click();
+  check((await page.locator('.mt-orbit__pause').getAttribute('aria-pressed'))==='true',name+' carousel pause remains controllable');
   await page.locator('.mt-orbit__quicknav button').last().click();
   await page.locator('.mt-orbit__quicknav button').last().waitFor({state:'visible'});
   check((await page.locator('.mt-orbit__quicknav button').last().getAttribute('aria-pressed'))==='true',name+' direct selection updates actual orbit');

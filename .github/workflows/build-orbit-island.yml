@@ -2,7 +2,7 @@ name: Build genuine cinematic carousel into the existing site
 
 on:
   push:
-    branches: [feature/parcours-orchestre-site-existant-20261012]
+    branches: [feature/parcours-orchestre-site-existant-20261012, feature/carousel-first-explorer-20261013]
     paths:
       - 'integrations/orbit-island-entry.tsx'
       - 'assets/orbit-integration.css'
@@ -54,7 +54,21 @@ jobs:
           a='style={{ width: cardW, height: cardH, "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
           b='style={{ width: cardW, height: cardH, pointerEvents: (i === focusIndex || i === mod(focusIndex + 1, n) || i === mod(focusIndex - 1, n)) ? "auto" : "none", "--card-accent": item.accent || "#c0a2a0" } as React.CSSProperties}'
           assert a in source
-          p.write_text(source.replace(a,b))
+          source=source.replace(a,b)
+          # Use the actual photographic card as the accessible 'EXPLORER'
+          # control. Pointer taps open the matching native service panel;
+          # swipes still use the untouched 3D physics.
+          edits=[
+            ('  onIndexChange?: (index: number) => void', '  onIndexChange?: (index: number) => void\n  onExplore?: (index: number) => void'),
+            ('  items, index: controlled, defaultIndex = 0, onIndexChange, brand,', '  items, index: controlled, defaultIndex = 0, onIndexChange, onExplore, brand,'),
+            ('        choose(info.tapIndex)', '        if (onExplore) onExplore(info.tapIndex)\n        else choose(info.tapIndex)'),
+            ('onClick={() => { if (!suppressed.current && !drag.current) choose(i) }}', 'onClick={() => { if (!suppressed.current && !drag.current) { if (onExplore) onExplore(i); else choose(i) } }}'),
+          ]
+          for old,new in edits:
+            assert old in source, '3D explore integration source mismatch: '+old
+            source=source.replace(old,new)
+          p.write_text(source)
+
           PY
           cat > "$SOURCE/island.html" <<'HTML'
           <!doctype html><html lang="fr"><head><meta charset="utf-8"></head><body><div id="moez-orbit-root"></div><script type="module" src="/src/island-entry.tsx"></script></body></html>
@@ -99,7 +113,11 @@ jobs:
             echo 'Compiled bundle already current'
           else
             git commit -m 'build(orbit): compile exact reference carousel for existing website'
-            git push origin HEAD:feature/parcours-orchestre-site-existant-20261012
+            # Other edits can land while compilation is running. Replay the
+            # generated-only commit on the newest branch head before pushing.
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase "origin/${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
       - name: Archive bundle for independent inspection
         if: always()

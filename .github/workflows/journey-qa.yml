@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - feature/parcours-orchestre-site-existant-20261012
+      - feature/carousel-native-performance-20261013
     paths:
       - 'index.html'
       - 'assets/orbit-island.js'
+      - 'assets/orbit-native.js'
+      - 'assets/orbit-lazy-loader.js'
       - 'assets/orbit-island.css'
       - 'assets/orbit-integration.css'
       - 'integrations/orbit-island-entry.tsx'
@@ -20,6 +23,8 @@ on:
     paths:
       - 'index.html'
       - 'assets/orbit-island.js'
+      - 'assets/orbit-native.js'
+      - 'assets/orbit-lazy-loader.js'
       - 'assets/orbit-island.css'
       - 'assets/orbit-integration.css'
       - 'integrations/orbit-island-entry.tsx'
@@ -50,6 +55,7 @@ jobs:
         run: |
           node --check assets/journey-orchestration.js
           node --check assets/orbit-island.js
+          node --check assets/orbit-native.js
           node --check assets/journey-orchestration.js
           node --check assets/offer-inline-details.js
       - name: Browser testing tools

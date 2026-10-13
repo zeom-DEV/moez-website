@@ -16,8 +16,9 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  page.setDefaultTimeout(15000);
  await page.goto(BASE+'/',{waitUntil:'domcontentloaded'});
  assert.equal(await page.locator('[data-offer-link]').count(),6,size.name+': services');
- assert.equal(await page.locator('.solutions-overview a').count(),6,size.name+': six immediately understandable solutions');
- assert.equal((await page.locator('.flagship-link').textContent()).replace('↘','').trim(),'Découvrir mes solutions',size.name+': single principal discovery CTA');
+ assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
+ assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
+ assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
  await page.locator('#intro-flip').click();
  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
@@ -35,8 +36,8 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  await page.locator('#inversion-intro').waitFor({state:'hidden'});
  assert.equal(new URL(page.url()).hash,'#offres',size.name+': film lands on offer overview');
- const heroTop=await page.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
- assert(heroTop>=0&&heroTop<350,size.name+': flagship hero visible ('+heroTop+')');
+ const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
+ assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
  if(size.width<=800){
   const layout=await page.evaluate(()=>({scrollWidth:document.documentElement.scrollWidth,innerWidth:innerWidth}));
@@ -54,7 +55,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await orbit.locator('.orbit-hero__card').count(),6,size.name+': six genuine photographic carousel cards');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').count(),6,size.name+': six direct choices');
  assert.equal(await page.locator('.works-wheel').isHidden(),true,size.name+': repeated wheel replaced');
- assert.equal(await page.locator('.solutions-overview').isHidden(),true,size.name+': first repeated list is hidden');
+ assert.equal(await page.locator('.solutions-overview').count(),0,size.name+': old service index removed with white hero');
  await orbit.locator('.mt-orbit__pause').click();
  await orbit.locator('.mt-orbit__quicknav button').last().click();
  await page.waitForFunction(()=>document.querySelector('.mt-orbit__current strong')?.textContent==='Automatisation');

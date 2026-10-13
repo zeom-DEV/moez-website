@@ -86,3 +86,32 @@ html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!
 
 .mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
 .mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
+
+/* Carousel now IS the homepage hero, flush under the main site header. */
+body[data-page="home"] #offres>.mt-orbit-showcase{margin-top:0}
+/* Real, understated call-to-action pulse on each photographic card. The whole
+   card is a tap/click target for the corresponding detailed service. */
+.mt-orbit__viewport .orbit-hero__card-line b{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:34px;padding:9px 12px;border:1px solid #ffdcacb3;
+ border-radius:999px;background:#201817bd;color:#fff7e7;
+ font-size:10px;line-height:1;letter-spacing:.16em;
+ text-shadow:0 0 9px #ffe9cb8c;
+ animation:mt-explore-glow 2.3s ease-in-out infinite;
+}
+.mt-orbit__viewport .orbit-hero__card:nth-child(2n) .orbit-hero__card-line b{animation-delay:-1.15s}
+.mt-orbit__viewport .orbit-hero__card--active .orbit-hero__card-line b{border-color:#ffe1b0;background:#67422fe8}
+.mt-orbit__viewport .orbit-hero__card:focus-visible .orbit-hero__card-line b,
+.mt-orbit__viewport .orbit-hero__card:hover .orbit-hero__card-line b{background:#a66a45;color:white}
+@keyframes mt-explore-glow{
+ 0%,100%{opacity:.77;box-shadow:0 0 0 0 #ffc58b00,0 0 4px #ffcf9922}
+ 50%{opacity:1;box-shadow:0 0 0 4px #ffc58b28,0 0 21px #ffc58b91}
+}
+@media(prefers-reduced-motion:reduce){.mt-orbit__viewport .orbit-hero__card-line b{animation:none;opacity:1;box-shadow:0 0 0 1px #ffdcac88}}
+
+/* The photographic hero mounts after a lazy React chunk. Reserve the full
+   action bar + selectors as well as the photo stage before mounting, so
+   the entire page below does not jump on mobile slow networks. */
+#moez-orbit-root{background:#090b10;min-height:calc(clamp(565px,75svh,810px) + 190px)}
+@media(max-width:930px){#moez-orbit-root{min-height:calc(clamp(565px,75svh,810px) + 285px)}}
+@media(max-width:650px){#moez-orbit-root{min-height:calc(clamp(505px,74svh,715px) + 330px)}}

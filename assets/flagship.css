@@ -64,3 +64,33 @@ button.intro-direct{border:0;background:transparent;width:calc(100% - 60px);text
 
 /* Homepage without the redundant web mockup: the flagship copy uses the full column. */
 .offers-five .flagship-hero--solo{display:block;width:100%;max-width:950px}
+
+/* Let the real cinematic six-service carousel replace the old white hero, edge to edge. */
+body[data-page="home"] .offers-five{padding-top:0!important}
+body[data-page="home"] #offers-five-title{outline:none}
+
+/* Progressive first-frame photograph: real content paints immediately while
+   the 3D React island loads. It uses the same image/copy as the first orbit. */
+.mt-orbit__poster{isolation:isolate;contain:layout paint;position:relative;background:radial-gradient(ellipse at 70% 70%,#2a2221 0%,#090b10 68%);color:#fff}
+.mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__poster:after{display:none!important}
+.mt-orbit__poster-brand{position:absolute;z-index:2;top:17px;left:0;right:0;text-align:center;letter-spacing:.13em;font-size:11px;font-weight:850;color:#f4ebe2}
+.mt-orbit__poster-copy{position:absolute;z-index:2;top:clamp(64px,10%,104px);left:clamp(20px,5vw,90px);right:clamp(20px,5vw,90px);pointer-events:none}
+.mt-orbit__poster-copy>span{display:block;letter-spacing:.15em;font-size:clamp(9px,1vw,12px);font-weight:850;color:#dfb892}
+.mt-orbit__poster-copy h2{margin:18px 0 14px;font:800 clamp(36px,4.9vw,82px)/.99 var(--sans);letter-spacing:-.074em;color:#fff;max-width:930px}
+.mt-orbit__poster-copy>p{font-size:10px;letter-spacing:.17em;font-weight:850;color:#e9caa7}
+.mt-orbit__poster-card{display:block;position:absolute;z-index:5;left:50%;top:43%;width:clamp(205px,28vw,385px);height:clamp(245px,46vh,440px);transform:translateX(-50%);border:1px solid #e6c9a896;border-radius:15px;overflow:hidden;background:#1d2730;box-shadow:0 30px 75px #0009;color:white}
+.mt-orbit__poster-card>img{width:100%;height:100%;display:block;object-fit:cover;background:#1b232d}
+.mt-orbit__poster-card:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#07090bd9,transparent 65%);pointer-events:none}
+.mt-orbit__poster-card-label{position:absolute;z-index:1;inset:auto 20px 22px;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.mt-orbit__poster-card-label small{font-size:9px;letter-spacing:.13em;font-weight:800;color:#ffddb3}
+.mt-orbit__poster-card-label strong{font-size:clamp(23px,2.2vw,33px);line-height:1.05;font-weight:800;letter-spacing:-.05em}
+.mt-orbit__poster-card-label b{border:1px solid #ffe3bb;padding:10px 13px;border-radius:999px;background:#604128;color:#fff;letter-spacing:.15em;font-size:10px;animation:mt-explore-glow 2.3s ease-in-out infinite}
+.mt-orbit__poster-card:focus-visible{outline:3px solid #ffe2b7;outline-offset:5px}
+@media(max-width:650px){
+ .mt-orbit__poster-copy{top:60px}
+ .mt-orbit__poster-copy h2{font-size:clamp(35px,10vw,48px);max-width:340px}
+ .mt-orbit__poster-card{top:45%;width:clamp(205px,55vw,260px);height:clamp(245px,42vh,350px)}
+ .mt-orbit__poster-card-label{inset:auto 16px 17px}
+ .mt-orbit__poster-card-label strong{font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){.mt-orbit__poster-card-label b{animation:none}}
