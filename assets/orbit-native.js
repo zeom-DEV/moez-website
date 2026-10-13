@@ -216,7 +216,7 @@
         if (Math.abs(diff) > .004) {
           offset += diff*(1-Math.exp(-elapsed/175));
         } else if (!paused && usable && now >= holdUntil) {
-          offset += elapsed/5900;
+          offset += elapsed/(dimensions.width < 650 ? 5900 : 3400);
           destination = offset;
           const focus = mod(Math.round(offset));
           if (focus !== selected) {
