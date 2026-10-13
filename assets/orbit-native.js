@@ -130,7 +130,7 @@
   }
   const focusedPhoto = photos[selected];
   if (focusedPhoto.complete && focusedPhoto.naturalWidth) setTimeout(loadRemainingPhotos,4800);
-  else focusedPhoto.addEventListener("load",()=>setTimeout(loadRemainingPhotos,700),{once:true});
+  else focusedPhoto.addEventListener("load",()=>setTimeout(loadRemainingPhotos,4800),{once:true});
   setTimeout(loadRemainingPhotos,8400);
 
   function choice(index, notify = false, resetHold = true) {
