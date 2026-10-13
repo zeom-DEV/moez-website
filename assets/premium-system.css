@@ -623,3 +623,20 @@ body[data-page=service] .mt-web-reference a{
  body[data-page=home] .mt-case-actions a{transition:none}
  body[data-page=home] .mt-case-actions a:hover{transform:none}
 }
+
+
+
+/* A secondary way to contact directly; booking remains the single main CTA. */
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt{
+  display:inline-flex;align-items:center;gap:9px;
+  color:var(--mt-gold-bright);border-bottom:1px solid #e6bf8780;
+  padding:6px 0;min-height:44px;margin-top:10px;
+  font-size:13px;font-weight:750;line-height:1.4;
+  text-decoration:none;
+}
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt:hover{
+  color:var(--mt-paper);border-bottom-color:var(--mt-paper)
+}
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt:focus-visible{
+  outline:3px solid var(--mt-gold);outline-offset:3px
+}
