@@ -599,3 +599,25 @@ body[data-page=home] .site-progress{background:var(--mt-gold)}
 body[data-page=home] .offers-five{background:var(--mt-ivory)!important;color:var(--mt-ink)!important}
 #inversion-intro .intro-dialog{background:var(--mt-paper)!important;color:var(--mt-ink)}
 #inversion-intro .intro-flip{background:var(--mt-ink);color:var(--mt-paper);border-color:var(--mt-gold)}
+
+/* Audit P0: never render the blocking cinematic shell during a direct mobile entry. */
+body.mt-direct-entry{overflow-x:hidden;overflow-y:auto}
+body.mt-direct-entry #inversion-intro{display:none!important}
+body.mt-direct-entry #site-shell{position:relative;inset:auto;transform:none;filter:none;pointer-events:auto}
+.mt-mobile-cinema-choice{display:none}
+@media(max-width:800px){
+ .mt-mobile-cinema-choice{
+   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+   gap:8px 18px;width:calc(100% - 36px);margin:14px auto 0;
+   color:#d8cbbb;font-size:10px;letter-spacing:.08em;line-height:1.5;
+ }
+ .mt-mobile-cinema-choice button{
+   appearance:none;background:none;border:0;padding:10px 0;min-height:44px;
+   color:#805032;text-align:left;text-decoration:underline;text-underline-offset:4px;
+   font-size:12px;letter-spacing:0;font-weight:750;
+ }
+ .mt-mobile-cinema-choice button:hover{color:#54331f}
+ .mt-mobile-cinema-choice button:focus-visible{outline:2px solid #805032;outline-offset:3px}
+ .mt-mobile-cinema-choice span{overflow-wrap:break-word}
+}
+@media(max-width:400px){.mt-mobile-cinema-choice{width:calc(100% - 28px)}}
