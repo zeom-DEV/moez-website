@@ -407,3 +407,26 @@ body[data-page=service] .inner-close a{
 }
 body[data-page=service] .inner-hero .breadcrumbs{color:#dccdbb}
 body[data-page=service] .inner-hero .breadcrumbs a:hover{color:var(--mt-gold-bright)}
+
+/* Green legacy journey CTA was still visible below some service sheets. */
+body[data-page=home] .mt-journey-brief,
+body[data-page=home] .kinetic-showcase__cta{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+  box-shadow:0 8px 25px #80503227;
+}
+body[data-page=home] .mt-journey-brief:hover,
+body[data-page=home] .kinetic-showcase__cta:hover{
+  background:var(--mt-gold-bright);
+  color:var(--mt-ink);
+}
+body[data-page=home] .mt-journey-rail__step.is-current{
+  background:#e6bf871d;
+  border-color:var(--mt-gold);
+}
+body[data-page=home] .mt-journey-rail__step.is-current .mt-journey-rail__number{
+  background:var(--mt-gold);
+  color:var(--mt-ink);
+  border-color:var(--mt-gold);
+}
