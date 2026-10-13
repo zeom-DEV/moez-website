@@ -203,6 +203,7 @@ const nojs=await browser.newContext({javaScriptEnabled:false,viewport:{width:390
 const fallback=await nojs.newPage();
 await fallback.goto(BASE+'/#offres');
 assert.equal(await fallback.locator('.offer-detail:visible').count(),6,'all offers usable without JS');
+assert.equal(await fallback.locator('.service-picker [data-offer-link]:visible').count(),6,'all six fallback links are visible and usable without JavaScript');
 assert.equal(await fallback.locator('.offer-detail[aria-hidden="true"]').count(),0,'no-JS accessible offers');
 assert.equal(await fallback.locator('#inversion-intro').isVisible(),false,'no-JS intro bypass');
 await nojs.close();
