@@ -26,31 +26,27 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
- if(size.width<=800){
-  assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': mobile entry bypasses forced film');
-  assert.equal(await page.locator('#site-shell').evaluate(el=>el.inert),false,size.name+': content accessible immediately');
-  assert.equal(await page.locator('.mt-mobile-cinema-choice button').isVisible(),true,size.name+': film remains available on demand');
-  assert.equal(new URL(page.url()).hash,'',size.name+': mobile landing needs no navigation detour');
-  await page.locator('.mt-mobile-cinema-choice button').click();
-  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
-  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': optional film blocks background while playing');
-  await page.keyboard.press('Escape');
- }else{
-  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': optional cinematic desktop introduction retained');
-  await page.locator('#intro-flip').click();
-  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
-  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
+ // Everyone can reach the six offers without first seeing the film.
+ assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': no forced cinematic gate');
+ assert.equal(await page.locator('#site-shell').evaluate(el=>el.inert),false,size.name+': page is immediately operable');
+ assert.equal(await page.locator('.mt-cinema-choice button').isVisible(),true,size.name+': optional film discoverable');
+ assert.equal(new URL(page.url()).hash,'',size.name+': landing has no forced redirect');
+ assert.equal(await page.locator('.mt-case-study').count(),1,size.name+': one verifiable personal project');
+ assert.equal(await page.locator('.mt-case-disclosure').count(),1,size.name+': no invented customer proof');
+ assert(await page.locator('.mt-case-actions a[href*="github.com/zeom-DEV/moez-website"]').count()===1,size.name+': actual code link');
+ await page.locator('.mt-cinema-choice button').click();
+ await page.locator('.moez-film.is-active').waitFor({state:'visible'});
+ assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': optional film blocks background');
+ if(size.name==='desktop'){
   await page.keyboard.press('Shift+Tab');
   assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
-  if(size.name==='desktop'){
-   try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message})));throw error;}
-   await page.locator('[data-film-sound]').click();
-   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
-   await page.locator('[data-film-sound]').click();
-   await page.locator('[data-film-end].is-visible').waitFor({state:'visible',timeout:30000});
-   await page.locator('[data-film-discover]').click();
-  }else{await page.keyboard.press('Escape');}
- }
+  await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;},{timeout:15000});
+  await page.locator('[data-film-sound]').click();
+  assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
+  await page.locator('[data-film-sound]').click();
+  await page.locator('[data-film-end].is-visible').waitFor({state:'visible',timeout:30000});
+  await page.locator('[data-film-discover]').click();
+ }else{await page.keyboard.press('Escape');}
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  await page.locator('#inversion-intro').waitFor({state:'hidden'});
  assert.equal(new URL(page.url()).hash,'#offres',size.name+': viewing the film returns to available offers');
@@ -232,6 +228,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  }
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
+  if(file==='site-signature.html'){
+   assert.equal(await page.locator('.mt-web-reference').count(),1,'flagship has own-work evidence');
+   assert.equal(await page.locator('.mt-web-reference a[href="./#realisations"]').count(),1,'proof is verifiable');
+  }
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
   if(key==='web'){
    assert(await page.locator('.web-proof-section').innerText().then(t=>t.includes('PROJET RÉEL')&&t.includes('Ce n’est pas une réalisation commandée par un client.')),size.name+': portfolio identifies demonstrator correctly');
