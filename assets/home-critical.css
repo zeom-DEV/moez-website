@@ -404,15 +404,6 @@ html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!
 
 /* The original photography-led carousel defines the palette; contextual messages
    now look like part of the same cinematic world, never like unrelated widgets. */
-.mt-orbit-mounted .mt-signal{--signal-accent:#f3cda5;border-color:#e1b68b9c;background:linear-gradient(138deg,#241e22fa,#10151df7);box-shadow:0 28px 78px #050609a8,0 0 0 1px #dcb48d26 inset}
-.mt-orbit-mounted .mt-signal[data-type=choice]{--signal-accent:#f3cda5}
-.mt-orbit-mounted .mt-signal[data-type=detail]{--signal-accent:#e9d5b9}
-.mt-orbit-mounted .mt-signal[data-type=brief]{--signal-accent:#a4d2dd}
-.mt-orbit-mounted .mt-signal[data-type=complete]{--signal-accent:#a8d8c2}
-.mt-orbit-mounted .mt-signal__orb{box-shadow:0 0 26px #daa87e3a;background:#f1bb881a}
-.mt-orbit-mounted .mt-signal__content a{background:var(--signal-accent);color:#1c1717}
-.mt-orbit-mounted .mt-signal__content a:hover{background:#fff8e9}
-.mt-orbit-mounted .mt-signal__content p{color:#d3cec9}
 
 .mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
 .mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
@@ -458,4 +449,49 @@ body.intro-active #kinetic-showcase {
   body.intro-active #kinetic-showcase {
     height:calc(clamp(505px,74svh,715px) + 380px);
   }
+}
+
+/* QUALITY PASS: the six photographic cards lead directly to their detailed
+   panels, without an additional visible title or repeated selection screen.
+   Keep the fallback picker and heading visible when the 3D module is absent. */
+html.mt-orbit-mounted .services-carousel__intro,
+html.mt-orbit-pending .services-carousel__intro{
+  position:absolute!important;width:1px!important;height:1px!important;
+  overflow:hidden!important;clip-path:inset(50%)!important;
+  padding:0!important;margin:-1px!important;border:0!important;
+  white-space:nowrap!important;
+}
+@media(max-width:650px){
+ .mt-orbit__footerline{font-size:12px;line-height:1.45}
+ .mt-orbit__current small,.mt-orbit__actions .mt-orbit__pause{font-size:12px}
+ .mt-orbit__quicknav button span{font-size:12px}
+ .orbit-hero__narrative .orbit-hero__eyebrow{letter-spacing:.11em}
+}
+
+/* When the orbit is active, continue immediately into its chosen offer.
+   Retain space and fallback navigation when the photo renderer is unavailable. */
+html.mt-orbit-mounted #services-carousel{padding-top:0!important}
+html.mt-orbit-mounted .works-wheel{display:none!important}
+#services-carousel .works-wheel:not([data-works-wheel]) .service-picker{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+}
+@media(max-width:680px){
+ #services-carousel .works-wheel:not([data-works-wheel]) .service-picker{
+   grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+ }
+}
+
+/* The reduced legacy selector is exclusively a no-JavaScript / hero-error
+   fallback. Reset wheel-era absolute positioning to make every link usable. */
+#services-carousel .works-wheel:not([data-works-wheel]){
+ min-height:0!important;position:static!important;display:block;
+ margin:10px 0 24px!important;isolation:auto;
+}
+#services-carousel .works-wheel:not([data-works-wheel]) .service-picker{
+ position:static!important;inset:auto!important;width:100%!important;
+ height:auto!important;max-width:none!important;margin:0!important;
+ padding:0!important;transform:none!important;
+}
+html.mt-orbit-mounted #services-carousel .works-wheel:not([data-works-wheel]){
+ display:none!important;
 }
