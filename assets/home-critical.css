@@ -404,15 +404,6 @@ html.mt-orbit-mounted .mt-orbit-showcase .mt-orbit__viewport:after{display:none!
 
 /* The original photography-led carousel defines the palette; contextual messages
    now look like part of the same cinematic world, never like unrelated widgets. */
-.mt-orbit-mounted .mt-signal{--signal-accent:#f3cda5;border-color:#e1b68b9c;background:linear-gradient(138deg,#241e22fa,#10151df7);box-shadow:0 28px 78px #050609a8,0 0 0 1px #dcb48d26 inset}
-.mt-orbit-mounted .mt-signal[data-type=choice]{--signal-accent:#f3cda5}
-.mt-orbit-mounted .mt-signal[data-type=detail]{--signal-accent:#e9d5b9}
-.mt-orbit-mounted .mt-signal[data-type=brief]{--signal-accent:#a4d2dd}
-.mt-orbit-mounted .mt-signal[data-type=complete]{--signal-accent:#a8d8c2}
-.mt-orbit-mounted .mt-signal__orb{box-shadow:0 0 26px #daa87e3a;background:#f1bb881a}
-.mt-orbit-mounted .mt-signal__content a{background:var(--signal-accent);color:#1c1717}
-.mt-orbit-mounted .mt-signal__content a:hover{background:#fff8e9}
-.mt-orbit-mounted .mt-signal__content p{color:#d3cec9}
 
 .mt-orbit-load-error .mt-orbit__viewport{min-height:100px!important;height:100px!important}
 .mt-orbit-load-error .mt-orbit__viewport:after{display:none!important}
@@ -474,4 +465,17 @@ html.mt-orbit-mounted .services-carousel__intro{
  .mt-orbit__current small,.mt-orbit__actions .mt-orbit__pause{font-size:12px}
  .mt-orbit__quicknav button span{font-size:12px}
  .orbit-hero__narrative .orbit-hero__eyebrow{letter-spacing:.11em}
+}
+
+/* When the orbit is active, continue immediately into its chosen offer.
+   Retain space and fallback navigation when the photo renderer is unavailable. */
+html.mt-orbit-mounted #services-carousel{padding-top:0!important}
+html.mt-orbit-mounted .works-wheel{display:none!important}
+#services-carousel .works-wheel:not([data-works-wheel]) .service-picker{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+}
+@media(max-width:680px){
+ #services-carousel .works-wheel:not([data-works-wheel]) .service-picker{
+   grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+ }
 }
