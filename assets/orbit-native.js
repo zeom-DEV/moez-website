@@ -34,7 +34,7 @@
       "' aria-pressed='" + (i === selected) + "' aria-hidden='" + (i !== selected && i !== mod(selected+1) && i !== mod(selected-1)) +
       "' tabindex='" + (i === selected ? "0" : "-1") + "' style='--card-accent:" + item.accent + ";pointer-events:" +
       (i === selected || i === mod(selected+1) || i === mod(selected-1) ? "auto" : "none") + "'>" +
-      "<img class='orbit-hero__card-image' " + (exposed ? "src" : "data-src") + "='" + image(item.id) + "' alt='' loading='eager' decoding='async' fetchpriority='" +
+      "<img class='orbit-hero__card-image' " + (i === selected ? "src" : "data-src") + "='" + image(item.id) + "' alt='' loading='eager' decoding='async' fetchpriority='" +
       (i === selected ? "high" : "low") + "' draggable='false'>" +
       "<div class='orbit-hero__card-tint'></div><div class='orbit-hero__card-top'><span>" +
       String(i+1).padStart(2,"0") + " / 06</span><span>↗</span></div>" +
@@ -110,10 +110,27 @@
       card.tabIndex = active ? 0 : -1;
       card.style.pointerEvents = exposed ? "auto" : "none";
       photos[i].fetchPriority = active ? "high" : "low";
-      if (exposed && !photos[i].getAttribute("src")) photos[i].src = photos[i].dataset.src;
+      if (active && !photos[i].getAttribute("src")) photos[i].src = photos[i].dataset.src;
     });
     quicknav.forEach((button,i) => button.setAttribute("aria-pressed",String(i === selected)));
     progress.forEach((dot,i) => dot.classList.toggle("active",i === selected));
+    // On slow mobile connections, avoid racing the focused LCP photograph
+    // against two nonessential neighbours. They appear as soon as it settles.
+    const center = selected, featured = photos[center];
+    const loadNeighbours = () => {
+      if (center !== selected) return;
+      for (const delta of [-1,1]) {
+        const neighbour = photos[mod(center+delta)];
+        if (!neighbour.getAttribute("src") && neighbour.dataset.src) {
+          neighbour.src = neighbour.dataset.src;
+        }
+      }
+    };
+    if (featured.complete && featured.naturalWidth) setTimeout(loadNeighbours,250);
+    else {
+      featured.addEventListener("load",() => setTimeout(loadNeighbours,250),{once:true});
+      featured.addEventListener("error",loadNeighbours,{once:true});
+    }
   }
 
   // Hidden back-facing photographs are not needed for first paint.
