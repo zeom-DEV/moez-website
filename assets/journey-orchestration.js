@@ -81,11 +81,10 @@
    if(parent)track(parent.id.replace("solution-",""));
    toBrief();
  });
+ // Carousel selection updates the chosen offer silently. The card's own
+ // EXPLORER button is the direct path to its detail; no floating notification.
  window.addEventListener("mt:journey-select",event=>{
-   const id=event.detail?.id;
-   if(!track(id))return;
-   notify("choice","01 / VOTRE SÉLECTION",names[id].name,
-      names[id].result,"Voir les tâches concrètes","#solution-"+id,"orbit-"+id);
+   if(track(event.detail?.id)) close();
  });
  window.addEventListener("mt:journey-detail",event=>{
    const id=event.detail?.id||location.hash.replace("#solution-","");
