@@ -524,3 +524,61 @@ html.mt-orbit-mounted #services-carousel .works-wheel:not([data-works-wheel]){
     letter-spacing:-.04em;
   }
 }
+
+/* Post-offer content must never bleed into the viewport edge. */
+body[data-page="home"] .offers-five__after.container{
+  display:flex;
+  width:min(calc(100% - 64px),1280px);
+  max-width:100%;
+  min-width:0;
+  margin:28px auto 0;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px 36px;
+}
+body[data-page="home"] .offers-five__after p{
+  min-width:0;
+  max-width:650px;
+  margin:0;
+  font-size:clamp(15px,1.45vw,18px);
+  line-height:1.65;
+  overflow-wrap:break-word;
+}
+body[data-page="home"] .offers-five__after a{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  flex:none;
+  font-size:13px;
+  line-height:1.45;
+  font-weight:800;
+  text-decoration:underline;
+  text-underline-offset:5px;
+}
+body[data-page="home"] .about-five__grid{
+  grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);
+}
+body[data-page="home"] .about-five__copy,
+body[data-page="home"] .about-five__photo{
+  min-width:0;
+}
+body[data-page="home"] .about-five__copy h2,
+body[data-page="home"] .about-five__copy p{
+  overflow-wrap:break-word;
+}
+@media(max-width:800px){
+  body[data-page="home"] .offers-five__after.container{
+    width:calc(100% - 36px);
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+  }
+  body[data-page="home"] .about-five__grid{
+    grid-template-columns:minmax(0,1fr);
+  }
+}
+@media(max-width:400px){
+  body[data-page="home"] .offers-five__after.container{
+    width:calc(100% - 28px);
+  }
+}
