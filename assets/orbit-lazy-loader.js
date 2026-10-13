@@ -32,8 +32,18 @@
  // A film covers the homepage on the first visit. Avoid loading six remote
  // images and React behind that film until visitors choose to proceed.
  let waitingForIntro=false;
+ let mobileStartPending=false;
  function relevant(){
    if(intro && !intro.classList.contains('is-hidden') && !location.hash){waitingForIntro=true;return;}
+   // The preloaded first photograph renders immediately. Defer parsing the
+   // cinematic 3D engine until after the first mobile paint (not desktop).
+   // The poster remains interactive while the 3D module is warming up.
+   if(matchMedia('(max-width:800px)').matches){
+     if(mobileStartPending||started)return;
+     mobileStartPending=true;
+     setTimeout(start,1050);
+     return;
+   }
    start();
  }
  document.getElementById('intro-flip')?.addEventListener('click',start,{once:true});
@@ -53,5 +63,5 @@
  }else{
    addEventListener('scroll',()=>{if(section.getBoundingClientRect().top<innerHeight+350)relevant()},{passive:true,once:true});
  }
- if(location.hash==='#kinetic-showcase'||location.hash==='#offres')start();
+ if(location.hash==='#kinetic-showcase'||location.hash==='#offres'||location.hash==='#services-carousel')relevant();
 })();
