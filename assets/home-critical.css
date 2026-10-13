@@ -582,3 +582,20 @@ body[data-page="home"] .about-five__copy p{
     width:calc(100% - 28px);
   }
 }
+
+/* Premium first paint: tiny critical palette while secondary theme CSS loads. */
+:root{
+ --mt-ink:#171a20;--mt-gold:#e6bf87;--mt-paper:#fffdf9;
+ --mt-ivory:#f6f3ed;--mt-border:#d9cfc1;
+ --mt-copper:#805032;--mt-gold-bright:#f2d7ad;
+ --ink:var(--mt-ink);--lime:var(--mt-gold);
+ --cream:var(--mt-ivory);--paper:var(--mt-paper);
+ --orange:var(--mt-copper);
+}
+body[data-page=home]{background:var(--mt-ivory);color:var(--mt-ink)}
+body[data-page=home] .announcement{background:var(--mt-ink);color:var(--mt-gold-bright)}
+body[data-page=home] .site-header{background:rgba(250,247,241,.97);color:var(--mt-ink);border-bottom:1px solid var(--mt-border)}
+body[data-page=home] .site-progress{background:var(--mt-gold)}
+body[data-page=home] .offers-five{background:var(--mt-ivory)!important;color:var(--mt-ink)!important}
+#inversion-intro .intro-dialog{background:var(--mt-paper)!important;color:var(--mt-ink)}
+#inversion-intro .intro-flip{background:var(--mt-ink);color:var(--mt-paper);border-color:var(--mt-gold)}
