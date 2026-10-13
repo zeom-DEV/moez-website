@@ -26,23 +26,34 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
- assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
- await page.locator('#intro-flip').click();
- await page.locator('.moez-film.is-active').waitFor({state:'visible'});
- assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
- await page.keyboard.press('Shift+Tab');
- assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
- if(size.name==='desktop'){
-  try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message})));throw error;}
-  await page.locator('[data-film-sound]').click();
-  assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
-  await page.locator('[data-film-sound]').click();
-  await page.locator('[data-film-end].is-visible').waitFor({state:'visible',timeout:30000});
-  await page.locator('[data-film-discover]').click();
- }else{await page.keyboard.press('Escape');}
+ if(size.width<=800){
+  assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': mobile entry bypasses forced film');
+  assert.equal(await page.locator('#site-shell').evaluate(el=>el.inert),false,size.name+': content accessible immediately');
+  assert.equal(await page.locator('.mt-mobile-cinema-choice button').isVisible(),true,size.name+': film remains available on demand');
+  assert.equal(new URL(page.url()).hash,'',size.name+': mobile landing needs no navigation detour');
+  await page.locator('.mt-mobile-cinema-choice button').click();
+  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
+  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': optional film blocks background while playing');
+  await page.keyboard.press('Escape');
+ }else{
+  assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': optional cinematic desktop introduction retained');
+  await page.locator('#intro-flip').click();
+  await page.locator('.moez-film.is-active').waitFor({state:'visible'});
+  assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
+  await page.keyboard.press('Shift+Tab');
+  assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
+  if(size.name==='desktop'){
+   try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message})));throw error;}
+   await page.locator('[data-film-sound]').click();
+   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
+   await page.locator('[data-film-sound]').click();
+   await page.locator('[data-film-end].is-visible').waitFor({state:'visible',timeout:30000});
+   await page.locator('[data-film-discover]').click();
+  }else{await page.keyboard.press('Escape');}
+ }
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  await page.locator('#inversion-intro').waitFor({state:'hidden'});
- assert.equal(new URL(page.url()).hash,'#offres',size.name+': film lands on offer overview');
+ assert.equal(new URL(page.url()).hash,'#offres',size.name+': viewing the film returns to available offers');
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
