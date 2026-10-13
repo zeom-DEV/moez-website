@@ -46,6 +46,11 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
+ // The editorial stylesheet is intentionally non-render-blocking on the homepage.
+ await page.waitForFunction(()=>{
+  const button=document.querySelector('#solution-web .offer-detail__conversion>a');
+  return button && getComputedStyle(button).backgroundColor==='rgb(230, 191, 135)';
+ },{timeout:10000});
  const premiumDetails=await page.evaluate(()=>{
   const color=sel=>getComputedStyle(document.querySelector(sel)).backgroundColor;
   return {paper:color('.offers-five'),card:color('#solution-web'),cta:color('#solution-web .offer-detail__conversion>a')};
