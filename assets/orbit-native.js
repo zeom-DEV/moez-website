@@ -186,8 +186,22 @@
     requestAnimationFrame(animate);
   }
 
+  // Browser hit-testing can target the 3D world rather than the visible
+  // photograph. Resolve only truly exposed card rectangles, front to back.
+  let tapCandidate = null;
+  function hitCard(x,y) {
+    const hits = cards.filter(card => {
+      if (card.getAttribute("aria-hidden") === "true" || card.style.pointerEvents === "none") return false;
+      const rect = card.getBoundingClientRect();
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    });
+    hits.sort((a,b) => Number(b.style.zIndex || 0) - Number(a.style.zIndex || 0));
+    return hits.length ? Number(hits[0].dataset.heroCard) : null;
+  }
   world.addEventListener("pointerdown", event => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    const ownCard = event.target instanceof Element ? event.target.closest("[data-hero-card]") : null;
+    tapCandidate = ownCard ? Number(ownCard.dataset.heroCard) : hitCard(event.clientX,event.clientY);
     activePointer = event.pointerId;
     dragging = true;
     dragStart = lastX = event.clientX;
@@ -243,8 +257,16 @@
   world.addEventListener("pointerup",release);
   world.addEventListener("pointercancel",release);
   world.addEventListener("pointerleave",() => {if(!dragging){parallaxX=0;parallaxY=0;}});
+  world.addEventListener("click",event => {
+    if (suppressClick || dragDistance > 9) return;
+    if (event.target instanceof Element && event.target.closest("[data-hero-card]")) return;
+    const index = tapCandidate === null ? hitCard(event.clientX,event.clientY) : tapCandidate;
+    tapCandidate = null;
+    if (index !== null) explore(index);
+  });
   cards.forEach((card,i) => card.addEventListener("click",event => {
     if (suppressClick || dragDistance>9) {event.preventDefault();return;}
+    tapCandidate = null;
     explore(i);
   }));
   quicknav.forEach((button,i)=>button.addEventListener("click",()=>choice(i,true)));
