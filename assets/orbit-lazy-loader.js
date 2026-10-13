@@ -20,7 +20,7 @@
    if(started)return;
    started=true;
    const firstImage=section.querySelector('[data-orbit-poster-image]');
-   if(firstImage&&!firstImage.getAttribute('src')){const source=firstImage.dataset.src;firstImage.src=matchMedia('(max-width: 650px)').matches?source.replace('w=720&h=1000&q=76','w=540&h=760&q=72'):source;}
+   if(firstImage&&!firstImage.getAttribute('src')){const source=firstImage.dataset.src;firstImage.src=matchMedia('(max-width: 650px)').matches?source.replace('web-desktop.webp','web-mobile.webp'):source;}
    const script=document.createElement('script');
    script.type='module';
    script.src='./assets/orbit-island.js?v=20261012-original';
