@@ -495,3 +495,32 @@ html.mt-orbit-mounted .works-wheel{display:none!important}
 html.mt-orbit-mounted #services-carousel .works-wheel:not([data-works-wheel]){
  display:none!important;
 }
+
+/* Responsive service panels - mobile/desktop visual QA 2026-10-13 */
+#services-carousel{
+  width:min(calc(100% - 64px),1280px);
+  max-width:100%;
+  min-width:0;
+  margin-inline:auto;
+}
+#services-carousel .offer-detail,
+#services-carousel .offer-detail-group{max-width:100%;min-width:0}
+#services-carousel .offer-detail__heading h2,
+#services-carousel .offer-detail__heading p{overflow-wrap:break-word}
+@media(max-width:800px){
+  #services-carousel{width:calc(100% - 36px)}
+  #services-carousel .offer-detail__bar{flex-wrap:wrap;align-items:flex-start;gap:6px 14px}
+  #services-carousel .offer-detail__columns,
+  #services-carousel .offer-detail__conversion{min-width:0}
+}
+@media(max-width:400px){
+  #services-carousel{width:calc(100% - 28px)}
+  #services-carousel .offer-detail{padding:16px}
+  #services-carousel .offer-detail__bar{font-size:10px}
+  #services-carousel .offer-detail__back{font-size:10px}
+  #services-carousel .offer-detail__heading h2{
+    font-size:clamp(25px,7.9vw,31px);
+    line-height:1.14;
+    letter-spacing:-.04em;
+  }
+}
