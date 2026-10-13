@@ -599,3 +599,22 @@ body[data-page=home] .site-progress{background:var(--mt-gold)}
 body[data-page=home] .offers-five{background:var(--mt-ivory)!important;color:var(--mt-ink)!important}
 #inversion-intro .intro-dialog{background:var(--mt-paper)!important;color:var(--mt-ink)}
 #inversion-intro .intro-flip{background:var(--mt-ink);color:var(--mt-paper);border-color:var(--mt-gold)}
+
+
+/* Stable mobile first paint: reserve the cinematic stage before JS and font loading. */
+@media (max-width: 800px) {
+  html:not(.intro-complete) body.intro-active #inversion-intro {
+    min-height: 100svh;
+    height: 100svh;
+    overflow: clip;
+    contain: layout paint;
+  }
+  body.intro-active #inversion-intro .intro-overlay {
+    min-height: 100svh;
+  }
+  body.intro-active #inversion-intro .intro-world img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
