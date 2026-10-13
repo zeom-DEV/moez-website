@@ -430,3 +430,18 @@ body[data-page=home] .mt-journey-rail__step.is-current .mt-journey-rail__number{
   color:var(--mt-ink);
   border-color:var(--mt-gold);
 }
+
+/* Dedicated service contact panel: light copy on charcoal, never gray-on-black. */
+body[data-page=service] .service-offer-cta__box{
+  padding:clamp(28px,5vw,66px);
+  border-radius:14px;
+}
+body[data-page=service] .service-offer-cta__box h2{color:var(--mt-paper)}
+body[data-page=service] .service-offer-cta__box p,
+body[data-page=service] .service-offer-cta__box small{
+  color:#d7ccc0;
+}
+body[data-page=service] .service-offer-cta__box a:hover{
+  background:var(--mt-gold-bright);
+  color:var(--mt-ink);
+}
