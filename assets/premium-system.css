@@ -217,7 +217,7 @@ body[data-page=home] .offer-graphic :is(.scene-avatar,.scene-outcome,.scene-fold
   background:#dfc7aa;
   color:#35291e;
 }
-body[data-page=home] .offer-graphic :is(.scene-web__label,.scene-notes b,.scene-review>span i,.scene-flow i,.scene-web__contact){
+body[data-page=home] .offer-graphic :is(.scene-web__label,.scene-notes b,.scene-review>span i,.scene-flow i){
   color:var(--mt-copper);
 }
 body[data-page=home] .offer-graphic .scene-web__contact{
