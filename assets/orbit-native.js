@@ -79,6 +79,14 @@
   const pause = mount.querySelector(".mt-orbit__pause");
   const viewport = mount.querySelector(".mt-orbit__viewport");
   let dimensions = {width:390,height:600,cardWidth:215,cardHeight:312};
+  // A single running animation frame is enough. Do not keep a 60fps loop
+  // alive behind the film, on other pages, or with a paused carousel.
+  let frameScheduled = false;
+  function wake() {
+    if (frameScheduled || document.hidden || !sceneVisible) return;
+    frameScheduled = true;
+    requestAnimationFrame(animate);
+  }
 
   function size() {
     const rect = viewport.getBoundingClientRect();
@@ -158,6 +166,7 @@
     if (resetHold) holdUntil = performance.now() + 2100;
     if (didChange) displaySelection();
     if (notify) announce("mt:journey-select");
+    wake();
   }
 
   function explore(index = selected) {
@@ -195,6 +204,7 @@
   }
 
   function animate(now) {
+    frameScheduled = false;
     const elapsed = previousTime ? clamp(now-previousTime,0,50) : 16;
     previousTime = now;
     const usable = !document.hidden && sceneVisible;
@@ -219,7 +229,11 @@
       parallaxY *= .96;
     }
     if (usable || dragging) physics();
-    requestAnimationFrame(animate);
+    // Auto-play is continuous only while its scene is actually on screen.
+    // Manual/reduced-motion mode sleeps as soon as the transition settles.
+    if (!reduced && (!paused || dragging ||
+        Math.abs(destination-offset) > .004 ||
+        Math.abs(parallaxX) > .02 || Math.abs(parallaxY) > .02)) wake();
   }
 
   // Browser hit-testing can target the 3D world rather than the visible
@@ -240,6 +254,7 @@
     tapCandidate = ownCard ? Number(ownCard.dataset.heroCard) : hitCard(event.clientX,event.clientY);
     activePointer = event.pointerId;
     dragging = true;
+    wake();
     dragStart = lastX = event.clientX;
     dragOrigin = offset;
     dragTime = performance.now();
@@ -252,6 +267,7 @@
         const bounds = world.getBoundingClientRect();
         parallaxX = clamp(((event.clientX-bounds.left)/bounds.width-.5)*2,-1,1);
         parallaxY = clamp(((event.clientY-bounds.top)/bounds.height-.5)*2,-1,1);
+        wake();
       }
       return;
     }
@@ -319,6 +335,7 @@
     if(focus!==selected){selected=focus;displaySelection();}
     holdUntil=performance.now()+1700;
     legend.textContent=paused || reduced?"MODE MANUEL":"MOUVEMENT CONTINU";
+    wake();
   });
   stage.addEventListener("keydown",event=>{
     const actions={ArrowRight:()=>choice(selected+1,true),ArrowLeft:()=>choice(selected-1,true),
@@ -336,10 +353,11 @@
     if(index>=0)choice(index,false);
   });
   addEventListener("resize",()=>{size();physics();},{passive:true});
-  addEventListener("visibilitychange",()=>{if(!document.hidden)holdUntil=performance.now()+350;});
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden){holdUntil=performance.now()+350;previousTime=0;wake();}});
   if("IntersectionObserver" in window) {
     const observer=new IntersectionObserver(entries=>{
       sceneVisible=entries.some(entry=>entry.isIntersecting);
+      if(sceneVisible){previousTime=0;wake();}
     },{rootMargin:"100px",threshold:.01});
     observer.observe(viewport);
   }
@@ -347,7 +365,7 @@
   displaySelection();
   physics();
   if(reduced)legend.textContent="MODE MANUEL";
-  requestAnimationFrame(animate);
+  wake();
   html.classList.add("mt-orbit-mounted");
   mount.closest(".mt-orbit-showcase")?.classList.add("mt-orbit-ready");
   window.dispatchEvent(new CustomEvent("mt:orbit-ready"));
