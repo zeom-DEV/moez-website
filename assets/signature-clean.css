@@ -15,6 +15,7 @@ img,video{display:block}
 .site{position:relative;min-height:100svh;overflow:clip}
 body.is-intro .site,body.is-righting .site{
  position:fixed;inset:0;min-height:100svh;height:100dvh;overflow:hidden;
+ pointer-events:none;
  backface-visibility:hidden;transform-origin:50% 50%;
  will-change:transform,filter;
  filter:grayscale(1) contrast(1.1);
@@ -291,4 +292,16 @@ body.is-film .site{position:relative;transform:none}
  body.is-righting .site{transform:none!important}
  .intro.is-ready .intro-card{visibility:visible;opacity:1}
  .offer-card{will-change:auto}
+}
+
+/* Interaction and visibility guards. */
+.intro[hidden],.film[hidden],.detail[hidden]{display:none!important}
+.intro[hidden]{pointer-events:none}
+body:not(.is-intro):not(.is-righting):not(.is-film) .site{position:relative!important;transform:none!important;filter:none!important;pointer-events:auto!important}
+.film:not(.is-visible){pointer-events:none}
+.film.is-visible{pointer-events:auto}
+@media(max-width:680px){
+ .offer-card[data-position="center"]{transition-duration:.95s}
+ .offer-card__foot strong{overflow-wrap:break-word}
+ .hero-title{overflow-wrap:normal}
 }
