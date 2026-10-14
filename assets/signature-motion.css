@@ -22,8 +22,8 @@ body.is-intro .header,body.is-film .header,body.is-righting .header{position:abs
 .hero-media{transform:translateZ(0);isolation:isolate}
 .hero-media img{animation:premium-hero-breathe 24s ease-in-out infinite alternate;will-change:transform}
 @keyframes premium-hero-breathe{
- from{transform:scale(1.055) translate3d(calc(var(--scene-x,0px)*.55),calc(var(--scene-y,0px)*.55),0)}
- to{transform:scale(1.15) translate3d(calc(var(--scene-x,0px)*.55 - 1.4%),calc(var(--scene-y,0px)*.55 + .8%),0)}
+ from{transform:scale(1.055) translate3d(var(--scene-x,0px),var(--scene-y,0px),0)}
+ to{transform:scale(1.15) translate3d(calc(var(--scene-x,0px) - 1.4%),calc(var(--scene-y,0px) + .8%),0)}
 }
 .hero:after{
  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -38,7 +38,7 @@ body.is-intro .header,body.is-film .header,body.is-righting .header{position:abs
  transition:transform .8s var(--premium-ease)
 }
 .hero-depth__ring--two{width:min(82vw,1110px);height:min(82vw,1110px);
- border-color:#ffffff20;left:66%;transform:translate3d(calc(-50% - var(--depth-x,0px)*.42),calc(-50% - var(--depth-y,0px)*.42),-110px) rotateX(70deg)}
+ border-color:#ffffff20;left:66%;transform:translate3d(calc(-50% + var(--depth-x-reverse,0px)),calc(-50% + var(--depth-y-reverse,0px)),-110px) rotateX(70deg)}
 .hero-depth__axis{position:absolute;left:70%;top:5%;height:90%;width:1px;
  transform:rotate(18deg);transform-origin:center;background:linear-gradient(transparent,#ffffff29,transparent)}
 .hero-copy{position:relative;z-index:1}
