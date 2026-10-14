@@ -58,6 +58,7 @@ export function TiltedGridHero({
   ...props
 }: React.ComponentProps<"div"> & TiltedGridHeroProps) {
   const ref = React.useRef<HTMLDivElement>(null);
+  const bandRef = React.useRef<HTMLDivElement>(null);
   const id = React.useId().replace(/[^a-zA-Z0-9]/g, "");
   const orbit = `tgh-o-${id}`;
   const tile = `tgh-t-${id}`;
@@ -94,17 +95,42 @@ export function TiltedGridHero({
   const turn = (deg: number) =>
     `translateZ(${radius}) rotateY(${+deg.toFixed(4)}deg) translateZ(-${radius})`;
 
-  const hide = +(((sweep - limit) / (2 * sweep || 1)) * 100).toFixed(4);
+  // Explicit 0/100% keyframes are far more reliable than mixing "from/to"
+  // with visibility keyframes: some browsers left every card overlapping at
+  // the centre when the motion keyframes failed to parse.
   const css =
-    `@keyframes ${orbit}{` +
-    `from{transform:${turn(-sweep)}}to{transform:${turn(sweep)}}` +
-    `0%,${hide}%,${100 - hide}%,100%{visibility:hidden}` +
-    `${hide + 0.001}%,${100 - hide - 0.001}%{visibility:visible}}` +
-    `@media(prefers-reduced-motion:reduce){.${tile}{animation-play-state:paused}}`;
+    `@keyframes ${orbit} {` +
+    `0% { transform: ${turn(-sweep)}; opacity: 0; }` +
+    `5% { opacity: 1; }` +
+    `95% { opacity: 1; }` +
+    `100% { transform: ${turn(sweep)}; opacity: 0; }` +
+    `}` +
+    `@media (prefers-reduced-motion: reduce) { .${tile} { animation-play-state: paused !important; } }`;
 
   const share = aspectRatio / SLICES;
   const duration = columns * speed;
+  const pitch = (2 * sweep) / Math.max(1, columns);
   const mask = `linear-gradient(90deg,transparent,#000 ${fade}%,#000 ${100 - fade}%,transparent)`;
+
+  // Safety net: if browser stylesheet parsing rejects the dynamic keyframes,
+  // use the Web Animations API instead of leaving every tile in one pile.
+  React.useEffect(() => {
+    const band = bandRef.current;
+    if (!band || !layout || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const tiles = Array.from(band.querySelectorAll<HTMLElement>("[data-cylinder-tile]"));
+    const fallbacks: Animation[] = [];
+    tiles.forEach((el, i) => {
+      if (el.getAnimations().length) return;
+      const animation = el.animate([
+        { transform: turn(-sweep), opacity: 0 },
+        { transform: turn(-sweep + pitch * 0.18), opacity: 1, offset: 0.05 },
+        { transform: turn(sweep - pitch * 0.18), opacity: 1, offset: 0.95 },
+        { transform: turn(sweep), opacity: 0 }
+      ], { duration: duration * 1000, iterations: Infinity, easing: "linear", delay: -i * speed * 1000 });
+      fallbacks.push(animation);
+    });
+    return () => fallbacks.forEach((animation) => animation.cancel());
+  }, [layout, columns, duration, speed, sweep, pitch]);
 
   return (
     <div
@@ -115,6 +141,7 @@ export function TiltedGridHero({
     >
       <style>{css}</style>
       <div
+        ref={bandRef}
         aria-hidden
         className="pointer-events-none absolute inset-0 transition-opacity duration-500"
         style={{
@@ -131,6 +158,7 @@ export function TiltedGridHero({
           return (
             <div
               key={t}
+              data-cylinder-tile={t}
               className={cn(tile, "absolute")}
               style={{
                 left: `calc(50% - ${u(aspectRatio / 2)})`,
@@ -138,7 +166,11 @@ export function TiltedGridHero({
                 width: u(aspectRatio),
                 height: u(1),
                 transformStyle: "preserve-3d",
+                // Static starting position also works when motion is paused,
+                // absent, or unsupported; photographs never pile in one spot.
+                transform: turn(-sweep + t * pitch),
                 animation: `${orbit} ${duration}s linear ${-t * speed}s infinite`,
+                animationFillMode: "both",
               }}
               onAnimationIteration={(e) => {
                 const lap = Math.round(e.elapsedTime / duration);
