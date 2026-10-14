@@ -20,7 +20,7 @@
 .mt-editorial__cta{display:inline-flex;align-items:center;justify-content:space-between;gap:35px;background:#111;color:#fff!important;padding:19px 25px;min-height:60px;font:750 13px/1.2 Arial,Helvetica,sans-serif;text-transform:uppercase;letter-spacing:.035em;border:1px solid #111;transition:background .25s,transform .25s}
 .mt-editorial__cta:hover{background:#353535;transform:translateY(-3px)}
 .mt-editorial__cta span{font-size:20px;font-weight:400}
-.mt-editorial__photo{min-width:0;min-height:100%;position:relative;overflow:hidden;background:#aaa}
+.mt-editorial__photo{min-width:0;min-height:100%;margin:0;position:relative;overflow:hidden;background:#aaa}
 .mt-editorial__photo picture,.mt-editorial__photo img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .mt-editorial__photo img{object-fit:cover;object-position:center;filter:grayscale(.3) contrast(1.02);transition:transform 6.2s linear}
 .mt-editorial__slide[data-active="true"] .mt-editorial__photo img{transform:scale(1.065)}
