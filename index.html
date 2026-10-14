@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="./assets/signature-motion.css?v=20261014-b">
 <link rel="stylesheet" href="./assets/signature-discovery.css?v=20261015-a">
 <script src="./assets/signature-clean.js?v=20261015-a" defer></script>
+<script type="module" src="/src/tilted-grid-mount.tsx"></script>
 <style>html{background:#0b0b0b}body{margin:0}.site{background:#111}body.is-intro .site{transform:rotate(180deg) scale(.96);position:fixed;inset:0;height:100dvh;overflow:hidden}</style>
 <noscript><style>body.is-intro{overflow:auto!important}body.is-intro .site{position:relative!important;transform:none!important;height:auto!important;overflow:visible!important}.intro{display:none!important}.detail{display:block!important}</style></noscript>
 </head>
@@ -70,7 +71,7 @@
  <button class="service-tab" type="button" data-service-target="automation" data-index="5" aria-pressed="false"><span class="service-tab__number">06</span><span class="service-tab__name">Automatisation</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
  </nav>
  <div class="discover-toolbar">
-  <p class="discover-prompt"><span class="discover-prompt__pulse" aria-hidden="true"></span><strong>6 offres en mouvement</strong><span>Choisissez une catégorie ou faites glisser les cartes</span></p>
+  <p class="discover-prompt"><span class="discover-prompt__pulse" aria-hidden="true"></span><strong>Six expertises à découvrir</strong><span>Sélectionnez un service pour consulter son offre</span></p>
   <div class="stage-controls" aria-label="Faire défiler les offres">
    <button id="stage-prev" type="button" aria-label="Afficher l'offre précédente"><span aria-hidden="true">←</span><small>Précédente</small></button>
    <output id="stage-count" aria-live="off">01 / 06</output>
@@ -83,6 +84,7 @@
         <button type="button" class="stage-next-preview" id="stage-next-preview" aria-label="Afficher le service suivant : Service client">
           <span>OFFRE SUIVANTE</span><strong id="stage-next-name">Service client</strong><i aria-hidden="true">↗</i>
         </button>
+        <div id="tilted-grid-root" class="tilted-grid-root" aria-label="Animation décorative de photographies courbées"></div>
         <div class="cards" id="cards">
           <noscript><p>Offres : Sites internet, Service client, Avis clients, Appels et relances, Dossiers clients, Automatisation.</p></noscript>
         </div>
