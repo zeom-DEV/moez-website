@@ -73,13 +73,16 @@
   <p class="discover-prompt"><span class="discover-prompt__pulse" aria-hidden="true"></span><strong>6 offres en mouvement</strong><span>Choisissez une catégorie ou faites glisser les cartes</span></p>
   <div class="stage-controls" aria-label="Faire défiler les offres">
    <button id="stage-prev" type="button" aria-label="Afficher l'offre précédente"><span aria-hidden="true">←</span><small>Précédente</small></button>
-   <output id="stage-count" aria-live="polite">01 / 06</output>
+   <output id="stage-count" aria-live="off">01 / 06</output>
    <button id="stage-next" type="button" aria-label="Afficher l'offre suivante"><small>Suivante</small><span aria-hidden="true">→</span></button>
   </div>
  </div>
       <div id="collection-stage" class="collection-stage" role="region" aria-roledescription="carrousel" aria-label="Six cartes photographiques de mes services" tabindex="0">
         <div class="stage-backdrops" aria-hidden="true"><div class="stage-backdrop is-active" data-backdrop="0"><img src="./assets/orbit-photos/web-desktop.webp" alt="" width="1200" height="780" loading="eager"></div><div class="stage-backdrop" data-backdrop="1"><img src="./assets/orbit-photos/sav-desktop.webp" alt="" width="1200" height="780" loading="lazy"></div></div>
         <div class="stage-ambient" aria-hidden="true"><i></i><i></i></div>
+        <button type="button" class="stage-next-preview" id="stage-next-preview" aria-label="Afficher le service suivant : Service client">
+          <span>OFFRE SUIVANTE</span><strong id="stage-next-name">Service client</strong><i aria-hidden="true">↗</i>
+        </button>
         <div class="cards" id="cards">
           <noscript><p>Offres : Sites internet, Service client, Avis clients, Appels et relances, Dossiers clients, Automatisation.</p></noscript>
         </div>
