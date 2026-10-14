@@ -69,3 +69,16 @@ body[data-page="home"] .offer-detail__flow i{border-color:#aaa}
   body[data-page="home"] .mt-orbit__explore{transition:none!important;transform:none!important}
   body[data-page="home"] .orbit-hero__card--active .orbit-hero__card-image{transition:none!important}
 }
+
+/* Hold the notification back long enough for the inverted world to register.
+   JS adds .is-ready after 1.7s; reduced-motion sets it immediately. */
+#inversion-intro:not(.is-ready):not(.is-righted) .intro-dialog{
+  opacity:0!important;
+  pointer-events:none!important;
+  animation:none!important;
+  transform:translate3d(0,36px,0) scale(.97)!important;
+}
+#inversion-intro.is-ready .intro-dialog{opacity:1}
+/* The rotated scene is always visible during the pre-notification interval. */
+#inversion-intro:not(.is-ready):not(.is-righted) .intro-shade{opacity:.22!important}
+#inversion-intro .intro-world{filter:grayscale(1) contrast(1.05)}
