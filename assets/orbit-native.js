@@ -19,7 +19,7 @@
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fromHash = items.findIndex(item => location.hash === "#solution-" + item.id);
   let selected = fromHash >= 0 ? fromHash : 0;
-  let paused = reduced, dragging = false, activePointer = null;
+  let paused = reduced, dragging = false, activePointer = null, automaticSlide = false;
   let offset = selected, destination = selected, previousTime = 0,
     holdUntil = performance.now() + (matchMedia("(max-width: 650px)").matches ? 4400 : 0);
   let lastX = 0, dragOrigin = selected, dragStart = 0, dragTime = 0, pointerVelocity = 0;
@@ -161,6 +161,7 @@
   setTimeout(loadRemainingPhotos,8400);
 
   function choice(index, notify = false, resetHold = true) {
+    automaticSlide = false; // explicit navigation wins over the autoplay animation
     index = mod(index);
     const didChange = index !== selected;
     selected = index;
@@ -242,12 +243,13 @@
           // leave it fully centered and legible for several seconds.
           offset += diff*(1-Math.exp(-elapsed/(small?155:175)));
           if (small && Math.abs(destination-offset)<.005) offset=destination;
-          if(small){
+          if(small && automaticSlide){
             const focus=mod(Math.round(offset));
             if(focus!==selected){selected=focus;displaySelection();}
           }
         } else if (!paused && usable && now >= holdUntil) {
           if (small) {
+            automaticSlide=true;
             destination=Math.round(offset)+1;
             holdUntil=now+4900;
           } else {
@@ -321,7 +323,7 @@
   },{passive:true});
   function release(event) {
     if (!dragging || event.pointerId !== activePointer) return;
-    dragging = false; activePointer = null;
+    dragging = false; activePointer = null; automaticSlide = false;
     world.classList.remove("orbit-hero__world--dragging");
     if (world.hasPointerCapture(event.pointerId)) {
       try {world.releasePointerCapture(event.pointerId);} catch {}
@@ -361,6 +363,7 @@
   arrows[1].addEventListener("click",()=>choice(selected+1,true));
   mount.querySelector(".mt-orbit__explore").addEventListener("click",()=>explore());
   pause.addEventListener("click",()=>{
+    automaticSlide = false;
     paused=!paused;
     pause.setAttribute("aria-pressed",String(paused));
     pause.textContent=paused?"▷ Animer":"Ⅱ Pause";
