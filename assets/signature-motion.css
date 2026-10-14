@@ -300,3 +300,13 @@ body.is-film .hero-media img{animation-play-state:paused}
 @media(prefers-reduced-motion:reduce){
  .offer-card__head,.offer-card__foot{transition:none}
 }
+
+/* Edge-to-edge mobile screens: preserve readable touch targets behind notches. */
+@supports(padding-top:env(safe-area-inset-top)){
+ @media(max-width:680px){
+  .header{height:calc(69px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+  .header.is-floating{height:calc(64px + env(safe-area-inset-top));padding-top:env(safe-area-inset-top)}
+  .hero-copy{padding-bottom:max(90px,calc(12svh + env(safe-area-inset-bottom)))}
+  .intro{padding-top:max(13px,env(safe-area-inset-top));padding-bottom:max(13px,env(safe-area-inset-bottom))}
+ }
+}
