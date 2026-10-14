@@ -1,0 +1,48 @@
+/* React cylinder, only enabled after the real React mount succeeds. */
+.tilted-grid-root{
+  position:absolute;inset:0;z-index:5;width:100%;height:100%;
+  pointer-events:none;opacity:0;
+  transition:opacity .75s cubic-bezier(.2,.82,.17,1)
+}
+.collection-stage.has-tilted-grid .tilted-grid-root{opacity:1}
+.collection-stage.has-tilted-grid{
+  background:linear-gradient(145deg,#0e0e0e,#222 47%,#0d0d0d);
+  isolation:isolate;overflow:hidden;perspective:none;contain:layout paint
+}
+.collection-stage.has-tilted-grid .cards,
+.collection-stage.has-tilted-grid .stage-backdrops,
+.collection-stage.has-tilted-grid .stage-ambient,
+.collection-stage.has-tilted-grid .stage-timer,
+.collection-stage.has-tilted-grid .stage-next-preview{display:none!important}
+.collection-stage.has-tilted-grid::before{
+  position:absolute;content:"";inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(ellipse 75% 70% at 50% 50%,#ffffff0b,transparent 70%);
+}
+.collection-stage.has-tilted-grid::after{
+  display:block;content:"";position:absolute;inset:0;z-index:3;
+  pointer-events:none;background:linear-gradient(180deg,#0007,transparent 20%,transparent 76%,#000b);
+  filter:none
+}
+.tgh-live{background:#151515;height:100%;min-height:100%;isolation:isolate}
+.tgh-live img{display:block;filter:grayscale(1) contrast(1.13) brightness(.8);object-position:center}
+.tgh-live>div[aria-hidden]{z-index:1}
+.tgh-editorial-overlay{position:absolute;inset:0;z-index:6;pointer-events:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:clamp(22px,3.8vw,60px);color:#f2f2f2}
+.tgh-editorial-index{font:800 11px/1.4 Arial,sans-serif;letter-spacing:.22em}
+.tgh-editorial-line{position:absolute;inset:50% 0 auto;transform:translateY(-50%);
+  border-top:1px solid #fff2;z-index:-1}
+.tgh-editorial-instruction{align-self:flex-end;padding:10px 14px;
+  font:750 clamp(11px,1.1vw,14px)/1.3 Arial,sans-serif;letter-spacing:.035em;
+  text-align:right;background:#080808b5;border:1px solid #ffffff3b;max-width:320px}
+@media(max-width:680px){
+  .collection-stage.has-tilted-grid{height:clamp(340px,54svh,480px)}
+  .tgh-editorial-overlay{padding:21px 15px}
+  .tgh-editorial-index{font-size:9px;letter-spacing:.13em}
+  .tgh-editorial-instruction{font-size:10px;max-width:235px;padding:8px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .tilted-grid-root{transition:none}
+  .tgh-live>div[aria-hidden]{transition:none}
+  .tgh-live img{filter:grayscale(1) contrast(1.05)}
+}
