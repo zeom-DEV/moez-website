@@ -24,6 +24,11 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(premiumHome.announcement,'rgb(23, 26, 32)',size.name+': ink announcement');
 
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
+ assert.equal(await page.locator('.mt-cinema-choice').count(),0,size.name+': redundant beige promo bar is removed');
+ assert.equal(await page.locator('#kinetic-showcase').evaluate(el=>getComputedStyle(el).marginTop),'0px',
+   size.name+': carrousel starts directly after the header without blank beige band');
+
+
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
  // Signature first visit: flipped site and its real film are the main experience.
@@ -123,6 +128,54 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  await orbit.locator('.orbit-hero__card').first().waitFor({state:'visible',timeout:25000});
  assert.equal(await orbit.locator('.orbit-hero__card').count(),6,size.name+': six genuine photographic carousel cards');
  assert.equal(await orbit.locator('.mt-orbit__quicknav button').count(),6,size.name+': six direct choices');
+ // Mobile carousel: a single card is completely visible, with no second
+ // photographic panel cutting across its title or conversion button.
+ if(size.width<=650){
+   const pauseButton=orbit.locator('.mt-orbit__pause');
+   const alreadyPaused=await pauseButton.getAttribute('aria-pressed')==='true';
+   if(!alreadyPaused)await pauseButton.click();
+   await page.waitForTimeout(900);
+   const geometry=await page.evaluate(()=>{
+     const viewport=document.querySelector('.mt-orbit__viewport').getBoundingClientRect();
+     const card=document.querySelector('.orbit-hero__card--active').getBoundingClientRect();
+     const other=[...document.querySelectorAll('.orbit-hero__card')].filter(el=>!el.classList.contains('orbit-hero__card--active')&&Number(getComputedStyle(el).opacity)>.15).map(el=>{
+       const r=el.getBoundingClientRect();
+       return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};
+     });
+     return {width:innerWidth,viewport:{left:viewport.left,right:viewport.right},
+       card:{left:card.left,right:card.right,top:card.top,bottom:card.bottom},
+       other};
+   });
+   assert(geometry.card.left>=geometry.viewport.left+12 &&
+          geometry.card.right<=geometry.viewport.right-12,
+     size.name+': selected card is completely readable inside mobile gutters '+JSON.stringify(geometry));
+   assert(geometry.other.every(card=>card.right<=geometry.card.left+3 ||
+                                     card.left>=geometry.card.right-3),
+     size.name+': neighbours never overlap the selected photo '+JSON.stringify(geometry));
+   const selectedBefore=await orbit.locator('.orbit-hero__card--active').getAttribute('data-hero-card');
+   await orbit.locator('.mt-orbit__nav').last().click();
+   await page.waitForTimeout(900);
+   const newSelected=await orbit.locator('.orbit-hero__card--active').getAttribute('data-hero-card');
+   assert.notEqual(newSelected,selectedBefore,size.name+': next mobile card is selectable');
+   const newBounds=await orbit.locator('.orbit-hero__card--active').boundingBox();
+   assert(newBounds && newBounds.x>=12 && newBounds.x+newBounds.width<=size.width-12,
+     size.name+': selected next photo also fits without clipping '+JSON.stringify(newBounds));
+   await orbit.locator('.mt-orbit__nav').first().click();
+   await page.waitForTimeout(900);
+   await orbit.screenshot({path:'reports/mobile-focused-'+size.name+'.png'});
+   if(!alreadyPaused){
+     await pauseButton.click();
+     const autoBefore=await orbit.locator('.mt-orbit__current strong').textContent();
+     await page.waitForFunction(before=>
+       document.querySelector('.mt-orbit__current strong')?.textContent!==before,
+       autoBefore,{timeout:8000});
+     await page.waitForTimeout(900);
+     const autoRect=await orbit.locator('.orbit-hero__card--active').boundingBox();
+     assert(autoRect && autoRect.x>=12 && autoRect.x+autoRect.width<=size.width-12,
+       size.name+': autoplay advances to a whole readable card '+JSON.stringify(autoRect));
+   }
+ }
+
  if(size.name==='desktop'){
   const movingCard=orbit.locator('.orbit-hero__card').first();
   const before=await movingCard.evaluate(el=>el.style.transform);

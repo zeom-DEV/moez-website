@@ -19,8 +19,9 @@
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fromHash = items.findIndex(item => location.hash === "#solution-" + item.id);
   let selected = fromHash >= 0 ? fromHash : 0;
-  let paused = reduced, dragging = false, activePointer = null;
-  let offset = selected, destination = selected, previousTime = 0, holdUntil = performance.now();
+  let paused = reduced, dragging = false, activePointer = null, automaticSlide = false;
+  let offset = selected, destination = selected, previousTime = 0,
+    holdUntil = performance.now() + (matchMedia("(max-width: 650px)").matches ? 4400 : 0);
   let lastX = 0, dragOrigin = selected, dragStart = 0, dragTime = 0, pointerVelocity = 0;
   let dragDistance = 0, suppressClick = false, sceneVisible = true;
   let pointerX = 0, pointerY = 0, parallaxX = 0, parallaxY = 0;
@@ -91,8 +92,9 @@
   function size() {
     const rect = viewport.getBoundingClientRect();
     const w = Math.max(300,rect.width), h = Math.max(380,rect.height), small = w < 650;
-    dimensions = {width:w,height:h,cardWidth:clamp(small?w*.55:w*.285,205,385),
-      cardHeight:clamp(h*.52,small?245:300,small?360:460)};
+    dimensions = {width:w,height:h,
+      cardWidth:small?clamp(w-44,246,400):clamp(w*.285,205,385),
+      cardHeight:small?clamp(h*.50,275,410):clamp(h*.52,300,460)};
     world.style.perspective = (small ? 830 : 1450) + "px";
     cards.forEach(card => {
       card.style.width = dimensions.cardWidth + "px";
@@ -159,11 +161,12 @@
   setTimeout(loadRemainingPhotos,8400);
 
   function choice(index, notify = false, resetHold = true) {
+    automaticSlide = false; // explicit navigation wins over the autoplay animation
     index = mod(index);
     const didChange = index !== selected;
     selected = index;
     destination = index + 6*Math.round((offset-index)/6);
-    if (resetHold) holdUntil = performance.now() + 2100;
+    if (resetHold) holdUntil = performance.now() + (dimensions.width < 650 ? 4600 : 2100);
     if (didChange) displaySelection();
     if (notify) announce("mt:journey-select");
     wake();
@@ -181,18 +184,39 @@
     holdUntil = performance.now() + 2500;
   }
 
+  // The desktop orbit is a spatial ring. On phones its neighbouring cards
+  // used to overlap and clip the active card's title/action. Mobile is a
+  // *single-lane* cinematic slide: one entire card, clean gutters, no overlap.
   function physics() {
     const {width:w} = dimensions, small = w < 650;
-    const span = small ? Math.max(190,w*.48) : Math.min(w*.42,560);
-    const depth = small ? 250 : 375, drop = small ? 18 : 28;
     const px = clamp(parallaxX,-1,1), py = clamp(parallaxY,-1,1);
-    ring.style.transform = "translate3d(" + (px*(small?4:13)).toFixed(2) + "px," +
-      (py*(small?3:8)).toFixed(2) + "px,0) rotateX(" + (-py*(small?.5:2)).toFixed(2) + "deg)";
+    ring.style.transform = "translate3d(" + (px*(small?0:13)).toFixed(2) + "px," +
+      (py*(small?0:8)).toFixed(2) + "px,0) rotateX(" + (-py*(small?0:2)).toFixed(2) + "deg)";
     cards.forEach((card,i) => {
+      if (small) {
+        // Wrap each card to the shortest position on the six-slide track.
+        // Spacing equals the full viewport width, which is strictly greater
+        // than the card width: photographs can never cover one another.
+        const n=items.length;
+        const d=((i-offset+n*1.5)%n+n)%n-n*.5;
+        const abs=Math.abs(d);
+        const x=d*w;
+        card.style.transform="translate3d(calc(-50% + "+x.toFixed(2)+"px),"+
+          (abs*4).toFixed(2)+"px,"+(-abs*40).toFixed(2)+"px) "+
+          "rotateY("+(-d*6).toFixed(2)+"deg)";
+        card.style.opacity=String(clamp(1-Math.max(0,abs-.6)*1.25,0,1));
+        card.style.zIndex=String(200-Math.round(abs*30));
+        const readable=abs<.16;
+        card.classList.toggle("orbit-hero__card--readable",readable);
+        card.style.pointerEvents=readable&&i===selected?"auto":"none";
+        return;
+      }
+      // Original desktop orbit remains untouched.
       const a = (i-offset)*Math.PI*2/items.length;
       const sine = Math.sin(a), cosine = Math.cos(a);
+      const span = Math.min(w*.42,560), depth = 375, drop = 28;
       const x = sine*span, y = (1-cosine)*drop+sine*12, z = (cosine-1)*depth;
-      const rotateY = -sine*(small?38:48), rotateZ = sine*3.2;
+      const rotateY = -sine*48, rotateZ = sine*3.2;
       const scale = .67+.33*((cosine+1)/2);
       card.style.transform = "translate3d(calc(-50% + " + x.toFixed(2) + "px)," +
         y.toFixed(2) + "px," + z.toFixed(2) + "px) rotateY(" +
@@ -208,20 +232,34 @@
     const elapsed = previousTime ? clamp(now-previousTime,0,50) : 16;
     previousTime = now;
     const usable = !document.hidden && sceneVisible;
+    const small=dimensions.width<650;
     if (!dragging) {
       if (reduced && paused) {
         offset = destination;
       } else {
         const diff = destination-offset;
         if (Math.abs(diff) > .004) {
-          offset += diff*(1-Math.exp(-elapsed/175));
+          // On mobile, glide to the next photograph in under one second, then
+          // leave it fully centered and legible for several seconds.
+          offset += diff*(1-Math.exp(-elapsed/(small?155:175)));
+          if (small && Math.abs(destination-offset)<.005) offset=destination;
+          if(small && automaticSlide){
+            const focus=mod(Math.round(offset));
+            if(focus!==selected){selected=focus;displaySelection();}
+          }
         } else if (!paused && usable && now >= holdUntil) {
-          offset += elapsed/(dimensions.width < 650 ? 5900 : 3400);
-          destination = offset;
-          const focus = mod(Math.round(offset));
-          if (focus !== selected) {
-            selected = focus;
-            displaySelection();
+          if (small) {
+            automaticSlide=true;
+            destination=Math.round(offset)+1;
+            holdUntil=now+4900;
+          } else {
+            offset += elapsed/3400;
+            destination = offset;
+            const focus = mod(Math.round(offset));
+            if (focus !== selected) {
+              selected = focus;
+              displaySelection();
+            }
           }
         }
       }
@@ -229,8 +267,6 @@
       parallaxY *= .96;
     }
     if (usable || dragging) physics();
-    // Auto-play is continuous only while its scene is actually on screen.
-    // Manual/reduced-motion mode sleeps as soon as the transition settles.
     if ((!reduced || !paused) && (!paused || dragging ||
         Math.abs(destination-offset) > .004 ||
         Math.abs(parallaxX) > .02 || Math.abs(parallaxY) > .02)) wake();
@@ -276,7 +312,7 @@
     if (dragDistance > 9 && !world.hasPointerCapture(event.pointerId)) {
       try {world.setPointerCapture(event.pointerId);} catch {}
     }
-    const unit = Math.max(120,dimensions.width*(dimensions.width<650?.48:.27));
+    const unit = dimensions.width < 650 ? dimensions.width : Math.max(120,dimensions.width*.27);
     offset = dragOrigin-deltaX/unit;
     const now=performance.now(),dt=Math.max(16,now-dragTime);
     pointerVelocity = clamp(-(event.clientX-lastX)*1000/(dt*unit),-2.7,2.7);
@@ -287,7 +323,7 @@
   },{passive:true});
   function release(event) {
     if (!dragging || event.pointerId !== activePointer) return;
-    dragging = false; activePointer = null;
+    dragging = false; activePointer = null; automaticSlide = false;
     world.classList.remove("orbit-hero__world--dragging");
     if (world.hasPointerCapture(event.pointerId)) {
       try {world.releasePointerCapture(event.pointerId);} catch {}
@@ -300,10 +336,10 @@
       destination=next;
       displaySelection();
       announce("mt:journey-select");
-      holdUntil=performance.now()+2100;
+      holdUntil=performance.now()+(dimensions.width<650?4600:2100);
     } else {
       destination = Math.round(offset);
-      holdUntil = performance.now()+1900;
+      holdUntil = performance.now()+(dimensions.width<650?4500:1900);
     }
   }
   world.addEventListener("pointerup",release);
@@ -327,6 +363,7 @@
   arrows[1].addEventListener("click",()=>choice(selected+1,true));
   mount.querySelector(".mt-orbit__explore").addEventListener("click",()=>explore());
   pause.addEventListener("click",()=>{
+    automaticSlide = false;
     paused=!paused;
     pause.setAttribute("aria-pressed",String(paused));
     pause.textContent=paused?"▷ Animer":"Ⅱ Pause";
