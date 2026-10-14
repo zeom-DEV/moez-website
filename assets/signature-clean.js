@@ -32,6 +32,7 @@
   const timerFill=$('#stage-timer-fill'),stageLede=$('#stage-lede'),
     stageSelectedNumber=$('#stage-selected-number'),stageExplore=$('#stage-explore');
   const serviceTabs=$('.service-tab'),backdrops=$('.stage-backdrop'),
+        nextPreview=$('#stage-next-preview'),nextPreviewName=$('#stage-next-name'),
         autoplayInterval=4900;
   let activeBackdrop=0,backdropVersion=0,lastBackdropOffer=0;
   const mod=n=>(n+services.length)%services.length;
@@ -89,6 +90,9 @@
     stageLede.textContent=services[motionState.active].result;
     stageSelectedNumber.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
     stageExplore.setAttribute('aria-label','Découvrir l’offre '+services[motionState.active].name);
+    const nextName=services[mod(motionState.active+1)].name;
+    if(nextPreviewName)nextPreviewName.textContent=nextName;
+    if(nextPreview)nextPreview.setAttribute('aria-label','Afficher le service suivant : '+nextName);
     if(fromUser)motionState.userInteracted=true;
     schedule();
   }
@@ -140,7 +144,7 @@
   serviceTabs.forEach((tab,i)=>{
     tab.addEventListener('click',()=>{
       showCard(i,true);
-      stage.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'nearest'});
+      // Keep the six category buttons visible after a direct selection.
     });
   });
   allCards.forEach((card,i)=>{
@@ -154,6 +158,7 @@
   stageExplore.addEventListener('click',()=>choose(motionState.active,true));
   $('#stage-prev').addEventListener('click',()=>showCard(motionState.active-1,true));
   $('#stage-next').addEventListener('click',()=>showCard(motionState.active+1,true));
+  nextPreview?.addEventListener('click',()=>showCard(motionState.active+1,true));
   stage.addEventListener('pointerdown',e=>{
     if(e.button!==0||e.target.closest('.stage-controls'))return;
     motionState.touchStart={id:e.pointerId,x:e.clientX,y:e.clientY};
