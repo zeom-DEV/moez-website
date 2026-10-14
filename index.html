@@ -16,7 +16,8 @@
 <link rel="preload" href="./assets/moez-portrait-900.webp" as="image" fetchpriority="high">
 <link rel="stylesheet" href="./assets/signature-clean.css?v=20261014-1">
 <link rel="stylesheet" href="./assets/signature-motion.css?v=20261014-b">
-<script src="./assets/signature-clean.js?v=20261014-b" defer></script>
+<link rel="stylesheet" href="./assets/signature-discovery.css?v=20261015-a">
+<script src="./assets/signature-clean.js?v=20261015-a" defer></script>
 <style>html{background:#0b0b0b}body{margin:0}.site{background:#111}body.is-intro .site{transform:rotate(180deg) scale(.96);position:fixed;inset:0;height:100dvh;overflow:hidden}</style>
 <noscript><style>body.is-intro{overflow:auto!important}body.is-intro .site{position:relative!important;transform:none!important;height:auto!important;overflow:visible!important}.intro{display:none!important}.detail{display:block!important}</style></noscript>
 </head>
@@ -58,18 +59,32 @@
         <div><span class="section-kicker">01 / 06 — Des expertises qui bougent</span>
           <h2 id="solutions-heading" tabindex="-1">Choisissez<br>votre élan.</h2>
         </div>
-        <p>Six solutions concrètes. Faites glisser les cartes ou utilisez les flèches pour parcourir les offres. Touchez une carte pour découvrir les détails.</p>
+        <p>Six expertises à explorer librement. Sélectionnez directement un service, ou laissez défiler les cartes pour découvrir les autres.</p>
       </div>
+<nav class="service-directory" id="service-directory" aria-label="Choisir parmi mes six services">
+ <button class="service-tab is-current" type="button" data-service-target="web" data-index="0" aria-pressed="true"><span class="service-tab__number">01</span><span class="service-tab__name">Sites internet</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ <button class="service-tab" type="button" data-service-target="sav" data-index="1" aria-pressed="false"><span class="service-tab__number">02</span><span class="service-tab__name">Service client</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ <button class="service-tab" type="button" data-service-target="avis" data-index="2" aria-pressed="false"><span class="service-tab__number">03</span><span class="service-tab__name">Avis clients</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ <button class="service-tab" type="button" data-service-target="prospects" data-index="3" aria-pressed="false"><span class="service-tab__number">04</span><span class="service-tab__name">Appels et relances</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ <button class="service-tab" type="button" data-service-target="crm" data-index="4" aria-pressed="false"><span class="service-tab__number">05</span><span class="service-tab__name">Dossiers clients</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ <button class="service-tab" type="button" data-service-target="automation" data-index="5" aria-pressed="false"><span class="service-tab__number">06</span><span class="service-tab__name">Automatisation</span><span class="service-tab__track" aria-hidden="true"><span></span></span></button>
+ </nav>
+ <div class="discover-toolbar">
+  <p class="discover-prompt"><span class="discover-prompt__pulse" aria-hidden="true"></span><strong>6 offres en mouvement</strong><span>Choisissez une catégorie ou faites glisser les cartes</span></p>
+  <div class="stage-controls" aria-label="Faire défiler les offres">
+   <button id="stage-prev" type="button" aria-label="Afficher l'offre précédente"><span aria-hidden="true">←</span><small>Précédente</small></button>
+   <output id="stage-count" aria-live="polite">01 / 06</output>
+   <button id="stage-next" type="button" aria-label="Afficher l'offre suivante"><small>Suivante</small><span aria-hidden="true">→</span></button>
+  </div>
+ </div>
       <div id="collection-stage" class="collection-stage" role="region" aria-roledescription="carrousel" aria-label="Six cartes photographiques de mes services" tabindex="0">
+        <div class="stage-backdrops" aria-hidden="true"><div class="stage-backdrop is-active" data-backdrop="0"><img src="./assets/orbit-photos/web-desktop.webp" alt="" width="1200" height="780" loading="eager"></div><div class="stage-backdrop" data-backdrop="1"><img src="./assets/orbit-photos/sav-desktop.webp" alt="" width="1200" height="780" loading="lazy"></div></div>
+        <div class="stage-ambient" aria-hidden="true"><i></i><i></i></div>
         <div class="cards" id="cards">
           <noscript><p>Offres : Sites internet, Service client, Avis clients, Appels et relances, Dossiers clients, Automatisation.</p></noscript>
         </div>
         <div class="stage-timer" aria-hidden="true"><span id="stage-timer-fill"></span></div>
-        <div class="stage-controls" aria-label="Navigation des offres">
-          <button id="stage-prev" type="button" aria-label="Offre précédente">←</button>
-          <output id="stage-count" aria-live="polite">01 / 06</output>
-          <button id="stage-next" type="button" aria-label="Offre suivante">→</button>
-        </div>
+
       </div>
       <div class="collection-status">
         <div class="collection-selection"><span class="collection-selection__eyebrow">OFFRE SÉLECTIONNÉE <em id="stage-selected-number">01 / 06</em></span>
