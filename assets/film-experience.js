@@ -22,7 +22,7 @@ const setSound=()=>{sound.textContent=video.muted?'Activer le son ♫':'Couper l
 function close(toDiagnosis=false){
  if(!open)return;
  clearWatch();observer?.disconnect();video.pause();open=false;
- node.classList.remove('is-active');node.setAttribute('aria-hidden','true');
+ node.classList.remove('is-active','is-awaiting-flip');node.setAttribute('aria-hidden','true');
  document.body.classList.remove('moez-film-open');
  background.forEach(([element,wasInert])=>{element.inert=wasInert;});background=[];
  end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');busy(false);
@@ -59,6 +59,21 @@ function play(fromIntro){
  end.classList.remove('is-visible');end.setAttribute('aria-hidden','true');
  progress.style.width='0%';
  node.classList.add('is-active');node.setAttribute('aria-hidden','false');
+ // The film can preload/play in the click gesture, but remains visually hidden
+ // while the ACTUAL inverted site rotates into place. Handoff is seamless.
+ if(fromIntro && intro && !intro.classList.contains('is-hidden')){
+   node.classList.add('is-awaiting-flip');
+   observer?.disconnect();
+   observer=new MutationObserver(()=>{
+     if(!intro.classList.contains('is-hidden'))return;
+     observer?.disconnect();
+     node.classList.remove('is-awaiting-flip');
+     if(open && !video.paused){try{video.currentTime=0;}catch(e){}}
+   });
+   observer.observe(intro,{attributes:true,attributeFilter:['class']});
+   // A stalled CSS transition must never trap the visitor in an invisible film.
+   setTimeout(()=>{if(open)node.classList.remove('is-awaiting-flip');},2700);
+ }else node.classList.remove('is-awaiting-flip');
  document.body.classList.add('moez-film-open');
  background=[...document.body.children].filter(el=>el!==node&& !['SCRIPT','STYLE'].includes(el.tagName)).map(el=>[el,el.inert]);
  background.forEach(([el])=>{el.inert=true;});
@@ -86,17 +101,7 @@ trigger.addEventListener('click', () => play(true));
 document.querySelectorAll('[data-replay-film]').forEach(b => b.addEventListener('click', () => play(false)));
 video.addEventListener('playing',()=>{
  started=true;clearWatch();busy(false);
- if(!replayed&&intro&&!intro.classList.contains('is-hidden')){
-   observer?.disconnect();
-   observer=new MutationObserver(()=>{
-     if(intro.classList.contains('is-hidden')){
-       observer.disconnect();
-       if(open&&!video.paused){try{video.currentTime=0;}catch(e){}}
-     }
-   });
-   observer.observe(intro,{attributes:true,attributeFilter:['class']});
-   setTimeout(()=>observer?.disconnect(),5000);
- }
+ // Page-flip handoff is managed from play(): it also handles slow media load.
 });
 video.addEventListener('timeupdate',()=>{
  const ratio=video.duration>0?Math.min(100,video.currentTime/video.duration*100):0;
