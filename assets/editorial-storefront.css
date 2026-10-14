@@ -72,9 +72,9 @@ body[data-page=home] .mt-editorial__cta:focus-visible,body[data-page=home] .mt-e
  .mt-editorial__header strong{font-size:24px}
  .mt-editorial__header nav a:nth-child(2){display:none}
  .mt-editorial__header nav{font-size:11px}
- .mt-editorial__stage{height:min(790px,calc(100dvh - 95px));min-height:620px;max-height:840px}
+ .mt-editorial__stage{height:clamp(780px,112dvh,980px);min-height:780px;max-height:980px}
  .mt-editorial__slide{display:flex;flex-direction:column}
- .mt-editorial__photo{position:relative;flex:0 0 50%;min-height:0;order:0}
+ .mt-editorial__photo{position:relative;flex:0 0 43%;min-height:0;order:0}
  .mt-editorial__photo img{object-position:center 46%}
  .mt-editorial__photo figcaption{bottom:17px;left:22px;font-size:9px}
  .mt-editorial__copy{order:1;flex:1;justify-content:flex-start;padding:24px 23px 85px;background:#f6f5f1}
@@ -95,7 +95,7 @@ body[data-page=home] .mt-editorial__cta:focus-visible,body[data-page=home] .mt-e
  .mt-editorial__footer{padding:0 16px 27px}
 }
 @media(max-width:350px){
- .mt-editorial__stage{min-height:635px}
+ .mt-editorial__stage{min-height:780px}
  .mt-editorial__copy h2{font-size:33px}
  .mt-editorial__tile__body strong{font-size:14px}
 }
