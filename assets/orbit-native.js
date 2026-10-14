@@ -19,7 +19,7 @@
   const escape = value => String(value).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const fromHash = items.findIndex(item => location.hash === "#solution-" + item.id);
   let selected = fromHash >= 0 ? fromHash : 0;
-  let paused = false, dragging = false, activePointer = null;
+  let paused = reduced, dragging = false, activePointer = null;
   let offset = selected, destination = selected, previousTime = 0, holdUntil = performance.now();
   let lastX = 0, dragOrigin = selected, dragStart = 0, dragTime = 0, pointerVelocity = 0;
   let dragDistance = 0, suppressClick = false, sceneVisible = true;
@@ -56,7 +56,7 @@
       "</section>" +
     "</div>" +
     "<div class='mt-orbit__actionbar'><div class='mt-orbit__current' aria-live='polite'><small>OFFRE 01 / 06</small><strong>Sites internet</strong></div>" +
-      "<div class='mt-orbit__actions'><button type='button' class='mt-orbit__nav' aria-label='Offre précédente'>←</button><button type='button' class='mt-orbit__nav' aria-label='Offre suivante'>→</button><button type='button' class='mt-orbit__pause' aria-pressed='false'>Ⅱ Pause</button></div>" +
+      "<div class='mt-orbit__actions'><button type='button' class='mt-orbit__nav' aria-label='Offre précédente'>←</button><button type='button' class='mt-orbit__nav' aria-label='Offre suivante'>→</button><button type='button' class='mt-orbit__pause' aria-pressed='" + reduced + "'>" + (reduced ? "▷ Animer" : "Ⅱ Pause") + "</button></div>" +
       "<button type='button' class='mt-orbit__explore' data-orbit-explore>Voir ce que je peux faire pour vous <span aria-hidden='true'>↗</span></button></div>" +
     "<nav class='mt-orbit__quicknav' aria-label='Accéder directement à une des six offres'>" +
       items.map((item,i) => "<button type='button' aria-pressed='" + (i === selected) + "'><span>" +
@@ -209,7 +209,7 @@
     previousTime = now;
     const usable = !document.hidden && sceneVisible;
     if (!dragging) {
-      if (reduced) {
+      if (reduced && paused) {
         offset = destination;
       } else {
         const diff = destination-offset;
@@ -231,7 +231,7 @@
     if (usable || dragging) physics();
     // Auto-play is continuous only while its scene is actually on screen.
     // Manual/reduced-motion mode sleeps as soon as the transition settles.
-    if (!reduced && (!paused || dragging ||
+    if ((!reduced || !paused) && (!paused || dragging ||
         Math.abs(destination-offset) > .004 ||
         Math.abs(parallaxX) > .02 || Math.abs(parallaxY) > .02)) wake();
   }
@@ -334,7 +334,7 @@
     const focus=mod(destination);
     if(focus!==selected){selected=focus;displaySelection();}
     holdUntil=performance.now()+1700;
-    legend.textContent=paused || reduced?"MODE MANUEL":"MOUVEMENT CONTINU";
+    legend.textContent=paused?"MODE MANUEL":"MOUVEMENT CONTINU";
     wake();
   });
   stage.addEventListener("keydown",event=>{
