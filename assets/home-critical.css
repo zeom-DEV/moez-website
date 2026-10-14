@@ -604,20 +604,95 @@ body[data-page=home] .offers-five{background:var(--mt-ivory)!important;color:var
 body.mt-direct-entry{overflow-x:hidden;overflow-y:auto}
 body.mt-direct-entry #inversion-intro{display:none!important}
 body.mt-direct-entry #site-shell{position:relative;inset:auto;transform:none;filter:none;pointer-events:auto}
-.mt-cinema-choice{display:flex;align-items:center;justify-content:space-between;gap:18px 28px;
- width:min(calc(100% - 64px),1280px);max-width:100%;margin:14px auto 4px;padding:10px 0 4px;color:#5c554c}
-.mt-cinema-choice>div{display:flex;flex-direction:column;gap:3px;min-width:0}
-.mt-cinema-choice strong{font-size:13px;letter-spacing:.02em;font-weight:800;color:#171a20}
-.mt-cinema-choice span{font-size:12px;line-height:1.5}
-.mt-cinema-choice button{appearance:none;flex:none;border:1px solid #cbbda8;border-radius:5px;
- min-height:44px;padding:10px 14px;color:#805032;background:#fffdf9;
- font-size:12px;line-height:1.4;font-weight:750;cursor:pointer}
-.mt-cinema-choice button:hover{border-color:#805032;background:#f0e7dc}
-.mt-cinema-choice button:focus-visible{outline:2px solid #805032;outline-offset:3px}
-@media(max-width:800px){
- .mt-cinema-choice{width:calc(100% - 36px);flex-wrap:wrap;gap:6px 18px}
- .mt-cinema-choice button{padding:9px 0;background:transparent;border:0;
-   min-height:44px;text-align:left;text-decoration:underline;text-underline-offset:4px}
- .mt-cinema-choice span{overflow-wrap:break-word}
+
+
+/* Mobile cinema: one complete photograph at a time, never a stack of
+   intersecting 3D cards. Desktop keeps the original physics. */
+@media(max-width:650px){
+  .mt-orbit-showcase:not(.mt-orbit-ready) .mt-orbit__viewport{
+    min-height:clamp(600px,78svh,740px);
+  }
+  .mt-orbit__viewport{
+    height:clamp(600px,78svh,740px);
+    overflow:hidden;
+  }
+  #moez-orbit-root{
+    min-height:calc(clamp(600px,78svh,740px) + 330px);
+  }
+  body.intro-active #kinetic-showcase{
+    height:calc(clamp(600px,78svh,740px) + 380px);
+  }
+  .mt-orbit__viewport .orbit-hero__narrative{
+    top:67px;
+    left:21px;
+    right:21px;
+  }
+  .mt-orbit__viewport .orbit-hero__narrative h2{
+    font-size:clamp(34px,8.6vw,48px);
+    line-height:1.07;
+    letter-spacing:-.065em;
+    max-width:13ch;
+    margin:15px 0 10px;
+  }
+  .mt-orbit__viewport .orbit-hero__narrative p{
+    font-size:10px;
+    line-height:1.5;
+    letter-spacing:.095em;
+  }
+  .mt-orbit__viewport .orbit-hero__world{
+    top:40%;
+    perspective-origin:50% 45%;
+  }
+  .mt-orbit__viewport .orbit-hero__card{
+    border-radius:15px;
+    box-shadow:0 24px 42px #000b,0 0 0 1px #ffffff25;
+    transform-origin:center center;
+  }
+  .mt-orbit__viewport .orbit-hero__card--active{
+    border-color:#f2d7ad;
+    box-shadow:0 24px 50px #000d,0 0 0 1px #f2d7ad80;
+  }
+  .mt-orbit__viewport .orbit-hero__card-top{
+    top:17px;
+    left:19px;
+    right:19px;
+    transition:opacity .18s ease;
+  }
+  .mt-orbit__viewport .orbit-hero__card-footer{
+    bottom:20px;
+    left:19px;
+    right:19px;
+    transition:opacity .18s ease;
+  }
+  .mt-orbit__viewport .orbit-hero__card-footer>span{
+    font-size:9px;
+    letter-spacing:.12em;
+    line-height:1.5;
+  }
+  .mt-orbit__viewport .orbit-hero__card-footer strong{
+    font-size:clamp(24px,6.6vw,30px);
+    line-height:1.13;
+    overflow-wrap:normal;
+  }
+  .mt-orbit__viewport .orbit-hero__card-line{
+    margin-top:17px;
+    padding-top:13px;
+  }
+  .mt-orbit__viewport .orbit-hero__card-line b{
+    font-size:10px;
+    letter-spacing:.13em;
+  }
+  /* Incoming and outgoing photos travel fully outside the active photo.
+     Their text disappears during travel instead of being cut at the edges. */
+  .mt-orbit__viewport .orbit-hero__card:not(.orbit-hero__card--readable)
+    .orbit-hero__card-footer,
+  .mt-orbit__viewport .orbit-hero__card:not(.orbit-hero__card--readable)
+    .orbit-hero__card-top{
+    opacity:0;
+  }
+  .mt-orbit__viewport .orbit-hero__floor{display:none}
 }
-@media(max-width:400px){.mt-cinema-choice{width:calc(100% - 28px)}}
+@media(prefers-reduced-motion:reduce){
+  .mt-orbit__viewport .orbit-hero__card-footer,
+  .mt-orbit__viewport .orbit-hero__card-top{transition:none}
+}
