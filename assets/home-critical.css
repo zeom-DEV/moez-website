@@ -702,3 +702,15 @@ body[data-page=home] .offers-five > .mt-orbit-showcase{
   .mt-orbit__viewport .orbit-hero__card-footer,
   .mt-orbit__viewport .orbit-hero__card-top{transition:none}
 }
+
+
+/* The first-visit inverted scene has its own full-bleed photographic film.
+   The carousel underneath is not visible until the site is righted.
+   Exclude its asynchronous image/layout work from the intro viewport,
+   preventing layout shifts during the 1.7s cinematic notification. */
+@media(max-width:650px){
+  body.intro-active #kinetic-showcase{
+    visibility:hidden;
+    pointer-events:none;
+  }
+}
