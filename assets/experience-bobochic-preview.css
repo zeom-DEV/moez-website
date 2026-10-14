@@ -20,7 +20,7 @@ body[data-page="home"] .monogram i,body[data-page="home"] .footer-big span{color
 #inversion-intro .intro-flip{
   position:relative;isolation:isolate;background:#111!important;color:#fff!important;
   border:1px solid #f0f0ef!important;min-height:78px;
-  box-shadow:0 10px 34px #0005!important;
+  box-shadow:0 10px 34px #0005;
   transition:background .25s ease,transform .35s cubic-bezier(.22,1,.36,1),box-shadow .3s ease!important;
 }
 #inversion-intro .intro-flip::before{border:1px solid #f0f0ef!important;opacity:.55!important}
