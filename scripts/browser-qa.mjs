@@ -310,6 +310,23 @@ await shortcut.keyboard.press('Escape');
 await shortcut.locator('.moez-film.is-active').waitFor({state:'hidden'});
 assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'film closes without restoring a forced intro');
 assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','reduced-motion visitor can reach flagship');
+const manualOrbit=shortcut.locator('.mt-orbit-showcase .orbit-hero__card').first();
+await manualOrbit.waitFor({state:'visible',timeout:20000});
+const manualToggle=shortcut.locator('.mt-orbit__pause');
+assert.equal(await manualToggle.getAttribute('aria-pressed'),'true',
+  'reduced-motion visitor starts in accessible manual mode');
+assert.match(await manualToggle.textContent(),/Animer/,
+  'manual mode must offer an explicit opt-in to movement');
+await manualToggle.click();
+assert.equal(await manualToggle.getAttribute('aria-pressed'),'false',
+  'reduced-motion user may explicitly activate the carousel');
+await shortcut.waitForTimeout(2200);
+const manualBefore=await manualOrbit.evaluate(el=>el.style.transform);
+await shortcut.waitForTimeout(550);
+const manualAfter=await manualOrbit.evaluate(el=>el.style.transform);
+assert.notEqual(manualBefore,manualAfter,
+  'desktop/reduced-motion: clicking Animer makes the 3D cards rotate');
+
 await shortcutContext.close();
 console.log('PASS no-JS, direct discovery, optional cinema and keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
