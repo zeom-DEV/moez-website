@@ -31,6 +31,19 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('#site-shell').evaluate(el=>el.inert),false,size.name+': page is immediately operable');
  assert.equal(await page.locator('.mt-cinema-choice button').isVisible(),true,size.name+': optional film discoverable');
  assert.equal(new URL(page.url()).hash,'',size.name+': landing has no forced redirect');
+ // Regression: opening the homepage directly on a real desktop must start
+ // the photographic orbit even though the legacy cinema remains in the DOM.
+ if(size.name==='desktop'){
+   const directOrbit=page.locator('.mt-orbit-showcase .orbit-hero__card').first();
+   await directOrbit.waitFor({state:'visible',timeout:20000});
+   const initialTransform=await directOrbit.evaluate(el=>el.style.transform);
+   await page.waitForTimeout(700);
+   const nextTransform=await directOrbit.evaluate(el=>el.style.transform);
+   assert.notEqual(initialTransform,nextTransform,
+     'desktop fresh landing: orbit must rotate autonomously without clicking or changing the URL');
+   assert.equal(await page.locator('.mt-orbit__pause').getAttribute('aria-pressed'),'false',
+     'desktop fresh landing: autoplay is enabled by default');
+ }
  assert.equal(await page.locator('.mt-case-study').count(),1,size.name+': one verifiable personal project');
  assert.equal(await page.locator('.mt-case-disclosure').count(),1,size.name+': no invented customer proof');
  assert(await page.locator('.mt-case-actions a[href*="github.com/zeom-DEV/moez-website"]').count()===1,size.name+': actual code link');
