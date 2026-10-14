@@ -52,6 +52,7 @@
       card.inert=!accessible;
       card.tabIndex=accessible?0:-1;
       card.setAttribute('aria-hidden',String(!accessible));
+      card.setAttribute('aria-label', (delta===0?'Explorer l’offre ':'Afficher l’offre ')+services[i].name);
       if(accessible){const img=$('img',card); if(img)img.loading='eager';}
     });
     count.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
@@ -189,6 +190,12 @@
 
   // Minimal optical depth in the hero; rAF only while pointer is moving.
   const hero=$('.hero');
+  if(hero&&'IntersectionObserver' in window){
+    const heroObserver=new IntersectionObserver(entries=>{
+      hero.classList.toggle('is-in-view',entries.some(e=>e.isIntersecting));
+    },{threshold:.08});
+    heroObserver.observe(hero);
+  }else hero?.classList.add('is-in-view');
   if(hero&&precision.matches&&!reduced.matches){
     let targetX=0,targetY=0,x=0,y=0,raf=0;
     const tick=()=>{
