@@ -18,6 +18,8 @@
  }
  function start(){
    if(started)return;
+   // Never compete for bandwidth while the fullscreen film is playing.
+   if(document.body.classList.contains('moez-film-open')){waitingForIntro=true;return;}
    started=true;
    const firstImage=section.querySelector('[data-orbit-poster-image]');
    if(firstImage&&!firstImage.getAttribute('src')){const source=firstImage.dataset.src;firstImage.src=matchMedia('(max-width: 650px)').matches?source.replace('web-desktop.webp','web-mobile.webp'):source;}
@@ -36,6 +38,7 @@
  function relevant(){
    // The new direct-entry homepage keeps the old cinema markup hidden rather than
    // setting .is-hidden. Only wait for a cinema that actually blocks the visitor.
+   if(document.body.classList.contains('moez-film-open')){waitingForIntro=true;return;}
    const introBlocks = intro &&
      !intro.classList.contains('is-hidden') &&
      !document.body.classList.contains('mt-direct-entry') &&
@@ -53,11 +56,12 @@
    }
    start();
  }
- document.getElementById('intro-flip')?.addEventListener('click',start,{once:true});
+ document.getElementById('intro-flip')?.addEventListener('click',()=>{waitingForIntro=true;},{once:true});
+ window.addEventListener('mt:film-discover',()=>relevant());
  document.querySelector('.intro-direct')?.addEventListener('click',start,{once:true});
  if(intro){
    const observe=new MutationObserver(()=>{
-     if(waitingForIntro && intro.classList.contains('is-hidden')){observe.disconnect();start();}
+     if(waitingForIntro && intro.classList.contains('is-hidden')&&!document.body.classList.contains('moez-film-open')){observe.disconnect();relevant();}
    });
    observe.observe(intro,{attributes:true,attributeFilter:['class']});
  }
