@@ -281,7 +281,7 @@
     if(!scrollRaf)scrollRaf=requestAnimationFrame(updateHeader);
   },{passive:true});
   if('IntersectionObserver' in window&&!reduced.matches){
-    const motionElements=$('.method-intro,.method-step,.section-head,.contact-inner');
+    const motionElements=$$('.method-intro,.method-step,.section-head,.contact-inner');
     motionElements.forEach(el=>el.classList.add('motion-reveal'));
     document.documentElement.classList.add('has-motion');
     const ioMotion=new IntersectionObserver(entries=>{
