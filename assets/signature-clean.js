@@ -31,7 +31,28 @@
   const allCards=$$('.offer-card',cards);
   const timerFill=$('#stage-timer-fill'),stageLede=$('#stage-lede'),
     stageSelectedNumber=$('#stage-selected-number'),stageExplore=$('#stage-explore');
+  const serviceTabs=$('.service-tab'),backdrops=$('.stage-backdrop'),
+        autoplayInterval=4900;
+  let activeBackdrop=0,backdropVersion=0,lastBackdropOffer=0;
   const mod=n=>(n+services.length)%services.length;
+  function swapBackdrop(index){
+    if(!backdrops.length||index===lastBackdropOffer)return;
+    const version=++backdropVersion;
+    const nextIndex=1-activeBackdrop;
+    const next=backdrops[nextIndex],image=$('img',next);
+    const source='./assets/orbit-photos/'+services[index].id+'-desktop.webp';
+    lastBackdropOffer=index;
+    image.src=source;
+    const reveal=()=>{
+      if(version!==backdropVersion)return;
+      next.classList.add('is-active');
+      backdrops[activeBackdrop].classList.remove('is-active');
+      activeBackdrop=nextIndex;
+    };
+    if(image.decode)image.decode().catch(()=>{}).then(reveal);
+    else if(image.complete)requestAnimationFrame(reveal);
+    else image.addEventListener('load',reveal,{once:true});
+  }
   let previousCard=-1,usingKeyboard=false,tiltRaf=0,tiltCard=null;
   document.addEventListener('keydown',e=>{if(e.key==='Tab'||e.key==='ArrowLeft'||e.key==='ArrowRight')usingKeyboard=true;});
   document.addEventListener('pointerdown',()=>{usingKeyboard=false;},{passive:true});
@@ -57,6 +78,14 @@
     });
     count.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
     $('#stage-current').textContent=services[motionState.active].name.toUpperCase();
+    swapBackdrop(motionState.active);
+    serviceTabs.forEach((button,i)=>{
+      const selected=i===motionState.active;
+      button.classList.toggle('is-current',selected);
+      button.setAttribute('aria-pressed',String(selected));
+      const line=$('.service-tab__track span',button);
+      if(line){line.style.animation='none';line.style.transform='scaleX(0)';}
+    });
     stageLede.textContent=services[motionState.active].result;
     stageSelectedNumber.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
     stageExplore.setAttribute('aria-label','Découvrir l’offre '+services[motionState.active].name);
@@ -94,13 +123,26 @@
     clearTimeout(motionState.timer);motionState.timer=null;
     if(!timerFill)return;
     timerFill.style.animation='none';
+    const selectedTab=serviceTabs[motionState.active];
+    const tabFill=selectedTab?$('.service-tab__track span',selectedTab):null;
+    if(tabFill)tabFill.style.animation='none';
     if(autoBlocked()){timerFill.style.transform='scaleX(0)';return;}
-    // The line communicates exactly when the carousel will change.
+    // Both the service tile and the stage indicate time to the next transition.
     void timerFill.offsetWidth;
     timerFill.style.transform='';
-    timerFill.style.animation='premium-progress 6500ms linear forwards';
-    motionState.timer=setTimeout(()=>showCard(motionState.active+1),6500);
+    timerFill.style.animation='premium-progress '+autoplayInterval+'ms linear forwards';
+    if(tabFill){
+      tabFill.style.transform='';
+      tabFill.style.animation='premium-progress '+autoplayInterval+'ms linear forwards';
+    }
+    motionState.timer=setTimeout(()=>showCard(motionState.active+1),autoplayInterval);
   }
+  serviceTabs.forEach((tab,i)=>{
+    tab.addEventListener('click',()=>{
+      showCard(i,true);
+      stage.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'nearest'});
+    });
+  });
   allCards.forEach((card,i)=>{
     card.addEventListener('click',()=>{
       if(motionState.swiped)return;
