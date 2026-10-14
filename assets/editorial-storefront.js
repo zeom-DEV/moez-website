@@ -16,7 +16,7 @@
   if (!stage || slides.length !== 6 || progress.length !== 6 || !counter || !backwards || !forwards) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let current = Math.max(0,slides.findIndex(slide=>slide.dataset.active==='true'));
-  let viewable = false, pointer = null, timer = 0;
+  let viewable = false, pointer = null, timer = 0, suppressCardClick = false;
   let hovering = false, focused = false;
   const interval = 5300;
   const wrap = n => (n + slides.length) % slides.length;
@@ -83,8 +83,15 @@
     if (!pointer || pointer.id!==event.pointerId) return;
     const dx=event.clientX-pointer.x,dy=event.clientY-pointer.y;
     pointer=null;
-    if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.3) go(current+(dx<0?1:-1));
+    if (Math.abs(dx)>55 && Math.abs(dx)>Math.abs(dy)*1.3) {
+      suppressCardClick=true;
+      go(current+(dx<0?1:-1));
+      setTimeout(()=>{suppressCardClick=false;},250);
+    }
   });
+  deck.addEventListener('click',event=>{
+    if (suppressCardClick){event.preventDefault();event.stopPropagation();}
+  },true);
   stage.addEventListener('pointercancel',()=>{pointer=null;});
   stage.addEventListener('keydown',event=>{
     if (event.key==='ArrowRight'||event.key==='ArrowLeft') {
