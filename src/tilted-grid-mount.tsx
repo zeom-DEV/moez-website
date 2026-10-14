@@ -8,8 +8,8 @@ import "./tilted-grid.css";
 const images: TiltedGridImage[] = [
   { src: "/assets/orbit-photos/web-desktop.webp", alt: "Création de sites internet" },
   { src: "/assets/orbit-photos/sav-desktop.webp", alt: "Service client" },
-  { src: "/assets/orbit-photos/avis-desktop.webp", alt: "Avis clients" },
-  { src: "/assets/orbit-photos/prospects-desktop.webp", alt: "Appels et relances" },
+  { src: "/assets/orbit-photos/prospects-desktop.webp", alt: "Échanges professionnels" },
+  { src: "/assets/moez-portrait-900.webp", alt: "Présentation et collaboration" },
   { src: "/assets/orbit-photos/crm-desktop.webp", alt: "Dossiers clients" },
   { src: "/assets/orbit-photos/automation-desktop.webp", alt: "Automatisation" }
 ];
@@ -19,8 +19,12 @@ function MotionGallery() {
     const stage = document.getElementById("collection-stage");
     if (!stage) return;
     stage.classList.add("has-tilted-grid");
+    document.getElementById("solutions")?.classList.add("is-tilted-ready");
     stage.dispatchEvent(new Event("mt:tilted-grid-ready", { bubbles: true }));
-    return () => stage.classList.remove("has-tilted-grid");
+    return () => {
+      stage.classList.remove("has-tilted-grid");
+      document.getElementById("solutions")?.classList.remove("is-tilted-ready");
+    };
   }, []);
 
   return (
@@ -35,13 +39,7 @@ function MotionGallery() {
       fade={7}
       className="tgh-live relative h-full w-full overflow-hidden"
     >
-      <div className="tgh-editorial-overlay" aria-hidden="true">
-        <span className="tgh-editorial-index">ÉDITION 2026 / SIX EXPERTISES</span>
-        <span className="tgh-editorial-line" />
-        <span className="tgh-editorial-instruction">
-          Un mouvement continu. Des solutions concrètes.
-        </span>
-      </div>
+      <span className="tgh-sculpture-caption" aria-hidden="true">DES IMAGES EN MOUVEMENT • SIX EXPERTISES</span>
     </TiltedGridHero>
   );
 }
