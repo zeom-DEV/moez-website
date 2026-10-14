@@ -27,7 +27,7 @@ function MotionGallery() {
     <TiltedGridHero
       images={images}
       speed={2.8}
-      tileHeight={46}
+      tileHeight={62}
       aspectRatio={1.38}
       gap={10}
       axis={51}
