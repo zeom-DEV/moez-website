@@ -25,6 +25,9 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
 
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.mt-cinema-choice').count(),0,size.name+': redundant beige promo bar is removed');
+ assert.equal(await page.locator('#kinetic-showcase').evaluate(el=>getComputedStyle(el).marginTop),'0px',
+   size.name+': carrousel starts directly after the header without blank beige band');
+
 
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
@@ -160,7 +163,17 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
    await orbit.locator('.mt-orbit__nav').first().click();
    await page.waitForTimeout(900);
    await orbit.screenshot({path:'reports/mobile-focused-'+size.name+'.png'});
-   if(!alreadyPaused)await pauseButton.click();
+   if(!alreadyPaused){
+     await pauseButton.click();
+     const autoBefore=await orbit.locator('.mt-orbit__current strong').textContent();
+     await page.waitForFunction(before=>
+       document.querySelector('.mt-orbit__current strong')?.textContent!==before,
+       autoBefore,{timeout:8000});
+     await page.waitForTimeout(900);
+     const autoRect=await orbit.locator('.orbit-hero__card--active').boundingBox();
+     assert(autoRect && autoRect.x>=12 && autoRect.x+autoRect.width<=size.width-12,
+       size.name+': autoplay advances to a whole readable card '+JSON.stringify(autoRect));
+   }
  }
 
  if(size.name==='desktop'){
