@@ -11,7 +11,7 @@
    {id:'crm',name:'Dossiers clients',tag:'ORGANISATION',title:'Tout est à sa place.',lede:'Une organisation claire des informations et des tâches pour que chaque client bénéficie d’un suivi cohérent.',tasks:['Mise à jour et structuration des informations CRM','Création des étapes de suivi','Classement des demandes et priorités','Tableaux de suivi et processus de travail'],result:'Des informations fiables et des priorités visibles.',contact:'Organisons vos opérations'},
    {id:'automation',name:'Automatisation',tag:'WORKFLOWS',title:'Laissez les tâches répétitives derrière vous.',lede:'Je connecte vos outils et conçois des automatisations utiles pour réduire les manipulations manuelles.',tasks:['Audit des tâches répétitives','Conception du scénario d’automatisation','Connexion des outils et tests de fonctionnement','Documentation et suivi des résultats'],result:'Des workflows plus simples et du temps dégagé pour l’essentiel.',contact:'Automatisons vos tâches'}
   ];
-  const motionState={intro:true,flipping:false,film:false,active:0,timer:null,seen:false,hover:false,focused:false,touchStart:null,swiped:false};
+  const motionState={intro:true,flipping:false,film:false,active:0,timer:null,seen:false,hover:false,focused:false,dragging:false,touchStart:null,swiped:false};
   const root=$('#site'),intro=$('#intro'),turn=$('#intro-turn'),film=$('#film'),video=$('#signature-video'),
     filmLoading=$('#film-loading'),filmEnd=$('#film-end'),filmProgress=$('#film-progress span'),sound=$('#film-sound'),
     filmMessage=$('#film-end-message'),stage=$('#collection-stage'),cards=$('#cards'),count=$('#stage-count'),
@@ -29,9 +29,21 @@
     '<span class="offer-card__foot"><small>'+escape(s.tag)+'</small><strong>'+escape(s.name)+'</strong>'+
     '<span class="offer-card__action">Explorer cette offre <b aria-hidden="true">↗</b></span></span></button>').join('');
   const allCards=$$('.offer-card',cards);
+  const timerFill=$('#stage-timer-fill'),stageLede=$('#stage-lede'),
+    stageSelectedNumber=$('#stage-selected-number'),stageExplore=$('#stage-explore');
   const mod=n=>(n+services.length)%services.length;
+  let previousCard=-1,usingKeyboard=false,tiltRaf=0,tiltCard=null;
+  document.addEventListener('keydown',e=>{if(e.key==='Tab'||e.key==='ArrowLeft'||e.key==='ArrowRight')usingKeyboard=true;});
+  document.addEventListener('pointerdown',()=>{usingKeyboard=false;},{passive:true});
   function showCard(index,fromUser=false){
     motionState.active=mod(index);
+    if(previousCard!==motionState.active){
+      allCards.forEach(card=>{
+        card.style.removeProperty('--card-tilt-x');card.style.removeProperty('--card-tilt-y');
+        card.style.removeProperty('--glare-x');card.style.removeProperty('--glare-y');
+      });
+      previousCard=motionState.active;
+    }
     allCards.forEach((card,i)=>{
       const delta=mod(i-motionState.active);
       const loc=delta===0?'center':delta===1?'right':delta===5?'left':delta===2?'far-right':delta===4?'far-left':'hidden';
@@ -44,6 +56,9 @@
     });
     count.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
     $('#stage-current').textContent=services[motionState.active].name.toUpperCase();
+    stageLede.textContent=services[motionState.active].result;
+    stageSelectedNumber.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
+    stageExplore.setAttribute('aria-label','Découvrir l’offre '+services[motionState.active].name);
     if(fromUser)motionState.userInteracted=true;
     schedule();
   }
@@ -72,45 +87,59 @@
   }
   function autoBlocked(){
     return motionState.intro||motionState.flipping||motionState.film||!motionState.seen||
-      motionState.hover||motionState.focused||document.hidden||reduced.matches;
+      motionState.dragging||motionState.focused||document.hidden||reduced.matches;
   }
   function schedule(){
     clearTimeout(motionState.timer);motionState.timer=null;
-    if(!autoBlocked()){
-      motionState.timer=setTimeout(()=>showCard(motionState.active+1),6500);
-    }
+    if(!timerFill)return;
+    timerFill.style.animation='none';
+    if(autoBlocked()){timerFill.style.transform='scaleX(0)';return;}
+    // The line communicates exactly when the carousel will change.
+    void timerFill.offsetWidth;
+    timerFill.style.transform='';
+    timerFill.style.animation='premium-progress 6500ms linear forwards';
+    motionState.timer=setTimeout(()=>showCard(motionState.active+1),6500);
   }
   allCards.forEach((card,i)=>{
     card.addEventListener('click',()=>{
       if(motionState.swiped)return;
+      // First bring a neighbouring photograph into focus; then explore.
+      if(i!==motionState.active){showCard(i,true);return;}
       choose(i,true);
     });
   });
+  stageExplore.addEventListener('click',()=>choose(motionState.active,true));
   $('#stage-prev').addEventListener('click',()=>showCard(motionState.active-1,true));
   $('#stage-next').addEventListener('click',()=>showCard(motionState.active+1,true));
   stage.addEventListener('pointerdown',e=>{
     if(e.button!==0||e.target.closest('.stage-controls'))return;
     motionState.touchStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+    motionState.dragging=true;schedule();
   });
   stage.addEventListener('pointerup',e=>{
     const t=motionState.touchStart;motionState.touchStart=null;
-    if(!t||e.pointerId!==t.id)return;
+    motionState.dragging=false;
+    if(!t||e.pointerId!==t.id){schedule();return;}
     const dx=e.clientX-t.x,dy=e.clientY-t.y;
     if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){
       motionState.swiped=true;
       showCard(motionState.active+(dx<0?1:-1),true);
       setTimeout(()=>{motionState.swiped=false;},300);
     }
+    schedule();
   });
-  stage.addEventListener('pointercancel',()=>{motionState.touchStart=null;});
+  stage.addEventListener('pointercancel',()=>{
+    motionState.touchStart=null;motionState.dragging=false;schedule();
+  });
   stage.addEventListener('click',e=>{
     if(motionState.swiped){e.preventDefault();e.stopPropagation();}
   },true);
-  stage.addEventListener('pointerenter',()=>{motionState.hover=true;schedule();});
-  stage.addEventListener('pointerleave',()=>{motionState.hover=false;schedule();});
-  stage.addEventListener('focusin',()=>{motionState.focused=true;schedule();});
+  // Passive pointer hover does not freeze the carousel on desktop.
+  stage.addEventListener('focusin',()=>{
+    motionState.focused=usingKeyboard;schedule();
+  });
   stage.addEventListener('focusout',()=>{
-    motionState.focused=stage.contains(document.activeElement);schedule();
+    motionState.focused=usingKeyboard&&stage.contains(document.activeElement);schedule();
   });
   stage.addEventListener('keydown',e=>{
     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
@@ -129,6 +158,88 @@
     schedule();
   });
   reduced.addEventListener?.('change',schedule);
+
+  // Gently responsive cards: 3-degree maximum, limited to a fine pointer.
+  const precision=matchMedia('(hover:hover) and (pointer:fine)');
+  if(precision.matches&&!reduced.matches){
+    allCards.forEach(card=>{
+      card.addEventListener('pointermove',event=>{
+        if(card.dataset.position!=='center')return;
+        const rect=card.getBoundingClientRect();
+        const px=Math.min(1,Math.max(0,(event.clientX-rect.left)/rect.width));
+        const py=Math.min(1,Math.max(0,(event.clientY-rect.top)/rect.height));
+        tiltCard=card;
+        if(tiltRaf)return;
+        tiltRaf=requestAnimationFrame(()=>{
+          tiltRaf=0;
+          if(tiltCard!==card||card.dataset.position!=='center')return;
+          card.style.setProperty('--card-tilt-y',((px-.5)*5).toFixed(2)+'deg');
+          card.style.setProperty('--card-tilt-x',((.5-py)*4).toFixed(2)+'deg');
+          card.style.setProperty('--glare-x',(px*100).toFixed(1)+'%');
+          card.style.setProperty('--glare-y',(py*100).toFixed(1)+'%');
+        });
+      },{passive:true});
+      card.addEventListener('pointerleave',()=>{
+        tiltCard=null;
+        card.style.removeProperty('--card-tilt-y');
+        card.style.removeProperty('--card-tilt-x');
+      });
+    });
+  }
+
+  // Minimal optical depth in the hero; rAF only while pointer is moving.
+  const hero=$('.hero');
+  if(hero&&precision.matches&&!reduced.matches){
+    let targetX=0,targetY=0,x=0,y=0,raf=0;
+    const tick=()=>{
+      x+=(targetX-x)*.15;y+=(targetY-y)*.15;
+      hero.style.setProperty('--scene-x',(-x*9).toFixed(2)+'px');
+      hero.style.setProperty('--scene-y',(-y*7).toFixed(2)+'px');
+      hero.style.setProperty('--depth-x',(x*19).toFixed(2)+'px');
+      hero.style.setProperty('--depth-y',(y*15).toFixed(2)+'px');
+      hero.style.setProperty('--depth-x-reverse',(-x*8).toFixed(2)+'px');
+      hero.style.setProperty('--depth-y-reverse',(-y*7).toFixed(2)+'px');
+      if(Math.abs(targetX-x)+Math.abs(targetY-y)>.005)raf=requestAnimationFrame(tick);
+      else raf=0;
+    };
+    const wake=()=>{if(!raf)raf=requestAnimationFrame(tick);};
+    hero.addEventListener('pointermove',event=>{
+      const rect=hero.getBoundingClientRect();
+      targetX=((event.clientX-rect.left)/rect.width-.5)*2;
+      targetY=((event.clientY-rect.top)/rect.height-.5)*2;
+      hero.style.setProperty('--light-x',((targetX+1)*50).toFixed(1)+'%');
+      hero.style.setProperty('--light-y',((targetY+1)*50).toFixed(1)+'%');
+      wake();
+    },{passive:true});
+    hero.addEventListener('pointerleave',()=>{targetX=0;targetY=0;wake();});
+  }
+
+  // Scrolling reveals meaningful steps and keeps the contact navigation nearby.
+  const siteHeader=$('.header'),heroElement=$('.hero');
+  let scrollRaf=0;
+  const updateHeader=()=>{
+    scrollRaf=0;
+    siteHeader?.classList.toggle('is-floating',
+      !motionState.intro&&!motionState.film&&!motionState.flipping&&
+      window.scrollY>Math.max(150,heroElement.offsetHeight-94));
+  };
+  window.addEventListener('scroll',()=>{
+    if(!scrollRaf)scrollRaf=requestAnimationFrame(updateHeader);
+  },{passive:true});
+  if('IntersectionObserver' in window&&!reduced.matches){
+    const motionElements=$('.method-intro,.method-step,.section-head,.contact-inner');
+    motionElements.forEach(el=>el.classList.add('motion-reveal'));
+    document.documentElement.classList.add('has-motion');
+    const ioMotion=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');ioMotion.unobserve(entry.target);
+        }
+      });
+    },{threshold:.08,rootMargin:'0px 0px -25px 0px'});
+    motionElements.forEach(el=>ioMotion.observe(el));
+  }
+  updateHeader();
   const setSound=()=>{
     sound.textContent=video.muted?'Activer le son ♫':'Couper le son ✕';
     sound.setAttribute('aria-label',video.muted?'Activer le son':'Couper le son');
