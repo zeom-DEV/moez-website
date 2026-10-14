@@ -126,7 +126,7 @@ export function TiltedGridHero({
         { transform: turn(-sweep + pitch * 0.18), opacity: 1, offset: 0.05 },
         { transform: turn(sweep - pitch * 0.18), opacity: 1, offset: 0.95 },
         { transform: turn(sweep), opacity: 0 }
-      ], { duration: duration * 1000, iterations: Infinity, easing: "linear", delay: -i * speed * 1000 });
+      ], { duration: duration * 1000, iterations: Infinity, easing: "linear", delay: -(i + 0.5) * speed * 1000 });
       fallbacks.push(animation);
     });
     return () => fallbacks.forEach((animation) => animation.cancel());
@@ -168,8 +168,8 @@ export function TiltedGridHero({
                 transformStyle: "preserve-3d",
                 // Static starting position also works when motion is paused,
                 // absent, or unsupported; photographs never pile in one spot.
-                transform: turn(-sweep + t * pitch),
-                animation: `${orbit} ${duration}s linear ${-t * speed}s infinite`,
+                transform: turn(-sweep + (t + 0.5) * pitch),
+                animation: `${orbit} ${duration}s linear ${-(t + 0.5) * speed}s infinite`,
                 animationFillMode: "both",
               }}
               onAnimationIteration={(e) => {
