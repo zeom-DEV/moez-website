@@ -445,3 +445,198 @@ body[data-page=service] .service-offer-cta__box a:hover{
   background:var(--mt-gold-bright);
   color:var(--mt-ink);
 }
+
+/* Secondary contact route: no required third-party account or JS. */
+body[data-page=service] .service-offer-cta__box a.service-offer-cta__email{
+ display:inline-flex;align-items:center;justify-content:center;
+ margin:12px auto 0;padding:9px 0;min-height:44px;max-width:100%;
+ background:none;border:0;box-shadow:none;
+ font-size:13px;font-weight:650;line-height:1.5;
+ color:var(--mt-gold-bright);text-decoration:underline;text-underline-offset:5px;
+ white-space:normal;
+}
+body[data-page=service] .service-offer-cta__box a.service-offer-cta__email:hover{
+ background:none;color:var(--mt-paper);
+}
+
+
+
+/* Portfolio proof: one verifiable personal project rather than invented testimonials. */
+body[data-page=home] .mt-cinema-choice a{
+  color:var(--mt-copper);text-decoration:underline;text-underline-offset:3px;
+  font-size:inherit;font-weight:750
+}
+body[data-page=home] .mt-case-study{
+  position:relative;padding:clamp(70px,8vw,124px) 0;
+  background:#ece6dc;color:var(--mt-ink);
+  border-block:1px solid #cfc4b4;
+}
+body[data-page=home] .mt-case-layout{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.94fr);
+  align-items:center;gap:clamp(35px,6vw,110px);
+}
+body[data-page=home] .mt-case-copy{min-width:0}
+body[data-page=home] .mt-case-eyebrow{
+  display:flex;align-items:center;gap:10px;color:var(--mt-copper);
+  font-size:11px;font-weight:850;letter-spacing:.13em
+}
+body[data-page=home] .mt-case-eyebrow>span{font-size:12px}
+body[data-page=home] .mt-case-copy h2{
+  margin:21px 0 23px;
+  font:780 clamp(39px,5.2vw,75px)/1.07 var(--sans);
+  letter-spacing:-.07em;
+}
+body[data-page=home] .mt-case-copy h2 em{
+  color:var(--mt-copper);font:400 .95em var(--serif);letter-spacing:-.045em
+}
+body[data-page=home] .mt-case-copy p{
+  max-width:57ch;font-size:15px;line-height:1.75;color:#474541;
+}
+body[data-page=home] .mt-case-copy .mt-case-lead{
+  font-size:clamp(17px,1.6vw,20px);line-height:1.6;
+  color:var(--mt-ink);font-weight:580;
+}
+body[data-page=home] .mt-case-disclosure{
+  padding:15px 17px;border-left:3px solid var(--mt-copper);
+  background:#f7f4ee;color:#4d4944;
+  font-size:13px!important;line-height:1.65!important;
+}
+body[data-page=home] .mt-case-actions{
+  display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:25px;
+}
+body[data-page=home] .mt-case-actions a{
+  display:inline-flex;gap:20px;align-items:center;justify-content:space-between;
+  padding:13px 17px;border-radius:5px;min-height:50px;
+  border:1px solid var(--mt-ink);
+  font-size:12px;line-height:1.4;font-weight:800;
+  transition:transform .25s,border-color .25s,background .25s
+}
+body[data-page=home] .mt-case-actions a:first-child{
+  color:var(--mt-paper);background:var(--mt-ink)
+}
+body[data-page=home] .mt-case-actions a:not(:first-child){
+  background:transparent;color:var(--mt-ink);
+  border-color:#a99c8c
+}
+body[data-page=home] .mt-case-actions a:hover{transform:translateY(-2px)}
+body[data-page=home] .mt-case-actions a:not(:first-child):hover{
+  background:var(--mt-paper);border-color:var(--mt-copper)
+}
+body[data-page=home] .mt-case-board{
+  min-width:0;position:relative;overflow:hidden;
+  color:var(--mt-paper);padding:clamp(25px,4vw,50px);
+  background:radial-gradient(ellipse at 96% 3%,#514032 0%,transparent 37%),#141820;
+  border:1px solid #9d8364;border-radius:14px;
+  box-shadow:0 26px 55px #352b201e;
+}
+body[data-page=home] .mt-case-board:before{
+  position:absolute;content:"";inset:0;pointer-events:none;opacity:.15;
+  background-image:linear-gradient(90deg,#e6bf8722 1px,transparent 1px),
+   linear-gradient(#e6bf8722 1px,transparent 1px);
+  background-size:35px 35px;
+}
+body[data-page=home] .mt-case-board>*{position:relative}
+body[data-page=home] .mt-case-board-top,
+body[data-page=home] .mt-case-board-foot{
+  display:flex;gap:15px;flex-wrap:wrap;justify-content:space-between;
+  font-size:10px;letter-spacing:.12em;font-weight:850;color:var(--mt-gold-bright)
+}
+body[data-page=home] .mt-case-board-top{padding-bottom:32px}
+body[data-page=home] .mt-case-board-top i{
+  display:inline-block;height:7px;width:7px;border-radius:50%;
+  background:var(--mt-gold);margin-right:6px;
+  box-shadow:0 0 0 4px #e6bf871b
+}
+body[data-page=home] .mt-case-board-title{
+  font-size:clamp(33px,3.2vw,52px);font-weight:800;
+  line-height:1.13;letter-spacing:-.055em;margin-bottom:40px
+}
+body[data-page=home] .mt-case-board-title em{
+  font:400 .84em var(--serif);color:var(--mt-gold);letter-spacing:-.025em
+}
+body[data-page=home] .mt-case-steps{
+  display:flex;flex-direction:column;gap:0;
+  margin:0;padding:0;list-style:none;
+}
+body[data-page=home] .mt-case-steps li{
+  display:grid;grid-template-columns:29px minmax(0,1fr) 19px;
+  align-items:start;gap:13px;
+  border-top:1px solid #e6bf8738;padding:19px 0;
+}
+body[data-page=home] .mt-case-steps li>span{
+  color:var(--mt-gold);font-size:12px;font-weight:800;
+}
+body[data-page=home] .mt-case-steps strong{
+  display:block;font-size:15px;line-height:1.4;color:var(--mt-paper);
+}
+body[data-page=home] .mt-case-steps small{
+  display:block;margin-top:6px;font-size:12px;
+  line-height:1.65;color:#d8cdc0;
+}
+body[data-page=home] .mt-case-steps b{color:var(--mt-gold);font-size:17px}
+body[data-page=home] .mt-case-board-foot{
+  border-top:1px solid #e6bf8755;padding-top:22px;margin-top:15px;
+}
+body[data-page=home] .mt-case-board-foot>span:last-child{color:var(--mt-paper)}
+
+/* Flagship page's own-site case link. */
+body[data-page=service] .mt-web-reference{
+  background:var(--mt-stone);color:var(--mt-ink);
+  padding:clamp(35px,5.5vw,70px) 0;
+  border-block:1px solid var(--mt-border);
+}
+body[data-page=service] .mt-web-reference__content{
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);
+  align-items:center;gap:clamp(22px,4vw,75px)
+}
+body[data-page=service] .mt-web-reference__kicker{
+  display:block;color:var(--mt-copper);
+  font-size:11px;font-weight:800;letter-spacing:.15em;margin-bottom:12px
+}
+body[data-page=service] .mt-web-reference h2{
+  margin:0;font-size:clamp(28px,3vw,46px);line-height:1.13;letter-spacing:-.045em
+}
+body[data-page=service] .mt-web-reference p{
+  font-size:15px;line-height:1.7;margin:0 0 16px;color:#4c4842
+}
+body[data-page=service] .mt-web-reference a{
+  display:inline-flex;align-items:center;gap:10px;min-height:44px;
+  color:var(--mt-copper);font-size:14px;font-weight:850;
+  text-decoration:underline;text-underline-offset:5px;
+}
+
+@media(max-width:900px){
+ body[data-page=home] .mt-case-layout{grid-template-columns:minmax(0,1fr)}
+ body[data-page=home] .mt-case-board{max-width:750px;width:100%;margin:auto}
+ body[data-page=service] .mt-web-reference__content{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+ body[data-page=home] .mt-case-study{padding:68px 0}
+ body[data-page=home] .mt-case-copy h2{font-size:clamp(38px,10vw,55px)}
+ body[data-page=home] .mt-case-actions{flex-direction:column;align-items:stretch}
+ body[data-page=home] .mt-case-actions a{width:100%}
+ body[data-page=home] .mt-case-board{padding:24px 20px}
+ body[data-page=home] .mt-case-board-title{margin-bottom:27px}
+ body[data-page=home] .mt-case-board-top{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ body[data-page=home] .mt-case-actions a{transition:none}
+ body[data-page=home] .mt-case-actions a:hover{transform:none}
+}
+
+
+
+/* A secondary way to contact directly; booking remains the single main CTA. */
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt{
+  display:inline-flex;align-items:center;gap:9px;
+  color:var(--mt-gold-bright);border-bottom:1px solid #e6bf8780;
+  padding:6px 0;min-height:44px;margin-top:10px;
+  font-size:13px;font-weight:750;line-height:1.4;
+  text-decoration:none;
+}
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt:hover{
+  color:var(--mt-paper);border-bottom-color:var(--mt-paper)
+}
+body[data-page=home] .offer-detail__conversion>div>a.mt-contact-alt:focus-visible{
+  outline:3px solid var(--mt-gold);outline-offset:3px
+}

@@ -26,14 +26,34 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  assert.equal(await page.locator('.mt-orbit-showcase').count(),1,size.name+': six offers are presented in one cinematic carousel');
  assert.equal(await page.locator('.flagship-hero').count(),0,size.name+': former white hero is gone');
  assert.equal(await page.locator('.flagship-link').count(),0,size.name+': former redundant discover button is removed');
- assert.equal(await page.locator('#inversion-intro').isVisible(),true,size.name+': introductory experience');
- await page.locator('#intro-flip').click();
- await page.locator('.moez-film.is-active').waitFor({state:'visible'});
- assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': background blocked during film');
- await page.keyboard.press('Shift+Tab');
- assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
+ // Everyone can reach the six offers without first seeing the film.
+ assert.equal(await page.locator('#inversion-intro').isVisible(),false,size.name+': no forced cinematic gate');
+ assert.equal(await page.locator('#site-shell').evaluate(el=>el.inert),false,size.name+': page is immediately operable');
+ assert.equal(await page.locator('.mt-cinema-choice button').isVisible(),true,size.name+': optional film discoverable');
+ assert.equal(new URL(page.url()).hash,'',size.name+': landing has no forced redirect');
+ // Regression: opening the homepage directly on a real desktop must start
+ // the photographic orbit even though the legacy cinema remains in the DOM.
  if(size.name==='desktop'){
-  try{await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;});}catch(error){console.error('FILM_DIAGNOSTIC',await page.locator('.moez-film video').evaluate(v=>({paused:v.paused,time:v.currentTime,duration:v.duration,ready:v.readyState,error:v.error?.message})));throw error;}
+   const directOrbit=page.locator('.mt-orbit-showcase .orbit-hero__card').first();
+   await directOrbit.waitFor({state:'visible',timeout:20000});
+   const initialTransform=await directOrbit.evaluate(el=>el.style.transform);
+   await page.waitForTimeout(700);
+   const nextTransform=await directOrbit.evaluate(el=>el.style.transform);
+   assert.notEqual(initialTransform,nextTransform,
+     'desktop fresh landing: orbit must rotate autonomously without clicking or changing the URL');
+   assert.equal(await page.locator('.mt-orbit__pause').getAttribute('aria-pressed'),'false',
+     'desktop fresh landing: autoplay is enabled by default');
+ }
+ assert.equal(await page.locator('.mt-case-study').count(),1,size.name+': one verifiable personal project');
+ assert.equal(await page.locator('.mt-case-disclosure').count(),1,size.name+': no invented customer proof');
+ assert(await page.locator('.mt-case-actions a[href*="github.com/zeom-DEV/moez-website"]').count()===1,size.name+': actual code link');
+ await page.locator('.mt-cinema-choice button').click();
+ await page.locator('.moez-film.is-active').waitFor({state:'visible'});
+ assert(await page.locator('#site-shell').evaluate(el=>el.inert),size.name+': optional film blocks background');
+ if(size.name==='desktop'){
+  await page.keyboard.press('Shift+Tab');
+  assert(await page.locator('.moez-film__skip').evaluate(el=>el===document.activeElement),size.name+': film keyboard focus wraps');
+  await page.waitForFunction(()=>{const v=document.querySelector('.moez-film video');return v&&!v.paused&&v.currentTime>0;},{timeout:15000});
   await page.locator('[data-film-sound]').click();
   assert.equal(await page.locator('.moez-film video').evaluate(v=>v.muted),true,'mute film');
   await page.locator('[data-film-sound]').click();
@@ -42,7 +62,7 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  }else{await page.keyboard.press('Escape');}
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  await page.locator('#inversion-intro').waitFor({state:'hidden'});
- assert.equal(new URL(page.url()).hash,'#offres',size.name+': film lands on offer overview');
+ assert.equal(new URL(page.url()).hash,'#offres',size.name+': viewing the film returns to available offers');
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
  assert.equal(await page.locator('.offer-detail.is-active').getAttribute('id'),'solution-web',size.name+': flagship first');
@@ -221,7 +241,15 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  }
  for(const [key,file] of routes){
   await page.goto(BASE+'/'+file,{waitUntil:'domcontentloaded'});
+  if(file==='site-signature.html'){
+   assert.equal(await page.locator('.mt-web-reference').count(),1,'flagship has own-work evidence');
+   assert.equal(await page.locator('.mt-web-reference a[href="./#realisations"]').count(),1,'proof is verifiable');
+  }
   assert.equal(await page.locator('h1').count(),1,size.name+': heading '+file);
+  if(key==='web'){
+   assert(await page.locator('.web-proof-section').innerText().then(t=>t.includes('PROJET RÉEL')&&t.includes('Ce n’est pas une réalisation commandée par un client.')),size.name+': portfolio identifies demonstrator correctly');
+   assert(await page.locator('.service-offer-cta__email[href^="mailto:"]').count()===1,size.name+': direct email alternative to booking');
+  }
   const premiumService=await page.evaluate(()=>{
    const color=selector=>getComputedStyle(document.querySelector(selector)).backgroundColor;
    return {announcement:color('.announcement'),benefit:color('.benefit'),steps:color('.inner-steps')};
@@ -270,20 +298,37 @@ await nojs.close();
 console.log('PASS no-JS fallback');
 const shortcutContext=await browser.newContext({reducedMotion:'reduce'});
 const shortcut=await shortcutContext.newPage();
-await shortcut.goto(BASE+'/');
-await shortcut.locator('#intro-flip').focus();
-await shortcut.keyboard.press('Tab');
-assert(await shortcut.locator('#intro-direct').evaluate(el=>el===document.activeElement),'intro shortcut reachable by keyboard');
-await shortcut.keyboard.press('Tab');
-assert(await shortcut.locator('#intro-flip').evaluate(el=>el===document.activeElement),'intro focus wraps');
-await shortcut.locator('#intro-direct').click();
- assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'direct film bypass dismisses the introduction');
- assert.equal(await shortcut.locator('.moez-film.is-active').count(),0,'no unwanted film after secondary shortcut');
- assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','direct shortcut opens flagship');
- const shortcutTop=await shortcut.locator('#offers-five-title').evaluate(el=>el.getBoundingClientRect().top);
- assert(shortcutTop>=0&&shortcutTop<350,'secondary shortcut lands on flagship overview');
- await shortcutContext.close();
-console.log('PASS direct discovery and intro keyboard');
+await shortcut.goto(BASE+'/',{waitUntil:'domcontentloaded'});
+assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'reduced-motion visitor is not blocked by the intro');
+const filmShortcut=shortcut.locator('.mt-cinema-choice button[data-replay-film]');
+await filmShortcut.focus();
+assert(await filmShortcut.evaluate(el=>el===document.activeElement),'optional film button is reachable by keyboard');
+await shortcut.keyboard.press('Enter');
+await shortcut.locator('.moez-film.is-active').waitFor({state:'visible'});
+assert(await shortcut.locator('#site-shell').evaluate(el=>el.inert),'background inert only while opted-in film is open');
+await shortcut.keyboard.press('Escape');
+await shortcut.locator('.moez-film.is-active').waitFor({state:'hidden'});
+assert.equal(await shortcut.locator('#inversion-intro').isVisible(),false,'film closes without restoring a forced intro');
+assert.equal(await shortcut.locator('.offer-detail.is-active').getAttribute('id'),'solution-web','reduced-motion visitor can reach flagship');
+const manualOrbit=shortcut.locator('.mt-orbit-showcase .orbit-hero__card').first();
+await manualOrbit.waitFor({state:'visible',timeout:20000});
+const manualToggle=shortcut.locator('.mt-orbit__pause');
+assert.equal(await manualToggle.getAttribute('aria-pressed'),'true',
+  'reduced-motion visitor starts in accessible manual mode');
+assert.match(await manualToggle.textContent(),/Animer/,
+  'manual mode must offer an explicit opt-in to movement');
+await manualToggle.click();
+assert.equal(await manualToggle.getAttribute('aria-pressed'),'false',
+  'reduced-motion user may explicitly activate the carousel');
+await shortcut.waitForTimeout(2200);
+const manualBefore=await manualOrbit.evaluate(el=>el.style.transform);
+await shortcut.waitForTimeout(550);
+const manualAfter=await manualOrbit.evaluate(el=>el.style.transform);
+assert.notEqual(manualBefore,manualAfter,
+  'desktop/reduced-motion: clicking Animer makes the 3D cards rotate');
+
+await shortcutContext.close();
+console.log('PASS no-JS, direct discovery, optional cinema and keyboard');
 }catch(error){failed=true;console.error('BROWSER_QA_FAILURE',error.stack || error);}
 finally{await browser.close();}
 if(failed)process.exit(1);

@@ -23,7 +23,7 @@
    if(firstImage&&!firstImage.getAttribute('src')){const source=firstImage.dataset.src;firstImage.src=matchMedia('(max-width: 650px)').matches?source.replace('web-desktop.webp','web-mobile.webp'):source;}
    const script=document.createElement('script');
    script.type='module';
-   script.src='./assets/orbit-native.js?v=20261013-editorial1';
+   script.src='./assets/orbit-native.js?v=20261014-desktop-motion1';
    script.addEventListener('error',fallback,{once:true});
    document.body.append(script);
    timeout();
@@ -32,8 +32,25 @@
  // A film covers the homepage on the first visit. Avoid loading six remote
  // images and React behind that film until visitors choose to proceed.
  let waitingForIntro=false;
+ let mobileStartPending=false;
  function relevant(){
-   if(intro && !intro.classList.contains('is-hidden') && !location.hash){waitingForIntro=true;return;}
+   // The new direct-entry homepage keeps the old cinema markup hidden rather than
+   // setting .is-hidden. Only wait for a cinema that actually blocks the visitor.
+   const introBlocks = intro &&
+     !intro.classList.contains('is-hidden') &&
+     !document.body.classList.contains('mt-direct-entry') &&
+     getComputedStyle(intro).display !== 'none';
+   if(introBlocks && !location.hash){waitingForIntro=true;return;}
+   // The preloaded first photograph renders immediately. Defer parsing the
+   // cinematic 3D engine until after the first mobile paint (not desktop).
+   // The poster remains interactive while the 3D module is warming up.
+   if(matchMedia('(max-width:800px)').matches){
+     if(mobileStartPending||started)return;
+     mobileStartPending=true;
+     // Allow the preloaded photographic poster to paint before mounting the 3D engine.
+     setTimeout(start, location.hash ? 1050 : 1800);
+     return;
+   }
    start();
  }
  document.getElementById('intro-flip')?.addEventListener('click',start,{once:true});
@@ -53,5 +70,5 @@
  }else{
    addEventListener('scroll',()=>{if(section.getBoundingClientRect().top<innerHeight+350)relevant()},{passive:true,once:true});
  }
- if(location.hash==='#kinetic-showcase'||location.hash==='#offres')start();
+ if(location.hash==='#kinetic-showcase'||location.hash==='#offres'||location.hash==='#services-carousel')relevant();
 })();
