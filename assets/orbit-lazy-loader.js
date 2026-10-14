@@ -34,7 +34,13 @@
  let waitingForIntro=false;
  let mobileStartPending=false;
  function relevant(){
-   if(intro && !intro.classList.contains('is-hidden') && !location.hash){waitingForIntro=true;return;}
+   // The new direct-entry homepage keeps the old cinema markup hidden rather than
+   // setting .is-hidden. Only wait for a cinema that actually blocks the visitor.
+   const introBlocks = intro &&
+     !intro.classList.contains('is-hidden') &&
+     !document.body.classList.contains('mt-direct-entry') &&
+     getComputedStyle(intro).display !== 'none';
+   if(introBlocks && !location.hash){waitingForIntro=true;return;}
    // The preloaded first photograph renders immediately. Defer parsing the
    // cinematic 3D engine until after the first mobile paint (not desktop).
    // The poster remains interactive while the 3D module is warming up.
