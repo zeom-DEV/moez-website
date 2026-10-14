@@ -41,8 +41,11 @@
     const version=++backdropVersion;
     const nextIndex=1-activeBackdrop;
     const next=backdrops[nextIndex],image=$('img',next);
+    const mobileSource=$('source',next);
     const source='./assets/orbit-photos/'+services[index].id+'-desktop.webp';
+    const mobile='./assets/orbit-photos/'+services[index].id+'-mobile.webp';
     lastBackdropOffer=index;
+    if(mobileSource)mobileSource.srcset=mobile;
     image.src=source;
     const reveal=()=>{
       if(version!==backdropVersion)return;
