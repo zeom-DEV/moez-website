@@ -26,13 +26,13 @@ function MotionGallery() {
   return (
     <TiltedGridHero
       images={images}
-      speed={3.4}
-      tileHeight={44}
-      aspectRatio={1.48}
-      gap={7}
-      axis={49}
-      curve={78}
-      fade={12}
+      speed={2.8}
+      tileHeight={46}
+      aspectRatio={1.38}
+      gap={10}
+      axis={51}
+      curve={48}
+      fade={7}
       className="tgh-live relative h-full w-full overflow-hidden"
     >
       <div className="tgh-editorial-overlay" aria-hidden="true">
