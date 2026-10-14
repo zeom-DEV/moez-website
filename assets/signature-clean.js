@@ -1,0 +1,235 @@
+(() => {
+  'use strict';
+  const $=(s,base=document)=>base.querySelector(s);
+  const $$=(s,base=document)=>Array.from(base.querySelectorAll(s));
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const services=[
+   {id:'web',name:'Sites internet',tag:'OFFRE PHARE',title:'Une présence qui donne envie.',lede:'Un site internet sur mesure, aussi remarquable que votre activité et pensé pour transformer l’intérêt en prise de contact.',tasks:['Conception de la structure et rédaction des messages essentiels','Design personnalisé et animations cohérentes','Adaptation mobile, optimisation du chargement et référencement technique de base','Mise en ligne et vérification des formulaires et liens de contact'],result:'Un site personnalisé, publié et facile à utiliser.',contact:'Parlons de votre futur site'},
+   {id:'sav',name:'Service client',tag:'RELATION CLIENT',title:'Chaque client compte.',lede:'Une prise en charge humaine et structurée pour répondre à vos clients et suivre leurs demandes.',tasks:['Réponses aux questions et demandes clients','Gestion et suivi des dossiers après-vente','Coordination des escalades et résolutions','Suivi des indicateurs utiles à l’expérience client'],result:'Des demandes mieux suivies et des réponses plus claires.',contact:'Organisons votre service client'},
+   {id:'avis',name:'Avis clients',tag:'E-RÉPUTATION',title:'La confiance se cultive.',lede:'Collecte conforme, suivi et réponses aux avis pour mieux comprendre votre clientèle et renforcer votre réputation.',tasks:['Suivi des retours et avis publiés','Réponses personnalisées aux avis positifs et négatifs','Organisation d’invitations à donner un avis selon les règles applicables','Synthèse des irritants et axes d’amélioration'],result:'Une gestion d’avis régulière, transparente et utile.',contact:'Parlons de votre réputation'},
+   {id:'prospects',name:'Appels et relances',tag:'DÉVELOPPEMENT COMMERCIAL',title:'Des échanges qui avancent.',lede:'Une prospection structurée et des relances personnalisées pour faire progresser vos opportunités commerciales.',tasks:['Qualification des contacts et préparation des échanges','Appels et relances adaptés au contexte','Compte rendu et mise à jour des informations','Suivi des rendez-vous et prochaines actions'],result:'Un pipeline commercial mieux organisé.',contact:'Développons vos opportunités'},
+   {id:'crm',name:'Dossiers clients',tag:'ORGANISATION',title:'Tout est à sa place.',lede:'Une organisation claire des informations et des tâches pour que chaque client bénéficie d’un suivi cohérent.',tasks:['Mise à jour et structuration des informations CRM','Création des étapes de suivi','Classement des demandes et priorités','Tableaux de suivi et processus de travail'],result:'Des informations fiables et des priorités visibles.',contact:'Organisons vos opérations'},
+   {id:'automation',name:'Automatisation',tag:'WORKFLOWS',title:'Laissez les tâches répétitives derrière vous.',lede:'Je connecte vos outils et conçois des automatisations utiles pour réduire les manipulations manuelles.',tasks:['Audit des tâches répétitives','Conception du scénario d’automatisation','Connexion des outils et tests de fonctionnement','Documentation et suivi des résultats'],result:'Des workflows plus simples et du temps dégagé pour l’essentiel.',contact:'Automatisons vos tâches'}
+  ];
+  const motionState={intro:true,flipping:false,film:false,active:0,timer:null,seen:false,hover:false,focused:false,touchStart:null,swiped:false};
+  const root=$('#site'),intro=$('#intro'),turn=$('#intro-turn'),film=$('#film'),video=$('#signature-video'),
+    filmLoading=$('#film-loading'),filmEnd=$('#film-end'),filmProgress=$('#film-progress span'),sound=$('#film-sound'),
+    filmMessage=$('#film-end-message'),stage=$('#collection-stage'),cards=$('#cards'),count=$('#stage-count'),
+    detail=$('#detail'),detailTitle=$('#detail-title'),detailNumber=$('#detail-number'),detailLede=$('#detail-lede'),
+    detailList=$('#detail-list'),detailImage=$('#detail-image'),detailResult=$('#detail-result'),
+    detailAction=$('#detail-action'),detailTag=$('#detail-tag');
+  const initialOffer=/^#solution-(web|sav|avis|prospects|crm|automation)$/.test(location.hash)
+    ? location.hash.slice(10) : null;
+  const escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+  const picture=id=>'<picture><source srcset="./assets/orbit-photos/'+id+'-mobile.webp" media="(max-width:680px)"><img src="./assets/orbit-photos/'+id+'-desktop.webp" alt="" width="640" height="860" loading="lazy" decoding="async"></picture>';
+  cards.innerHTML=services.map((s,i)=>'<button class="offer-card" type="button" data-index="'+i+'" aria-label="Découvrir l’offre '+escape(s.name)+'">'+
+    picture(s.id)+'<span class="offer-card__head"><span>MOEZ / '+String(i+1).padStart(2,'0')+' — 06</span>'+
+    (i===0?'<span class="offer-card__flag">OFFRE PHARE</span>':'')+'</span>'+
+    '<span class="offer-card__foot"><small>'+escape(s.tag)+'</small><strong>'+escape(s.name)+'</strong>'+
+    '<span class="offer-card__action">Explorer cette offre <b aria-hidden="true">↗</b></span></span></button>').join('');
+  const allCards=$$('.offer-card',cards);
+  const mod=n=>(n+services.length)%services.length;
+  function showCard(index,fromUser=false){
+    motionState.active=mod(index);
+    allCards.forEach((card,i)=>{
+      const delta=mod(i-motionState.active);
+      const loc=delta===0?'center':delta===1?'right':delta===5?'left':delta===2?'far-right':delta===4?'far-left':'hidden';
+      card.dataset.position=loc;
+      const accessible=delta<=1||delta===5;
+      card.inert=!accessible;
+      card.tabIndex=accessible?0:-1;
+      card.setAttribute('aria-hidden',String(!accessible));
+      if(accessible){const img=$('img',card); if(img)img.loading='eager';}
+    });
+    count.textContent=String(motionState.active+1).padStart(2,'0')+' / 06';
+    $('#stage-current').textContent=services[motionState.active].name.toUpperCase();
+    if(fromUser)motionState.userInteracted=true;
+    schedule();
+  }
+  function choose(index,focus=false){
+    const s=services[mod(index)],n=mod(index);
+    showCard(n,true);
+    detailNumber.textContent=String(n+1).padStart(2,'0')+' / 06 — '+s.tag;
+    detailTitle.textContent=s.title;
+    detailLede.textContent=s.lede;
+    detailTag.textContent=s.tag;
+    detailList.replaceChildren(...s.tasks.map(t=>{
+      const li=document.createElement('li');li.textContent=t;return li;
+    }));
+    detailImage.src='./assets/orbit-photos/'+s.id+'-desktop.webp';
+    detailImage.alt='Illustration de l’offre '+s.name;
+    detailResult.textContent=s.result;
+    detailAction.textContent=s.contact+' ↗';
+    detailAction.href='https://calendly.com/moez-thabet-881988/30min';
+    const hash='#solution-'+s.id;
+    if(location.hash!==hash)history.pushState({offer:s.id},'',hash);
+    detail.hidden=false;
+    if(focus){
+      detail.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});
+      setTimeout(()=>detailTitle.focus({preventScroll:true}),reduced.matches?0:650);
+    }
+  }
+  function autoBlocked(){
+    return motionState.intro||motionState.flipping||motionState.film||!motionState.seen||
+      motionState.hover||motionState.focused||document.hidden||reduced.matches;
+  }
+  function schedule(){
+    clearTimeout(motionState.timer);motionState.timer=null;
+    if(!autoBlocked()){
+      motionState.timer=setTimeout(()=>showCard(motionState.active+1),6500);
+    }
+  }
+  allCards.forEach((card,i)=>{
+    card.addEventListener('click',()=>{
+      if(motionState.swiped)return;
+      choose(i,true);
+    });
+  });
+  $('#stage-prev').addEventListener('click',()=>showCard(motionState.active-1,true));
+  $('#stage-next').addEventListener('click',()=>showCard(motionState.active+1,true));
+  stage.addEventListener('pointerdown',e=>{
+    if(e.button!==0||e.target.closest('.stage-controls'))return;
+    motionState.touchStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+  });
+  stage.addEventListener('pointerup',e=>{
+    const t=motionState.touchStart;motionState.touchStart=null;
+    if(!t||e.pointerId!==t.id)return;
+    const dx=e.clientX-t.x,dy=e.clientY-t.y;
+    if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.25){
+      motionState.swiped=true;
+      showCard(motionState.active+(dx<0?1:-1),true);
+      setTimeout(()=>{motionState.swiped=false;},300);
+    }
+  });
+  stage.addEventListener('pointercancel',()=>{motionState.touchStart=null;});
+  stage.addEventListener('click',e=>{
+    if(motionState.swiped){e.preventDefault();e.stopPropagation();}
+  },true);
+  stage.addEventListener('pointerenter',()=>{motionState.hover=true;schedule();});
+  stage.addEventListener('pointerleave',()=>{motionState.hover=false;schedule();});
+  stage.addEventListener('focusin',()=>{motionState.focused=true;schedule();});
+  stage.addEventListener('focusout',()=>{
+    motionState.focused=stage.contains(document.activeElement);schedule();
+  });
+  stage.addEventListener('keydown',e=>{
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+      e.preventDefault();showCard(motionState.active+(e.key==='ArrowLeft'?-1:1),true);
+    }
+  });
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver(entries=>{
+      motionState.seen=entries.some(e=>e.isIntersecting);
+      schedule();
+    },{threshold:.19});
+    io.observe(stage);
+  }else motionState.seen=true;
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden&&motionState.film&&!video.paused)video.pause();
+    schedule();
+  });
+  reduced.addEventListener?.('change',schedule);
+  const setSound=()=>{
+    sound.textContent=video.muted?'Activer le son ♫':'Couper le son ✕';
+    sound.setAttribute('aria-label',video.muted?'Activer le son':'Couper le son');
+  };
+  let fallbackTimer=null,filmReady=false;
+  function cancelFallback(){clearTimeout(fallbackTimer);fallbackTimer=null;}
+  function showFilmEnd(failed=false){
+    if(!motionState.film)return;
+    cancelFallback();
+    filmLoading.classList.add('is-hidden');
+    filmEnd.classList.add('is-active');
+    $('#film-end-head').textContent=failed?'Découvrez mes solutions.':'Votre projet mérite mieux.';
+    filmMessage.textContent=failed?'Le film n’a pas pu être chargé. Les six solutions restent accessibles immédiatement.':
+      'Six expertises, un interlocuteur. Découvrez le service qui correspond à votre projet.';
+    $('#film-discover').focus({preventScroll:true});
+  }
+  function startFilm(){
+    if(motionState.flipping||motionState.film)return;
+    motionState.flipping=true;motionState.film=true;motionState.intro=false;
+    filmReady=false;
+    document.body.classList.remove('is-intro');
+    document.body.classList.add('is-righting');
+    intro.classList.add('is-reversing');
+    film.classList.add('is-loaded');
+    film.setAttribute('aria-hidden','false');
+    filmEnd.classList.remove('is-active');
+    filmLoading.classList.remove('is-hidden');
+    filmProgress.style.width='0%';
+    video.pause();try{video.currentTime=0}catch{}
+    video.muted=false;setSound();
+    // Start playback synchronously inside visitor gesture to permit sound.
+    try{
+      const promise=video.play();
+      promise?.catch?.(()=>{
+        if(!motionState.film)return;
+        video.muted=true;setSound();
+        video.play().catch(()=>{showFilmEnd(true);});
+      });
+    }catch{showFilmEnd(true);}
+    fallbackTimer=setTimeout(()=>{if(!filmReady)showFilmEnd(true);},11000);
+    setTimeout(()=>{
+      film.classList.add('is-visible');
+      document.body.classList.remove('is-righting');
+      document.body.classList.add('is-film');
+      intro.hidden=true;
+      motionState.flipping=false;
+      try{video.currentTime=0}catch{}
+      if(filmReady&&!video.ended&&video.paused)video.play().catch(()=>showFilmEnd(true));
+      if(!filmReady&&video.error)showFilmEnd(true);
+    },reduced.matches?0:1390);
+    schedule();
+  }
+  turn.addEventListener('click',startFilm);
+  video.addEventListener('playing',()=>{filmReady=true;cancelFallback();filmLoading.classList.add('is-hidden');});
+  video.addEventListener('timeupdate',()=>{
+    const d=video.duration;
+    if(d>0)filmProgress.style.width=Math.min(100,(video.currentTime/d)*100)+'%';
+  });
+  video.addEventListener('ended',()=>showFilmEnd(false));
+  video.addEventListener('error',()=>showFilmEnd(true));
+  sound.addEventListener('click',()=>{
+    if(video.paused&&!video.ended){
+      video.muted=false;setSound();video.play().catch(()=>showFilmEnd(true));
+    }else{video.muted=!video.muted;setSound();}
+  });
+  function leaveFilm(){
+    cancelFallback();video.pause();
+    motionState.film=false;motionState.intro=false;motionState.flipping=false;
+    film.classList.remove('is-visible','is-loaded');
+    film.setAttribute('aria-hidden','true');
+    document.body.classList.remove('is-film','is-righting','is-intro');
+    root.style.transform='none';
+    if(initialOffer){
+      const index=services.findIndex(s=>s.id===initialOffer);
+      if(index>=0){choose(index,true);schedule();return;}
+    }
+    if(location.hash!=='#solutions')history.replaceState({},'','#solutions');
+    $('#solutions').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});
+    $('#solutions-heading').focus({preventScroll:true});
+    schedule();
+  }
+  $('#film-discover').addEventListener('click',e=>{e.preventDefault();leaveFilm();});
+  // Preserve a single main conversion CTA before the services.
+  $$('.to-solutions').forEach(a=>a.addEventListener('click',e=>{
+    if(motionState.intro||motionState.film)return;
+    e.preventDefault();location.hash='solutions';
+    $('#solutions').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});
+  }));
+  $('#other-offers').addEventListener('click',()=>{
+    $('#solutions').scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});
+  });
+  window.addEventListener('popstate',()=>{
+    if(motionState.intro||motionState.film)return;
+    const match=/^#solution-(web|sav|avis|prospects|crm|automation)$/.exec(location.hash);
+    if(match){const idx=services.findIndex(s=>s.id===match[1]);if(idx>=0)choose(idx,false);}
+  });
+  // First paint keeps the true homepage upside down. Notification arrives at 1.7s.
+  showCard(0);
+  if(reduced.matches){intro.classList.add('is-ready');turn.focus({preventScroll:true});}
+  else setTimeout(()=>{if(motionState.intro){intro.classList.add('is-ready');turn.focus({preventScroll:true});}},1700);
+  window.addEventListener('load',()=>{
+    // Direct offer links must still present the cinematic first impression.
+    if(location.hash)window.scrollTo({top:0,behavior:'instant'});
+  },{once:true});
+})();
