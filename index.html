@@ -15,7 +15,8 @@
 <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="./assets/moez-portrait-900.webp" as="image" fetchpriority="high">
 <link rel="stylesheet" href="./assets/signature-clean.css?v=20261014-1">
-<script src="./assets/signature-clean.js?v=20261014-1" defer></script>
+<link rel="stylesheet" href="./assets/signature-motion.css?v=20261014-b">
+<script src="./assets/signature-clean.js?v=20261014-b" defer></script>
 <style>html{background:#0b0b0b}body{margin:0}.site{background:#111}body.is-intro .site{transform:rotate(180deg) scale(.96);position:fixed;inset:0;height:100dvh;overflow:hidden}</style>
 <noscript><style>body.is-intro{overflow:auto!important}body.is-intro .site{position:relative!important;transform:none!important;height:auto!important;overflow:visible!important}.intro{display:none!important}.detail{display:block!important}</style></noscript>
 </head>
@@ -26,7 +27,7 @@
     <a class="brand" href="./" aria-label="Accueil Moez">moez.<span>STUDIO &amp; SOLUTIONS</span></a>
     <nav class="header-nav" aria-label="Navigation">
       <a href="#solutions" class="to-solutions">Les six offres</a>
-      <a href="#contact">Mon approche</a>
+      <a href="#methode">Ma méthode</a>
       <a href="#contact" class="nav-contact">Discutons ↗</a>
     </nav>
   </header>
@@ -37,6 +38,7 @@
           <img src="./assets/moez-portrait-900.webp" alt="" width="900" height="900" fetchpriority="high" decoding="async">
         </picture>
       </div>
+      <div class="hero-depth" aria-hidden="true"><span class="hero-depth__ring hero-depth__ring--one"></span><span class="hero-depth__ring hero-depth__ring--two"></span><span class="hero-depth__axis"></span></div>
       <div class="hero-copy">
         <span class="hero-eyebrow">Création de sites internet &amp; services aux entreprises</span>
         <h1 class="hero-title" id="hero-title">L'impact<br><em>avant tout.</em></h1>
@@ -46,6 +48,11 @@
       <span class="hero-vertical" aria-hidden="true">SIGNATURE / 2026 — PARCOURS PERSONNALISÉ</span>
       <span class="hero-corner" aria-hidden="true">DÉFILER <i></i></span>
     </section>
+    <aside class="value-rail" aria-label="Mes engagements de travail">
+      <span><i aria-hidden="true">01</i><strong>Une vision claire</strong><small>Comprendre vos objectifs avant de créer</small></span>
+      <span><i aria-hidden="true">02</i><strong>Un interlocuteur direct</strong><small>Un échange simple, sans intermédiaire</small></span>
+      <span><i aria-hidden="true">03</i><strong>Un travail vérifiable</strong><small>Des livrables et des étapes précisés ensemble</small></span>
+    </aside>
     <section class="collection" id="solutions" aria-labelledby="solutions-heading">
       <div class="section-head">
         <div><span class="section-kicker">01 / 06 — Des expertises qui bougent</span>
@@ -57,6 +64,7 @@
         <div class="cards" id="cards">
           <noscript><p>Offres : Sites internet, Service client, Avis clients, Appels et relances, Dossiers clients, Automatisation.</p></noscript>
         </div>
+        <div class="stage-timer" aria-hidden="true"><span id="stage-timer-fill"></span></div>
         <div class="stage-controls" aria-label="Navigation des offres">
           <button id="stage-prev" type="button" aria-label="Offre précédente">←</button>
           <output id="stage-count" aria-live="polite">01 / 06</output>
@@ -64,9 +72,13 @@
         </div>
       </div>
       <div class="collection-status">
-        <span id="stage-current">SITES INTERNET</span>
-        <span>VISUELS D’ILLUSTRATION — SERVICES PERSONNALISÉS</span>
+        <div class="collection-selection"><span class="collection-selection__eyebrow">OFFRE SÉLECTIONNÉE <em id="stage-selected-number">01 / 06</em></span>
+          <strong id="stage-current">SITES INTERNET</strong>
+          <p id="stage-lede">Un site personnalisé, publié et facile à utiliser.</p>
+        </div>
+        <button type="button" class="selected-offer-cta" id="stage-explore" aria-label="Découvrir l'offre Sites internet">Voir cette offre <span aria-hidden="true">↗</span></button>
       </div>
+      <p class="collection-footnote">Photographies d’illustration. Les projets et prestations sont définis selon votre besoin.</p>
     </section>
     <section class="detail" id="detail" aria-labelledby="detail-title" hidden>
       <div class="detail-inner">
@@ -88,6 +100,21 @@
       <div class="other">
         <span>UNE AUTRE EXPERTISE VOUS INTÉRESSE ?</span>
         <button type="button" id="other-offers">Retour aux six offres ↑</button>
+      </div>
+    </section>
+    <section class="method" id="methode" aria-labelledby="method-title">
+      <div class="method-layout">
+        <div class="method-intro motion-reveal">
+          <span class="section-kicker">UNE COLLABORATION SANS FLOU</span>
+          <h2 id="method-title">La méthode<br><em>fait la différence.</em></h2>
+          <p>Une belle expérience ne suffit pas. Chaque projet doit servir un objectif précis, être facile à comprendre et simple à faire évoluer.</p>
+          <div class="method-rule"><span>LE MOUVEMENT AU SERVICE DU RÉSULTAT</span><i aria-hidden="true">↘</i></div>
+        </div>
+        <div class="method-steps" role="list">
+          <article class="method-step motion-reveal" role="listitem"><span class="method-step__no">01</span><div><h3>Comprendre avant de créer</h3><p>Nous définissons le public, les besoins, les priorités et ce qui doit concrètement changer pour votre activité.</p></div><span class="method-step__symbol" aria-hidden="true">↗</span></article>
+          <article class="method-step motion-reveal" role="listitem"><span class="method-step__no">02</span><div><h3>Concevoir avec intention</h3><p>Je construis un parcours clair, des contenus compréhensibles et des interactions qui accompagnent la décision.</p></div><span class="method-step__symbol" aria-hidden="true">↗</span></article>
+          <article class="method-step motion-reveal" role="listitem"><span class="method-step__no">03</span><div><h3>Tester avant de livrer</h3><p>Nous vérifions les interactions, le rendu sur les écrans concernés et les moyens de vous contacter avant la mise en ligne.</p></div><span class="method-step__symbol" aria-hidden="true">↗</span></article>
+        </div>
       </div>
     </section>
     <section class="contact" id="contact" aria-labelledby="contact-title">
