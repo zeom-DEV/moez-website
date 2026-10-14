@@ -1,0 +1,144 @@
+/* SIGNATURE EXPERIENCE / preview branch only.
+   The REAL site-shell is the inverted scene. No duplicate animated movie layer. */
+:root{--mt-signature-bg:#101010;--mt-signature-cream:#f4f4f2}
+body.intro-active{overflow:hidden!important}
+body.intro-active #site-shell{
+ position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;
+ overflow:hidden!important;transform:rotate(180deg) scale(.96)!important;
+ transform-origin:50% 50%!important;
+ filter:grayscale(1) contrast(1.05)!important;
+ visibility:visible!important;opacity:1!important;pointer-events:none!important;
+ transition:transform 1.4s cubic-bezier(.22,.82,.17,1),filter 1.16s ease!important;
+ backface-visibility:hidden;
+}
+body.intro-active.intro-righting #site-shell{
+ transform:rotate(360deg) scale(1)!important;filter:grayscale(0) contrast(1)!important;
+}
+body:not(.intro-active) #site-shell{
+ transform:none!important;filter:none!important;position:relative!important;
+ overflow:visible!important;height:auto!important;pointer-events:auto!important;
+}
+#inversion-intro.inversion-intro{position:fixed!important;inset:0;z-index:10000;
+ background:transparent!important;isolation:isolate;pointer-events:auto}
+#inversion-intro #intro-cinema,#inversion-intro #intro-stage{display:none!important}
+#inversion-intro .intro-shade{
+ position:absolute!important;inset:0!important;z-index:2!important;
+ opacity:1!important;background:rgba(0,0,0,.23)!important;
+ transition:background .7s ease,opacity .4s ease!important;
+ backdrop-filter:none!important;pointer-events:none;
+}
+#inversion-intro.is-ready .intro-shade{
+ background:rgba(0,0,0,.46)!important;
+ backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important;
+}
+#inversion-intro.is-righted .intro-shade{
+ background:transparent!important;backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important;opacity:0!important;
+}
+#inversion-intro .intro-overlay{
+ background:transparent!important;z-index:5!important;
+ pointer-events:none!important;
+}
+#inversion-intro .intro-dialog{
+ width:min(92vw,660px)!important;max-height:calc(100dvh - 32px);
+ border:1px solid #bcbcbc!important;border-radius:2px!important;
+ background:#f6f6f4!important;color:#111!important;
+ box-shadow:0 30px 150px #000b!important;pointer-events:auto!important;
+}
+#inversion-intro:not(.is-ready):not(.is-righted) .intro-dialog{
+ visibility:hidden!important;opacity:0!important;pointer-events:none!important;
+ animation:none!important;transform:translate3d(0,22px,0)!important;
+}
+#inversion-intro.is-ready .intro-dialog{visibility:visible!important}
+#inversion-intro.is-righted .intro-dialog{pointer-events:none!important;visibility:hidden!important}
+#inversion-intro .intro-dialog h2{font-family:Arial,Helvetica,sans-serif!important;font-weight:800;letter-spacing:-.075em}
+#inversion-intro .intro-flip{
+ background:#111!important;color:#fff!important;border:1px solid #111!important;
+ box-shadow:0 8px 0 #333,0 20px 38px #0004!important;
+ min-height:76px;cursor:pointer;
+}
+#inversion-intro .intro-flip::before{border:1px solid #fff6!important}
+#inversion-intro .intro-flip::after{background:#fff!important;box-shadow:none!important}
+#inversion-intro.is-ready .intro-flip{animation:mt-signature-call 2.7s ease-in-out infinite!important}
+@keyframes mt-signature-call{0%,100%{box-shadow:0 8px 0 #333,0 20px 38px #0004,0 0 0 0 #fff0}50%{box-shadow:0 8px 0 #333,0 20px 38px #0004,0 0 0 7px #1112}}
+/* Do not show the film until the actual page has completed its 180-degree rotation. */
+.moez-film.is-active.is-awaiting-flip{opacity:0!important;pointer-events:none!important}
+.moez-film.is-active{opacity:1;transition:opacity .48s ease;will-change:opacity}
+.moez-film video{object-fit:cover;background:#080808}
+.moez-film__loading{background:rgba(0,0,0,.45)}
+/* Keep just one editorial filmstrip, with card geometry always inside viewport.
+   Large photographic backdrop and readable overlay, not a second pseudo-shop. */
+#kinetic-showcase.mt-editorial{background:#141414!important;color:#fff!important}
+#kinetic-showcase .mt-editorial__stage{min-height:clamp(660px,86svh,970px)}
+#kinetic-showcase .mt-editorial__slide{display:block}
+#kinetic-showcase .mt-editorial__photo{position:absolute;inset:0;width:100%;height:100%}
+#kinetic-showcase .mt-editorial__photo img{
+ width:100%;height:100%;object-fit:cover;filter:grayscale(.23) brightness(.64) contrast(1.1);
+}
+#kinetic-showcase .mt-editorial__photo::after{
+ content:"";position:absolute;inset:0;z-index:1;
+ background:linear-gradient(90deg,#090909ef 0%,#090909aa 33%,#09090924 70%,transparent 100%),
+ linear-gradient(0deg,#070707bb 0%,transparent 32%);
+}
+#kinetic-showcase .mt-editorial__copy{
+ position:absolute;inset:0 auto 0 0;width:min(66%,900px);padding:clamp(38px,6vw,106px);
+ background:transparent!important;color:#fff;z-index:2;
+ justify-content:center;
+}
+#kinetic-showcase .mt-editorial__eyebrow{color:#eee;font-weight:800;text-shadow:0 1px 12px #000a}
+#kinetic-showcase .mt-editorial__copy h2{
+ color:#fff!important;text-shadow:0 2px 25px #0008;
+ font-size:clamp(47px,6.6vw,106px);line-height:.98;max-width:12ch;
+}
+#kinetic-showcase .mt-editorial__copy p{
+ color:#ececec!important;text-shadow:0 1px 13px #000b;
+ max-width:450px;font-size:clamp(16px,1.3vw,20px);
+}
+#kinetic-showcase .mt-editorial__cta{
+ background:#fff;color:#111!important;border-color:#fff;font-weight:800;
+}
+#kinetic-showcase .mt-editorial__cta:hover{background:#ddd;color:#111!important}
+#kinetic-showcase .mt-editorial__nav{bottom:clamp(27px,4vw,53px);color:#fff}
+#kinetic-showcase .mt-editorial__nav button{
+ border-color:#fff9;color:#fff;background:#1118;backdrop-filter:blur(6px);
+}
+#kinetic-showcase .mt-editorial__nav button:hover{background:#fff;color:#111}
+#kinetic-showcase .mt-editorial__progress{background:#555;z-index:11}
+#kinetic-showcase .mt-editorial__progress button{background:#555}
+#kinetic-showcase .mt-editorial__progress button::after{background:#fff}
+#kinetic-showcase .mt-editorial__deck{right:clamp(32px,5vw,100px);bottom:clamp(85px,11vh,130px);width:clamp(140px,15vw,245px);height:clamp(190px,21vw,315px)}
+#kinetic-showcase .mt-editorial__footer{background:#f6f6f4;color:#222;padding-top:25px}
+@media(max-width:780px){
+ #kinetic-showcase .mt-editorial__stage{height:min(920px,105svh);min-height:710px;max-height:920px}
+ #kinetic-showcase .mt-editorial__copy{
+  top:43%;left:0;right:0;bottom:0;width:100%;
+  justify-content:flex-start;padding:clamp(25px,5vw,42px) 23px 86px;
+  background:linear-gradient(0deg,#111 2%,#151515dd 72%,transparent 100%)!important;
+ }
+ #kinetic-showcase .mt-editorial__photo{position:absolute;inset:0;min-height:0;order:0}
+ #kinetic-showcase .mt-editorial__photo img{filter:grayscale(.2) brightness(.78);object-position:center 32%}
+ #kinetic-showcase .mt-editorial__photo::after{
+  background:linear-gradient(0deg,#0a0a0afa 0%,#0a0a0acc 24%,transparent 77%)
+ }
+ #kinetic-showcase .mt-editorial__copy h2{font-size:clamp(37px,8.7vw,65px);max-width:16ch;margin-bottom:16px}
+ #kinetic-showcase .mt-editorial__copy p{font-size:clamp(14px,3.6vw,17px);line-height:1.48;margin-bottom:18px;max-width:34ch}
+ #kinetic-showcase .mt-editorial__eyebrow{margin-bottom:18px}
+ #kinetic-showcase .mt-editorial__nav{left:23px;bottom:23px}
+ #kinetic-showcase .mt-editorial__deck{
+  top:clamp(100px,14svh,170px);bottom:auto;right:23px;
+  width:clamp(115px,30vw,155px);height:clamp(154px,42vw,202px);
+ }
+ #kinetic-showcase .mt-editorial__deck-status{display:none}
+}
+@media(max-width:370px){
+ #kinetic-showcase .mt-editorial__stage{height:820px;min-height:820px}
+ #kinetic-showcase .mt-editorial__copy{top:39%;padding:22px 18px 87px}
+ #kinetic-showcase .mt-editorial__copy h2{font-size:36px}
+ #kinetic-showcase .mt-editorial__deck{width:108px;height:149px;top:125px;right:15px}
+ #kinetic-showcase .mt-editorial__nav{left:18px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.intro-active #site-shell{transform:none!important;transition:none!important}
+ #inversion-intro .intro-flip,.moez-film{animation:none!important;transition:none!important}
+ #kinetic-showcase .mt-editorial__photo img{animation:none!important;transform:none!important}
+}
