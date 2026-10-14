@@ -60,7 +60,11 @@ class QA(unittest.TestCase):
   self.assertIn('Copier le message',homepage)
  def test_audit_critical_contracts(self):
   homepage=self.pages['index.html']
-  self.assertIn("document.body.classList.add('mt-direct-entry')", homepage, 'The film must not block the initial view')
+  self.assertIn('class="intro-active"', homepage, 'The signature must invert the homepage on first entry')
+  self.assertIn("else reveal();", homepage, 'The first visit must show the signature introduction')
+  self.assertIn('id="intro-flip"', homepage, 'The flip action must be available')
+  self.assertIn('film-experience.js?v=20261014-intro-restored1', homepage, 'The film player must be loaded')
+  self.assertNotIn("document.body.classList.add('mt-direct-entry')",homepage,'Do not bypass the signature intro on every visit')
   self.assertIn('data-replay-film',homepage,'Keep the film optional and accessible')
   self.assertIn('id="realisations"',homepage,'Show one verifiable personal project')
   self.assertIn('réalisation pour un client',homepage,'Do not invent customer proof')
