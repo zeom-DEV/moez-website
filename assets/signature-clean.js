@@ -29,6 +29,7 @@
     '<span class="offer-card__foot"><small>'+escape(s.tag)+'</small><strong>'+escape(s.name)+'</strong>'+
     '<span class="offer-card__action">Explorer cette offre <b aria-hidden="true">↗</b></span></span></button>').join('');
   const allCards=$$('.offer-card',cards);
+  stage.addEventListener('mt:tilted-grid-ready',()=>schedule());
   const timerFill=$('#stage-timer-fill'),stageLede=$('#stage-lede'),
     stageSelectedNumber=$('#stage-selected-number'),stageExplore=$('#stage-explore');
   const serviceTabs=$$('.service-tab'),backdrops=$$('.stage-backdrop'),
@@ -123,7 +124,10 @@
     }
   }
   function autoBlocked(){
-    return motionState.intro||motionState.flipping||motionState.film||!motionState.seen||
+    // React grid has its own uninterrupted cylinder animation.
+    // Do not also auto-cycle the service selectors when it is mounted.
+    return stage.classList.contains('has-tilted-grid')||
+      motionState.intro||motionState.flipping||motionState.film||!motionState.seen||
       motionState.dragging||motionState.focused||document.hidden||reduced.matches;
   }
   function schedule(){
