@@ -31,7 +31,7 @@
   const allCards=$$('.offer-card',cards);
   const timerFill=$('#stage-timer-fill'),stageLede=$('#stage-lede'),
     stageSelectedNumber=$('#stage-selected-number'),stageExplore=$('#stage-explore');
-  const serviceTabs=$('.service-tab'),backdrops=$('.stage-backdrop'),
+  const serviceTabs=$$('.service-tab'),backdrops=$$('.stage-backdrop'),
         nextPreview=$('#stage-next-preview'),nextPreviewName=$('#stage-next-name'),
         autoplayInterval=4900;
   let activeBackdrop=0,backdropVersion=0,lastBackdropOffer=0;
