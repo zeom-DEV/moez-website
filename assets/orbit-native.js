@@ -242,8 +242,10 @@
           // leave it fully centered and legible for several seconds.
           offset += diff*(1-Math.exp(-elapsed/(small?155:175)));
           if (small && Math.abs(destination-offset)<.005) offset=destination;
-          const focus=mod(Math.round(offset));
-          if(focus!==selected){selected=focus;displaySelection();}
+          if(small){
+            const focus=mod(Math.round(offset));
+            if(focus!==selected){selected=focus;displaySelection();}
+          }
         } else if (!paused && usable && now >= holdUntil) {
           if (small) {
             destination=Math.round(offset)+1;
