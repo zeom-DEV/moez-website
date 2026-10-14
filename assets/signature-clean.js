@@ -18,6 +18,7 @@
     detail=$('#detail'),detailTitle=$('#detail-title'),detailNumber=$('#detail-number'),detailLede=$('#detail-lede'),
     detailList=$('#detail-list'),detailImage=$('#detail-image'),detailResult=$('#detail-result'),
     detailAction=$('#detail-action'),detailTag=$('#detail-tag');
+  root.inert=true; // Trap keyboard focus in the intended opening experience.
   const initialOffer=/^#solution-(web|sav|avis|prospects|crm|automation)$/.test(location.hash)
     ? location.hash.slice(10) : null;
   const escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -152,6 +153,7 @@
     document.body.classList.add('is-righting');
     intro.classList.add('is-reversing');
     film.classList.add('is-loaded');
+    film.inert=false;
     film.setAttribute('aria-hidden','false');
     filmEnd.classList.remove('is-active');
     filmLoading.classList.remove('is-hidden');
@@ -173,6 +175,8 @@
       document.body.classList.remove('is-righting');
       document.body.classList.add('is-film');
       intro.hidden=true;
+      intro.inert=true;
+      sound.focus({preventScroll:true});
       motionState.flipping=false;
       try{video.currentTime=0}catch{}
       if(filmReady&&!video.ended&&video.paused)video.play().catch(()=>showFilmEnd(true));
@@ -198,6 +202,8 @@
     motionState.film=false;motionState.intro=false;motionState.flipping=false;
     film.classList.remove('is-visible','is-loaded');
     film.setAttribute('aria-hidden','true');
+    film.inert=true;
+    root.inert=false;
     document.body.classList.remove('is-film','is-righting','is-intro');
     root.style.transform='none';
     if(initialOffer){
@@ -210,6 +216,8 @@
     schedule();
   }
   $('#film-discover').addEventListener('click',e=>{e.preventDefault();leaveFilm();});
+  // Only the intro is keyboard-accessible before the flip.
+  film.inert=true;
   // Preserve a single main conversion CTA before the services.
   $$('.to-solutions').forEach(a=>a.addEventListener('click',e=>{
     if(motionState.intro||motionState.film)return;
