@@ -284,3 +284,19 @@ body.is-intro .header,body.is-film .header,body.is-righting .header{position:abs
  .hero-depth__ring,.selected-offer-cta,.method-step:before{transition:none!important}
  .offer-card[data-position="center"]{transform:translate3d(-50%,-52%,0)!important}
 }
+
+/* Adjacent cards are visual previews, not half-clipped text blocks. */
+.offer-card__head,.offer-card__foot{transition:opacity .28s ease}
+.offer-card:not([data-position="center"]) .offer-card__head,
+.offer-card:not([data-position="center"]) .offer-card__foot{opacity:0}
+/* The movie-like background only animates when the hero is in view. */
+.hero-media img{animation-play-state:paused}
+.hero.is-in-view .hero-media img{animation-play-state:running}
+body.is-film .hero-media img{animation-play-state:paused}
+@media(max-width:680px){
+ .offer-card__head,.offer-card__foot{transition-duration:.2s}
+ .offer-card:not([data-position="center"]) img{filter:grayscale(1) contrast(.93) brightness(.76)}
+}
+@media(prefers-reduced-motion:reduce){
+ .offer-card__head,.offer-card__foot{transition:none}
+}
