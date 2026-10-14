@@ -7,7 +7,7 @@
 .mt-editorial__header{height:clamp(62px,7vw,84px);padding:0 clamp(22px,5vw,88px);display:flex;align-items:center;justify-content:space-between;gap:20px;background:#fff;border-top:1px solid #ddd;border-bottom:1px solid #dededb}
 .mt-editorial__header strong{font:750 clamp(20px,2.6vw,32px)/1 Arial,Helvetica,sans-serif;letter-spacing:-.065em}
 .mt-editorial__header strong small{display:block;font:600 9px/1.5 Arial,Helvetica,sans-serif;letter-spacing:.24em;margin-top:5px}
-.mt-editorial__header nav{display:flex;gap:clamp(12px,3vw,40px);font-size:clamp(11px,1vw,14px);font-weight:650}
+.mt-editorial__header nav{display:flex;gap:clamp(12px,2vw,28px);font-size:clamp(11px,1vw,14px);font-weight:650;white-space:nowrap;overflow-x:auto;scrollbar-width:none;overscroll-behavior-x:contain}.mt-editorial__header nav::-webkit-scrollbar{display:none}
 .mt-editorial__header a{border-bottom:1px solid transparent;padding:8px 0;transition:border-color .25s}
 .mt-editorial__header a:hover,.mt-editorial__header a:focus-visible{border-color:currentColor}
 .mt-editorial__stage{min-height:clamp(530px,70vh,850px);position:relative;background:#eeece7;overflow:hidden}
@@ -70,7 +70,7 @@ body[data-page=home] .mt-editorial__cta:focus-visible,body[data-page=home] .mt-e
  #kinetic-showcase.mt-editorial{margin-bottom:42px}
  .mt-editorial__header{height:67px;padding:0 20px}
  .mt-editorial__header strong{font-size:24px}
- .mt-editorial__header nav a:nth-child(2){display:none}
+ .mt-editorial__header nav{flex:1;min-width:0;gap:19px}.mt-editorial__header strong{flex:0 0 auto;font-size:16px;max-width:132px;white-space:normal}.mt-editorial__header strong small{font-size:7px;letter-spacing:.06em}
  .mt-editorial__header nav{font-size:11px}
  .mt-editorial__stage{height:clamp(780px,112dvh,980px);min-height:780px;max-height:980px}
  .mt-editorial__slide{display:flex;flex-direction:column}
