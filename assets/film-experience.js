@@ -9,10 +9,11 @@ node.setAttribute('role','dialog');
 node.setAttribute('aria-modal','true');
 node.setAttribute('aria-label','Film Signature de Moez');
 node.setAttribute('aria-hidden','true');
-node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"none\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-480.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / CRÉATION DE SITES INTERNET</span><h2>UN SITE CLAIR.<br>UNE ACTION ÉVIDENTE.</h2><p>Découvrez les six services proposés et choisissez celui qui correspond à votre projet.</p><div class=\"moez-film__buttons\"><a href=\"#offres\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a></div></div>";
+node.innerHTML="<div class=\"moez-film__controls\"><span class=\"moez-film__label\">FILM SIGNATURE / MOEZ</span><button type=\"button\" data-film-sound aria-label=\"Couper le son\">Couper le son ✕</button></div>\n<video preload=\"metadata\" playsinline webkit-playsinline disablepictureinpicture poster=\"./assets/moez-portrait-480.webp\" aria-label=\"Film de présentation de Moez\"><source src=\"./assets/moez-signature-teaser-12s.mp4\" type=\"video/mp4\"></video>\n<div class=\"moez-film__loading\" data-film-loading aria-live=\"polite\"><span class=\"moez-film__loading-index\">M / 001</span><strong>PRENDRE LE RELAIS.</strong><span class=\"moez-film__loading-track\" aria-hidden=\"true\"><i></i></span></div>\n<div class=\"moez-film__progress\" aria-hidden=\"true\"><i data-film-progress></i></div>\n<div class=\"moez-film__finished\" data-film-end aria-hidden=\"true\"><span class=\"moez-film__eyebrow\">MOEZ / CRÉATION DE SITES INTERNET</span><h2>UN SITE CLAIR.<br>UNE ACTION ÉVIDENTE.</h2><p>Découvrez les six services proposés et choisissez celui qui correspond à votre projet.</p><div class=\"moez-film__buttons\"><a href=\"#offres\" data-film-discover>DÉCOUVRIR MES SOLUTIONS ↘</a></div></div>";
 document.body.append(node);
 const video=node.querySelector('video'),sound=node.querySelector('[data-film-sound]'),end=node.querySelector('[data-film-end]'),loading=node.querySelector('[data-film-loading]'),progress=node.querySelector('[data-film-progress]');
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const firstDeepLink = /^#solution-(?:web|sav|avis|prospects|crm|automation)$/.test(location.hash) ? location.hash : null;
 let open=false,previousFocus=null,watchdog=0,started=false,replayed=false,observer=null;
 let background=[];
 const clearWatch=()=>{clearTimeout(watchdog);watchdog=0;};
@@ -78,7 +79,7 @@ function play(fromIntro){
      }catch(e){busy(false);sound.textContent='Lire le film ▶';}
    });
  }catch(e){busy(false);sound.textContent='DÉMARRER LE FILM ▶';}
- watchdog=setTimeout(()=>{if(open&&!started)fail();},12000);
+ watchdog=setTimeout(()=>{if(open&&!started)fail();},8000);
 }
 // Main visitor action must start the film immediately inside the click gesture.
 trigger.addEventListener('click', () => play(true));
@@ -117,10 +118,18 @@ function discover(){
  close(false);
  if(intro&&!intro.classList.contains('is-hidden')){intro.classList.add('is-hidden');intro.setAttribute('aria-hidden','true');document.body.classList.remove('intro-active','intro-righting');document.getElementById('intro-cinema-video')?.pause();}
  const shell=document.getElementById('site-shell');if(shell)shell.inert=false;
- if(location.hash!=='#offres')history.pushState(null,'','#offres');
- // The offer overview is the destination; do not invoke the old carousel shortcut.
- document.getElementById('offres')?.scrollIntoView({behavior:'instant',block:'start'});
- const title=document.getElementById('offers-five-title');if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
+ const destination = firstDeepLink && document.getElementById(firstDeepLink.slice(1)) ? firstDeepLink : '#offres';
+ if(location.hash!==destination)history.pushState(null,'',destination);
+ // A bookmarked offer keeps its destination; ordinary entry reveals all six cards.
+ if(destination==='#offres'){
+   document.getElementById('offres')?.scrollIntoView({behavior:'instant',block:'start'});
+   const title=document.getElementById('offers-five-title');if(title){title.tabIndex=-1;title.focus({preventScroll:true});}
+ } else {
+   window.dispatchEvent(new PopStateEvent('popstate'));
+   const panel=document.getElementById(destination.slice(1));
+   panel?.scrollIntoView({behavior:'instant',block:'start'});
+   const h=panel?.querySelector('h2');if(h){h.tabIndex=-1;h.focus({preventScroll:true});}
+ }
  window.dispatchEvent(new Event('mt:film-discover'));
 }
 node.querySelector('[data-film-discover]').addEventListener('click',e=>{e.preventDefault();discover();});
