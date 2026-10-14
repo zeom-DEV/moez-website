@@ -606,6 +606,12 @@ body.mt-direct-entry #inversion-intro{display:none!important}
 body.mt-direct-entry #site-shell{position:relative;inset:auto;transform:none;filter:none;pointer-events:auto}
 
 
+/* The photographic carousel now follows the header immediately.
+   Do not leave the old promo strip's empty beige gap behind. */
+body[data-page=home] .offers-five > .mt-orbit-showcase{
+  margin-top:0;
+}
+
 /* Mobile cinema: one complete photograph at a time, never a stack of
    intersecting 3D cards. Desktop keeps the original physics. */
 @media(max-width:650px){
