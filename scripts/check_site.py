@@ -63,7 +63,7 @@ class QA(unittest.TestCase):
   self.assertIn('class="intro-active"', homepage, 'The signature must invert the homepage on first entry')
   self.assertIn("else reveal();", homepage, 'The first visit must show the signature introduction')
   self.assertIn('id="intro-flip"', homepage, 'The flip action must be available')
-  self.assertIn('film-experience.js?v=20261014-intro-restored1', homepage, 'The film player must be loaded')
+  self.assertIn('film-experience.js?v=20261014-intro-stable1', homepage, 'The stable film player must be loaded')
   self.assertNotIn("document.body.classList.add('mt-direct-entry')",homepage,'Do not bypass the signature intro on every visit')
   self.assertNotIn('class="mt-cinema-choice"',homepage,'Redundant beige cinema strip must be removed')
   self.assertIn('id="intro-flip"',homepage,'Inverted intro keeps the original film-launch CTA')

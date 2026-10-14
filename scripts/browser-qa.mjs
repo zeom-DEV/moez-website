@@ -41,6 +41,11 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
    size.name+': service content is not focusable through the inverted intro');
  assert.equal(await intro.getAttribute('aria-hidden'),null,
    size.name+': cinema dialog is accessible on initial entry');
+ if(size.width<=650){
+   assert.equal(await page.locator('#kinetic-showcase').evaluate(el=>getComputedStyle(el).visibility),'hidden',
+     size.name+': inverted film isolates the unseen mobile carousel from layout shifts');
+ }
+
  await page.locator('#intro-flip').waitFor({state:'visible'});
  await page.waitForFunction(()=>document.querySelector('#inversion-intro')?.classList.contains('is-ready'),null,{timeout:10000});
  assert.equal(new URL(page.url()).hash,'',size.name+': first visit does not change the URL');
@@ -71,6 +76,10 @@ for(const size of [{name:'mobile',width:390,height:844},{name:'small-mobile',wid
  }
  await page.locator('.moez-film.is-active').waitFor({state:'hidden'});
  await page.locator('#inversion-intro').waitFor({state:'hidden'});
+ if(size.width<=650){
+   assert.equal(await page.locator('#kinetic-showcase').evaluate(el=>getComputedStyle(el).visibility),'visible',
+     size.name+': full photographic carousel reappears after cinematic transition');
+ }
  assert.equal(new URL(page.url()).hash,'#offres',size.name+': viewing the film returns to available offers');
  const heroTop=await page.locator('#kinetic-showcase').evaluate(el=>el.getBoundingClientRect().top);
  assert(heroTop>=-10&&heroTop<350,size.name+': real carousel is now the first section ('+heroTop+')');
