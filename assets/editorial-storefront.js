@@ -6,6 +6,10 @@
   const stage = root.querySelector('.mt-editorial__stage');
   const slides = Array.from(root.querySelectorAll('.mt-editorial__slide'));
   const progress = Array.from(root.querySelectorAll('.mt-editorial__progress button'));
+  const deck = root.querySelector('.mt-editorial__deck');
+  const cards = Array.from(root.querySelectorAll('.mt-editorial__deck-card'));
+  const tiles = Array.from(root.querySelectorAll('.mt-editorial__tile'));
+  if (!deck || cards.length !== 6) return;
   const counter = root.querySelector('.mt-editorial__counter');
   const backwards = root.querySelector('[data-editorial-previous]');
   const forwards = root.querySelector('[data-editorial-next]');
@@ -14,7 +18,7 @@
   let current = Math.max(0,slides.findIndex(slide=>slide.dataset.active==='true'));
   let viewable = false, pointer = null, timer = 0;
   let hovering = false, focused = false;
-  const interval = 5800;
+  const interval = 5300;
   const wrap = n => (n + slides.length) % slides.length;
   function blocked() {
     const intro = document.getElementById('inversion-intro');
@@ -41,6 +45,18 @@
         if (img && img.loading === 'lazy') img.loading = 'eager';
       }
     });
+    cards.forEach((card,i) => {
+      const relative = (i - current + slides.length) % slides.length;
+      const position = relative===0?'front':relative===1?'next':relative===2?'third':relative===slides.length-1?'exit':'out';
+      const shown = relative < 3;
+      card.dataset.stack = position;
+      card.setAttribute('aria-hidden',String(!shown));
+      card.inert = !shown;
+      if (shown) {
+        const img = card.querySelector('img');
+        if (img && img.loading === 'lazy') img.loading = 'eager';
+      }
+    });
     progress.forEach((button,i) => {
       button.setAttribute('aria-current',String(i === current));
       button.setAttribute('aria-label','Voir l’offre ' + (i+1) + ' sur ' + slides.length);
@@ -51,11 +67,12 @@
   backwards.addEventListener('click', () => go(current - 1));
   forwards.addEventListener('click', () => go(current + 1));
   progress.forEach((button,i) => button.addEventListener('click',() => go(i)));
-  root.querySelectorAll('.mt-editorial__tile[data-service]').forEach(tile => {
-    tile.addEventListener('pointerenter',()=>{const i=slides.findIndex(slide=>slide.dataset.service===tile.dataset.service);if(i>=0)go(i);});
-  });
-  stage.addEventListener('pointerenter',()=>{hovering=true;schedule();});
-  stage.addEventListener('pointerleave',()=>{hovering=false;schedule();});
+  // Offer tiles link straight to their service rather than changing the hero
+  // unexpectedly when the user merely moves a pointer across the gallery.
+  // Cards glide into position automatically, while explicit navigation wins.
+  // Hovering the entire hero must NOT freeze animation on desktop.
+  deck.addEventListener('pointerenter',()=>{hovering=true;schedule();});
+  deck.addEventListener('pointerleave',()=>{hovering=false;schedule();});
   stage.addEventListener('focusin',()=>{focused=true;schedule();});
   stage.addEventListener('focusout',()=>{focused=stage.contains(document.activeElement);schedule();});
   stage.addEventListener('pointerdown',event=>{
@@ -79,6 +96,13 @@
   window.addEventListener('mt:film-discover',()=>{go(0);schedule();});
   window.addEventListener('popstate',schedule);
   if ('IntersectionObserver' in window) {
+    const tilesObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {entry.target.classList.add('is-visible');tilesObserver.unobserve(entry.target);}
+      });
+    },{rootMargin:'60px 0px',threshold:.06});
+    tiles.forEach(tile=>tilesObserver.observe(tile));
+    root.classList.add('mt-deck-motion');
     const observer=new IntersectionObserver(entries=>{
       viewable=entries.some(entry=>entry.isIntersecting);
       schedule();
