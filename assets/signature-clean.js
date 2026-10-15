@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  window.__signatureReady=true;
   const $=(s,base=document)=>base.querySelector(s);
   const $$=(s,base=document)=>Array.from(base.querySelectorAll(s));
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -21,6 +22,7 @@
   root.inert=true; // Trap keyboard focus in the intended opening experience.
   const initialOffer=/^#solution-(web|sav|avis|prospects|crm|automation)$/.test(location.hash)
     ? location.hash.slice(10) : null;
+  const directEntry=Boolean(initialOffer)||['#solutions','#contact'].includes(location.hash);
   const escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const picture=id=>'<picture><source srcset="./assets/orbit-photos/'+id+'-mobile.webp" media="(max-width:680px)"><img src="./assets/orbit-photos/'+id+'-desktop.webp" alt="" width="640" height="860" loading="lazy" decoding="async"></picture>';
   cards.innerHTML=services.map((s,i)=>'<button class="offer-card" type="button" data-index="'+i+'" aria-label="Découvrir l’offre '+escape(s.name)+'">'+
@@ -169,7 +171,7 @@
         video.play().catch(()=>{showFilmEnd(true);});
       });
     }catch{showFilmEnd(true);}
-    fallbackTimer=setTimeout(()=>{if(!filmReady)showFilmEnd(true);},11000);
+    fallbackTimer=setTimeout(()=>{if(!filmReady)showFilmEnd(true);},5000);
     setTimeout(()=>{
       film.classList.add('is-visible');
       document.body.classList.remove('is-righting');
@@ -178,7 +180,6 @@
       intro.inert=true;
       sound.focus({preventScroll:true});
       motionState.flipping=false;
-      try{video.currentTime=0}catch{}
       if(filmReady&&!video.ended&&video.paused)video.play().catch(()=>showFilmEnd(true));
       if(!filmReady&&video.error)showFilmEnd(true);
     },reduced.matches?0:1390);
@@ -216,6 +217,26 @@
     schedule();
   }
   $('#film-discover').addEventListener('click',e=>{e.preventDefault();leaveFilm();});
+  $('#film-exit').addEventListener('click',leaveFilm);
+  function revealDirect(target=location.hash){
+    cancelFallback();
+    motionState.intro=false;motionState.film=false;motionState.flipping=false;
+    video.pause();film.classList.remove('is-visible','is-loaded');
+    film.setAttribute('aria-hidden','true');film.inert=true;
+    intro.hidden=true;intro.inert=true;
+    root.inert=false;root.style.transform='none';
+    document.body.classList.remove('is-intro','is-film','is-righting');
+    if(initialOffer){
+      const idx=services.findIndex(s=>s.id===initialOffer);
+      if(idx>=0){choose(idx,false);setTimeout(()=>detail.scrollIntoView({behavior:'instant',block:'start'}),0);}
+    }else if(target==='#solutions'||target==='#contact'){
+      setTimeout(()=>$(target)?.scrollIntoView({behavior:'instant',block:'start'}),0);
+    }
+    schedule();
+  }
+  $('#intro-direct').addEventListener('click',e=>{
+    e.preventDefault();history.replaceState({},'','#solutions');revealDirect('#solutions');
+  });
   // Only the intro is keyboard-accessible before the flip.
   film.inert=true;
   // Preserve a single main conversion CTA before the services.
@@ -234,10 +255,11 @@
   });
   // First paint keeps the true homepage upside down. Notification arrives at 1.7s.
   showCard(0);
-  if(reduced.matches){intro.classList.add('is-ready');turn.focus({preventScroll:true});}
+  if(directEntry){
+    revealDirect(location.hash);
+  }else if(reduced.matches){intro.classList.add('is-ready');turn.focus({preventScroll:true});}
   else setTimeout(()=>{if(motionState.intro){intro.classList.add('is-ready');turn.focus({preventScroll:true});}},1700);
   window.addEventListener('load',()=>{
-    // Direct offer links must still present the cinematic first impression.
-    if(location.hash)window.scrollTo({top:0,behavior:'instant'});
+    if(!directEntry&&location.hash)window.scrollTo({top:0,behavior:'instant'});
   },{once:true});
 })();
