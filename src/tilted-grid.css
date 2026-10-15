@@ -1,48 +1,124 @@
-/* React cylinder, only enabled after the real React mount succeeds. */
+/* TILTED GRID / Premium cinematic layout
+ * One moving photographic scene. Controls and offer categories live below it. */
+#solutions{background:#0d0d0d}
+#solutions .section-head{padding-top:8px;margin-bottom:22px;align-items:end}
+#solutions .section-head h2{font-size:clamp(48px,6.5vw,96px);line-height:.93}
+#solutions .section-head p{max-width:370px;font-size:clamp(14px,1.25vw,18px);line-height:1.55}
+.gallery-introduction{
+ width:min(1470px,calc(100% - clamp(34px,9vw,140px)));margin:0 auto 14px;
+ display:flex;justify-content:space-between;gap:20px;
+ font:800 10px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.2em;color:#b6b6b6;
+}
+#solutions .collection-stage{
+ height:clamp(520px,64svh,720px);min-height:0;width:min(100%,1750px);
+ margin:0 auto;position:relative;isolation:isolate;overflow:hidden;
+ background:#121212;contain:layout paint
+}
+#solutions .collection-stage.has-tilted-grid{
+ perspective:none;
+ background:#141414
+}
+#solutions .collection-stage.has-tilted-grid .cards,
+#solutions .collection-stage.has-tilted-grid .stage-ambient,
+#solutions .collection-stage.has-tilted-grid .stage-timer,
+#solutions .collection-stage.has-tilted-grid .stage-next-preview{display:none!important}
+#solutions .collection-stage.has-tilted-grid .stage-backdrops{
+ display:block!important;opacity:1;z-index:0;pointer-events:none
+}
+#solutions .collection-stage.has-tilted-grid .stage-backdrop img{
+ filter:grayscale(1) blur(45px) contrast(.92) brightness(.34);
+ transform:scale(1.22);opacity:.65
+}
+#solutions .collection-stage.has-tilted-grid .stage-backdrops:after{
+ background:radial-gradient(ellipse 78% 79% at 50% 53%,transparent,#0909097d 84%);
+}
+#solutions .collection-stage.has-tilted-grid::before{
+ content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+ background:radial-gradient(ellipse 61% 55% at 50% 44%,#ffffff0a,transparent 100%)
+}
+#solutions .collection-stage.has-tilted-grid::after{
+ display:block;content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+ background:linear-gradient(180deg,#0b0b0b67,transparent 14%,transparent 77%,#0b0b0b8c);
+ filter:none
+}
 .tilted-grid-root{
-  position:absolute;inset:0;z-index:5;width:100%;height:100%;
-  pointer-events:none;opacity:0;
-  transition:opacity .75s cubic-bezier(.2,.82,.17,1)
+ position:absolute;inset:0;z-index:5;height:100%;width:100%;
+ pointer-events:none;opacity:0;transition:opacity .6s ease
 }
 .collection-stage.has-tilted-grid .tilted-grid-root{opacity:1}
-.collection-stage.has-tilted-grid{
-  background:linear-gradient(145deg,#0e0e0e,#222 47%,#0d0d0d);
-  isolation:isolate;overflow:hidden;perspective:none;contain:layout paint
+.tgh-live{height:100%;width:100%;min-height:100%;background:transparent;isolation:isolate}
+.tgh-live img{
+ display:block;object-fit:cover;object-position:center;
+ filter:grayscale(1) contrast(1.12) brightness(.9)
 }
-.collection-stage.has-tilted-grid .cards,
-.collection-stage.has-tilted-grid .stage-backdrops,
-.collection-stage.has-tilted-grid .stage-ambient,
-.collection-stage.has-tilted-grid .stage-timer,
-.collection-stage.has-tilted-grid .stage-next-preview{display:none!important}
-.collection-stage.has-tilted-grid::before{
-  position:absolute;content:"";inset:0;z-index:2;pointer-events:none;
-  background:radial-gradient(ellipse 75% 70% at 50% 50%,#ffffff0b,transparent 70%);
+.tgh-live>div[aria-hidden]{z-index:2;pointer-events:none}
+.tgh-sculpture-caption{
+ position:absolute;bottom:clamp(19px,3.1vw,44px);right:clamp(20px,4.4vw,70px);
+ z-index:8;color:#f5f5f5;background:#101010a8;
+ border-top:1px solid #ffffff7a;padding:12px 0 0 20px;
+ font:800 10px/1.3 Arial,Helvetica,sans-serif;letter-spacing:.12em;
+ text-align:right;pointer-events:none;max-width:75%
 }
-.collection-stage.has-tilted-grid::after{
-  display:block;content:"";position:absolute;inset:0;z-index:3;
-  pointer-events:none;background:linear-gradient(180deg,#0007,transparent 20%,transparent 76%,#000b);
-  filter:none
+.service-choose{
+ width:min(1470px,calc(100% - clamp(34px,9vw,140px)));
+ margin:30px auto 14px;display:flex;justify-content:space-between;align-items:center;gap:15px;
 }
-.tgh-live{background:#151515;height:100%;min-height:100%;isolation:isolate}
-.tgh-live img{display:block;filter:grayscale(1) contrast(1.13) brightness(.8);object-position:center}
-.tgh-live>div[aria-hidden]{z-index:1}
-.tgh-editorial-overlay{position:absolute;inset:0;z-index:6;pointer-events:none;
-  display:flex;flex-direction:column;justify-content:space-between;
-  padding:clamp(22px,3.8vw,60px);color:#f2f2f2}
-.tgh-editorial-index{font:800 11px/1.4 Arial,sans-serif;letter-spacing:.22em}
-.tgh-editorial-line{position:absolute;inset:50% 0 auto;transform:translateY(-50%);
-  border-top:1px solid #fff2;z-index:-1}
-.tgh-editorial-instruction{align-self:flex-end;padding:10px 14px;
-  font:750 clamp(11px,1.1vw,14px)/1.3 Arial,sans-serif;letter-spacing:.035em;
-  text-align:right;background:#080808b5;border:1px solid #ffffff3b;max-width:320px}
+.service-choose>span{font:800 12px/1.4 Arial,sans-serif;letter-spacing:.16em;color:#fff}
+.service-choose small{font:500 13px/1.4 Arial,sans-serif;color:#aaa}
+#solutions .service-directory{
+ width:min(1470px,calc(100% - clamp(34px,9vw,140px)));
+ margin:0 auto 24px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+ border:1px solid #454545;border-right:0;background:#111
+}
+#solutions .service-tab{
+ min-height:84px;justify-content:space-between;gap:8px;
+ background:transparent;color:#b2b2b2;padding:17px 13px 15px;
+ border-right:1px solid #454545;transition:background .3s,color .3s
+}
+#solutions .service-tab:hover{background:#292929;color:#fff}
+#solutions .service-tab.is-current{background:#eaeae8;color:#111}
+#solutions .service-tab__number{font-size:10px}
+#solutions .service-tab__name{font-size:clamp(12px,1.14vw,16px);line-height:1.18}
+#solutions.is-tilted-ready .discover-toolbar{display:none!important}
+#solutions.is-tilted-ready .service-tab__track{display:none!important}
+#solutions .collection-status{
+ border-top:1px solid #363636;padding:30px 0 26px;margin-top:0;
+ align-items:center
+}
+#solutions .collection-selection strong{font-size:clamp(30px,3.6vw,53px)}
+#solutions .selected-offer-cta{min-height:62px}
+#solutions .collection-footnote{color:#8b8b8b}
+@media(max-width:1050px){
+ #solutions .service-directory{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #solutions .service-tab{min-height:70px;padding:12px 14px}
+ #solutions .service-tab__name{font-size:14px}
+ #solutions .collection-stage{height:clamp(480px,66svh,670px)}
+}
 @media(max-width:680px){
-  .collection-stage.has-tilted-grid{height:clamp(340px,54svh,480px)}
-  .tgh-editorial-overlay{padding:21px 15px}
-  .tgh-editorial-index{font-size:9px;letter-spacing:.13em}
-  .tgh-editorial-instruction{font-size:10px;max-width:235px;padding:8px 10px}
+ #solutions{padding-top:60px}
+ #solutions .section-head{margin-bottom:24px;gap:16px}
+ #solutions .section-head h2{font-size:clamp(45px,10.5vw,69px)}
+ #solutions .section-head p{font-size:14px}
+ .gallery-introduction{width:calc(100% - 30px);font-size:9px;letter-spacing:.08em;margin-bottom:12px}
+ #solutions .collection-stage{height:clamp(435px,67svh,565px);min-height:0}
+ #solutions .collection-stage.has-tilted-grid .stage-backdrop img{filter:grayscale(1) blur(33px) brightness(.29)}
+ .service-choose{width:calc(100% - 30px);margin:21px auto 12px}
+ .service-choose>span{font-size:11px;letter-spacing:.1em}
+ .service-choose small{font-size:11px}
+ #solutions .service-directory{width:calc(100% - 30px);grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:19px}
+ #solutions .service-tab{padding:11px 10px 13px;min-height:75px}
+ #solutions .service-tab__name{font-size:clamp(11px,3vw,14px)}
+ #solutions .collection-status{padding:22px 0;gap:18px}
+ .tgh-sculpture-caption{font-size:9px;padding-top:9px;right:16px;bottom:15px}
+}
+@media(max-width:380px){
+ #solutions .collection-stage{height:435px}
+ #solutions .service-directory{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #solutions .service-tab{min-height:61px;padding:10px 11px}
+ .gallery-introduction>span:last-child{display:none}
+ .service-choose small{display:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .tilted-grid-root{transition:none}
-  .tgh-live>div[aria-hidden]{transition:none}
-  .tgh-live img{filter:grayscale(1) contrast(1.05)}
+ .tilted-grid-root{transition:none!important}
+ .tgh-live img{filter:grayscale(1) contrast(1.04)}
 }
