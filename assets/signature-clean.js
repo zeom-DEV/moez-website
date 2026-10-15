@@ -1,7 +1,6 @@
 (() => {
   'use strict';
-  window.__signatureReady=true;
-  const $=(s,base=document)=>base.querySelector(s);
+   const $=(s,base=document)=>base.querySelector(s);
   const $$=(s,base=document)=>Array.from(base.querySelectorAll(s));
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const services=[
@@ -262,4 +261,5 @@
   window.addEventListener('load',()=>{
     if(!directEntry&&location.hash)window.scrollTo({top:0,behavior:'instant'});
   },{once:true});
+  window.__signatureReady=true;
 })();
