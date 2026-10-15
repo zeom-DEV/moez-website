@@ -1,47 +1,22 @@
-name: Verify Signature website
+name: Verify prospective customer website
 on:
   push:
-    branches: [main, refonte-signature-preview-20261010, "audit-public-*", "feature/carousel-native-performance-20261013"]
+    branches: [main, "fix/prospection-stable-20261015"]
   pull_request:
     branches: [main]
+permissions:
+  contents: read
 jobs:
-  validate:
+  browser:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python scripts/check_site.py
-      - run: node --check assets/film-experience.js
-      - run: node --check assets/offer-inline-details.js
-      - run: node --check assets/services-wheel.js
-      - run: node --check assets/kinetic-crossing.js
-      - run: node --check assets/orbit-native.js
+      - run: node --check assets/signature-clean.js
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
       - run: |
-          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/moez-http.log 2>&1 &
-          echo $! > /tmp/moez-http.pid
-      - run: |
-          cd /tmp
-          npm install --no-save playwright@1.56.1 lighthouse@13.5.0
-          npx playwright install --with-deps chrome
-          ln -s /tmp/node_modules "$GITHUB_WORKSPACE/node_modules"
-          cd "$GITHUB_WORKSPACE"
-          node scripts/browser-qa.mjs
-      - run: node scripts/performance-qa.mjs
-      - name: Verify deployed public website
-        if: github.ref == 'refs/heads/main'
-        env:
-          QA_BASE_URL: https://moezthabet.com
-        run: |
-          python scripts/wait_public.py
-          node scripts/browser-qa.mjs
-          node scripts/performance-qa.mjs
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: website-qa-reports
-          path: reports/
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/site-server.log 2>&1 &
+      - run: node scripts/prospection-qa.mjs
