@@ -15,7 +15,8 @@
 <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="./assets/moez-portrait-900.webp" as="image" fetchpriority="high">
 <link rel="stylesheet" href="./assets/signature-clean.css?v=20261014-1">
-<script src="./assets/signature-clean.js?v=20261014-1" defer></script>
+<script src="./assets/signature-clean.js?v=20261015-prospection" defer></script>
+<script>window.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{if(!window.__signatureReady&&document.body.classList.contains('is-intro')){document.body.classList.remove('is-intro');document.getElementById('intro')?.setAttribute('hidden','');if(document.getElementById('site'))document.getElementById('site').inert=false;}},4500)});</script>
 <style>html{background:#0b0b0b}body{margin:0}.site{background:#111}body.is-intro .site{transform:rotate(180deg) scale(.96);position:fixed;inset:0;height:100dvh;overflow:hidden}</style>
 <noscript><style>body.is-intro{overflow:auto!important}body.is-intro .site{position:relative!important;transform:none!important;height:auto!important;overflow:visible!important}.intro{display:none!important}.detail{display:block!important}</style></noscript>
 </head>
@@ -39,8 +40,8 @@
       </div>
       <div class="hero-copy">
         <span class="hero-eyebrow">Création de sites internet &amp; services aux entreprises</span>
-        <h1 class="hero-title" id="hero-title">L'impact<br><em>avant tout.</em></h1>
-        <p class="hero-sub">Un design qui retient l’attention. Des solutions qui simplifient votre quotidien. Une seule ambition : faire avancer votre activité.</p>
+        <h1 class="hero-title" id="hero-title">Votre activité.<br><em>Un site qui convainc.</em></h1>
+        <p class="hero-sub">Je crée des sites internet personnalisés, rapides et adaptés au mobile pour présenter vos services et faciliter les demandes de contact. Je propose aussi cinq services pour accompagner votre activité.</p>
         <a class="primary-link to-solutions" href="#solutions">Découvrir mes solutions <b aria-hidden="true">↗</b></a>
       </div>
       <span class="hero-vertical" aria-hidden="true">SIGNATURE / 2026 — PARCOURS PERSONNALISÉ</span>
@@ -63,6 +64,14 @@
           <button id="stage-next" type="button" aria-label="Offre suivante">→</button>
         </div>
       </div>
+      <nav class="quick-services" aria-label="Accéder directement à un service">
+        <a href="./site-signature.html"><span>01</span> Création de sites internet <b>↗</b></a>
+        <a href="./sav-ecommerce.html"><span>02</span> Service client <b>↗</b></a>
+        <a href="./e-reputation.html"><span>03</span> Avis clients <b>↗</b></a>
+        <a href="./televente.html"><span>04</span> Appels et relances <b>↗</b></a>
+        <a href="./crm-reporting.html"><span>05</span> Dossiers clients <b>↗</b></a>
+        <a href="./automatisation-workflows.html"><span>06</span> Automatisation <b>↗</b></a>
+      </nav>
       <div class="collection-status">
         <span id="stage-current">SITES INTERNET</span>
         <span>VISUELS D’ILLUSTRATION — SERVICES PERSONNALISÉS</span>
@@ -114,12 +123,13 @@
     <button class="intro-cta" id="intro-turn" type="button">
       <span><strong>Remettre le site à l'endroit</strong><small>LE REDRESSEMENT DÉCLENCHE LE FILM</small></span><i aria-hidden="true">↗</i>
     </button>
+    <a id="intro-direct" class="intro-direct" href="#solutions">Accéder directement aux six offres ↗</a>
     <span class="intro-note">Une expérience cinématographique avant la découverte de mes services.</span>
   </div>
 </section>
 <section id="film" class="film" role="dialog" aria-modal="true" aria-label="Film signature de Moez" aria-hidden="true">
   <div class="film-toolbar"><span class="film-label">MOEZ / FILM SIGNATURE</span>
-    <button type="button" class="film-sound" id="film-sound">Couper le son ✕</button>
+    <button type="button" class="film-sound" id="film-sound">Couper le son ✕</button><button type="button" class="film-exit" id="film-exit">Voir les six offres ↗</button>
   </div>
   <video id="signature-video" preload="metadata" playsinline webkit-playsinline disablepictureinpicture poster="./assets/moez-portrait-900.webp" aria-label="Film de présentation de Moez">
     <source src="./assets/moez-signature-teaser-12s.mp4" type="video/mp4">
