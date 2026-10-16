@@ -1,0 +1,115 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{font-family:'DM Sans',Arial,sans-serif;background:#090b10;color:#f6f2ee}
+html{scroll-behavior:smooth}
+body{margin:0;min-width:300px}
+*,*:before,*:after{box-sizing:border-box}
+button,a{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:2px solid #efd0a9;outline-offset:4px}
+.signature-preview{background:#090b10;color:#f6f2ee;min-height:100vh;overflow:hidden;font-family:'DM Sans',Arial,sans-serif}
+.signature-preview__header{min-height:75px;background:#08090d;display:flex;align-items:center;justify-content:space-between;gap:22px;border-bottom:1px solid #f0dbc124;padding:13px clamp(20px,4.5vw,76px)}
+.signature-preview__logo{display:flex;gap:14px;align-items:center;color:#fff9f3;text-decoration:none}
+.signature-preview__logo>span:first-child{font:400 52px/.9 Georgia,serif;letter-spacing:-.15em;margin-right:7px}
+.signature-preview__gold{color:#eec39b}
+.signature-preview__logo>span:last-child{font-size:11px;letter-spacing:.22em;font-weight:800;display:block}
+.signature-preview__logo small{display:block;color:#c7a98e;font-size:8px;letter-spacing:.27em;margin-top:4px;font-weight:600}
+.signature-preview__header-label,.signature-preview__safe{font-size:9px;letter-spacing:.18em;font-weight:800;color:#b5a9a0}
+.signature-preview__header-label i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#9bdaac;box-shadow:0 0 12px #9bdaac85;margin-right:7px}
+.signature-preview__safe{color:#e5c4a6}
+.signature-preview__stage{width:100%;height:clamp(600px,76svh,880px);background:#090b11}
+.signature-preview__controller{padding:22px clamp(20px,5.2vw,90px);display:flex;justify-content:space-between;align-items:center;gap:22px;background:#111217;border-top:1px solid #ffffff20;border-bottom:1px solid #ffffff1c}
+.signature-preview__controller-name{display:grid;gap:8px}
+.signature-preview__controller-eye{font-size:10px;letter-spacing:.2em;font-weight:800;color:#e9c59f}
+.signature-preview__controller-desc{font-size:13px;color:#9a9ea7}
+.signature-preview__controller-actions{display:flex;gap:7px;align-items:center}
+.signature-preview__controller-actions button{background:#1b1b20;color:#f7efe6;border:1px solid #715d4c;min-width:49px;min-height:44px;font-size:19px;cursor:pointer;transition:background .2s,border-color .2s;display:grid;place-items:center}
+.signature-preview__controller-actions button:hover{background:#422f25;border-color:#d5a577}
+.signature-preview__controller-actions .signature-preview__pause{min-width:132px;font-size:10px;letter-spacing:.15em;font-weight:800}
+.signature-preview__focus{max-width:1650px;margin:auto;padding:70px clamp(20px,5.2vw,90px) 78px}
+.signature-preview__focus-top{display:flex;justify-content:space-between;gap:25px;padding:18px 0;border-top:1px solid #746252;border-bottom:1px solid #ffffff1f;font-size:10px;letter-spacing:.2em;font-weight:800;color:#e1b993}
+.signature-preview__focus-grid{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(340px,.8fr);gap:clamp(40px,7vw,120px);margin:58px 0 74px}
+.signature-preview__focus-copy{min-height:365px;display:flex;flex-direction:column;align-items:flex-start}
+.signature-preview__kicker{display:flex;gap:12px;align-items:center;font-size:10px;letter-spacing:.19em;font-weight:800;color:#e6c49e}
+.signature-preview__kicker i{display:block;width:26px;height:1px;background:#dbb88f}
+.signature-preview__focus-copy h1{font:400 clamp(54px,6.9vw,112px)/.99 Georgia,serif;letter-spacing:-.067em;margin:24px 0 28px;color:#f4eee5}
+.signature-preview__focus-copy h1>span{color:#dbad83}
+.signature-preview__focus-copy>p{max-width:720px;font-size:clamp(14px,1.2vw,18px);line-height:1.85;color:#c4c0bd;margin:0 0 28px}
+.signature-preview__result{border-left:2px solid #e4b68d;padding:5px 0 5px 20px;display:grid;gap:7px;max-width:650px}
+.signature-preview__result b{font-size:10px;letter-spacing:.2em;color:#e4bd95}
+.signature-preview__result span{font-size:14px;line-height:1.75;color:#ded7d2}
+.signature-preview__cta-row{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-top:38px}
+.signature-preview__cta-row a{min-height:57px;padding:16px 22px;display:flex;gap:30px;justify-content:space-between;align-items:center;font-size:12px;font-weight:800;text-decoration:none;border:1px solid transparent;transition:transform .25s,background-color .25s}
+.signature-preview__cta-row a:hover{transform:translateY(-3px)}
+.signature-preview__cta-row a span{font-size:23px;font-weight:400}
+.signature-preview__primary{background:#e6bd96;color:#1c1410}
+.signature-preview__primary:hover{background:#ffdfbd}
+.signature-preview__secondary{background:#16171e;color:#f0e6dd;border-color:#7b6350!important}
+.signature-preview__secondary:hover{background:#312821}
+.signature-preview__journey{align-self:stretch;border-left:1px solid #5c5048;padding:12px 0 12px clamp(25px,4vw,65px);display:flex;flex-direction:column}
+.signature-preview__journey-eye{font-size:10px;letter-spacing:.21em;color:#cfb79f;font-weight:800;margin-bottom:32px}
+.signature-preview__journey-stages{display:grid;gap:0}
+.signature-preview__step{padding:21px 0;display:grid;grid-template-columns:43px minmax(0,1fr) 30px;gap:18px;border-top:1px solid #ffffff30;align-items:center}
+.signature-preview__step:last-child{border-bottom:1px solid #ffffff30}
+.signature-preview__step>span:first-child{font-size:12px;color:#d8b18b;font-weight:800}
+.signature-preview__step strong{font-size:clamp(16px,1.6vw,23px);line-height:1.22;letter-spacing:-.02em;font-weight:700}
+.signature-preview__step>span:last-child{text-align:right;font-size:23px;color:#d8b18b}
+.signature-preview__journey-foot{margin-top:auto;padding-top:30px;font-size:10px;letter-spacing:.13em;color:#aca397;font-weight:800}
+.signature-preview__chapters{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));border-top:1px solid #8b7662}
+.signature-preview__chapters button{background:transparent;color:#a79f98;border:0;text-align:left;padding:24px 14px 20px;min-height:140px;border-right:1px solid #ffffff1c;border-bottom:3px solid transparent;display:flex;flex-direction:column;align-items:flex-start;gap:18px;cursor:pointer;transition:color .25s,background .25s,border-color .25s}
+.signature-preview__chapters button:first-child{padding-left:0}
+.signature-preview__chapters button:last-child{border-right:0}
+.signature-preview__chapters button:hover{background:#e8b48610;color:#fff3e7}
+.signature-preview__chapters button.active{color:#f3dabd;border-bottom-color:#e8b486;background:linear-gradient(180deg,#e8b48612,transparent)}
+.signature-preview__chapters button>span{font-size:10px;font-weight:800;letter-spacing:.19em}
+.signature-preview__chapters button strong{font-size:14px;line-height:1.3;font-weight:800;letter-spacing:-.018em}
+.signature-preview__chapters button i{font-size:18px;font-style:normal;margin-top:auto;color:#e8c19c}
+.signature-preview__footer{border-top:1px solid #413a32;padding:28px clamp(20px,5.2vw,90px);display:flex;justify-content:space-between;gap:30px;align-items:center;font-size:9px;font-weight:700;letter-spacing:.1em;color:#928781}
+.signature-preview__footer b{color:#e3d3c5;letter-spacing:.17em}
+@media(max-width:1000px){
+ .signature-preview__header-label{display:none}
+ .signature-preview__focus-grid{grid-template-columns:minmax(0,1fr) minmax(280px,.7fr);gap:30px}
+ .signature-preview__chapters{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .signature-preview__chapters button{min-height:110px}
+ .signature-preview__chapters button:nth-child(3){border-right:0}
+}
+@media(max-width:700px){
+ .signature-preview__header{min-height:64px;padding:12px 18px;gap:12px}
+ .signature-preview__logo{gap:10px}
+ .signature-preview__logo>span:first-child{font-size:40px}
+ .signature-preview__logo>span:last-child{font-size:9px;letter-spacing:.13em}
+ .signature-preview__logo small{font-size:7px;letter-spacing:.13em}
+ .signature-preview__safe{font-size:8px;letter-spacing:.06em;text-align:right;max-width:99px}
+ .signature-preview__stage{height:clamp(490px,79svh,730px)}
+ .signature-preview__controller{padding:17px 18px;gap:13px}
+ .signature-preview__controller-eye{font-size:8px;letter-spacing:.09em}
+ .signature-preview__controller-desc{font-size:11px;max-width:180px}
+ .signature-preview__controller-actions{gap:4px}
+ .signature-preview__controller-actions button{min-width:44px;min-height:44px;font-size:16px}
+ .signature-preview__controller-actions .signature-preview__pause{min-width:73px;font-size:8px;letter-spacing:0}
+ .signature-preview__focus{padding:42px 19px 60px}
+ .signature-preview__focus-top{font-size:8px;letter-spacing:.1em}
+ .signature-preview__focus-grid{display:flex;flex-direction:column;gap:40px;margin:34px 0 56px}
+ .signature-preview__focus-copy{min-height:0}
+ .signature-preview__focus-copy h1{font-size:clamp(54px,13vw,85px);margin:20px 0}
+ .signature-preview__focus-copy>p{font-size:14px}
+ .signature-preview__result span{font-size:13px}
+ .signature-preview__cta-row{display:grid;width:100%}
+ .signature-preview__cta-row a{min-height:53px;width:100%}
+ .signature-preview__journey{padding:8px 0 0 20px}
+ .signature-preview__journey-eye{font-size:9px;margin-bottom:22px}
+ .signature-preview__step{padding:17px 0;grid-template-columns:26px 1fr 25px;gap:13px}
+ .signature-preview__step strong{font-size:18px}
+ .signature-preview__chapters{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .signature-preview__chapters button{padding:18px 10px;min-height:120px}
+ .signature-preview__chapters button:nth-child(3){border-right:1px solid #ffffff1c}
+ .signature-preview__chapters button:nth-child(even){border-right:0}
+ .signature-preview__chapters button strong{font-size:13px}
+ .signature-preview__footer{display:block;padding:22px 19px;line-height:2;font-size:8px}
+ .signature-preview__footer span{display:block}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ .signature-preview__chapters button,.signature-preview__controller-actions button,.signature-preview__cta-row a{transition:none!important}
+}

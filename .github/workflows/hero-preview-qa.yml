@@ -1,0 +1,37 @@
+name: Preview 3D Carousel Browser QA
+on:
+  push:
+    branches:
+      - feature/hero-carousel-react-preview-20261012
+    paths:
+      - 'experiments/hero-carousel/**'
+      - '.github/workflows/hero-preview-qa.yml'
+  workflow_dispatch:
+jobs:
+  carousel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: experiments/hero-carousel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install preview dependencies
+        run: npm install
+      - name: Build TypeScript React preview
+        run: npm run build
+      - name: Install Chromium browser QA
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test desktop, mobile, images, physical motion and accessibility preference
+        run: node scripts/qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: orbit-hero-desktop-mobile
+          path: experiments/hero-carousel/reports/
+          if-no-files-found: ignore
