@@ -15,7 +15,7 @@ try {
     const context = await browser.newContext({viewport, reducedMotion:'reduce'});
     const page = currentPage = await context.newPage();
     const errors = [];
-    page.on('pageerror', e => errors.push(e.message));
+    page.on('pageerror', e => { errors.push(e.message); console.error('PAGE ERROR:',e.stack); });
     page.on('response', r => { if (r.url().startsWith(base) && r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
     await page.goto(base + '/', {waitUntil:'networkidle'});
     await page.waitForFunction(() => window.__signatureReady);
@@ -71,7 +71,9 @@ try {
     assert.equal(await page.locator('#intro').isVisible(),false);
     await page.locator('#signature-open').click();
     await page.locator('#intro-turn').click();
-    await page.locator('.film.is-visible').waitFor();
+    await page.locator('.film.is-visible').waitFor({timeout:8000}).catch(async error => {
+      throw new Error(error.message + '\nSTATE ' + JSON.stringify(await page.evaluate(() => ({body:document.body.className,intro:document.querySelector('#intro').outerHTML.slice(0,1000),film:document.querySelector('#film').className}))) + '\nERRORS '+JSON.stringify(errors));
+    });
     await page.locator('#film-exit').click();
     assert.equal(await page.locator('#site').evaluate(el => el.inert),false);
     await page.locator('#signature-open').click();
