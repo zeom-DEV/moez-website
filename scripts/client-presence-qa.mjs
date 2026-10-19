@@ -5,7 +5,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 const base = process.env.SITE_URL || 'http://127.0.0.1:8765';
 const out = 'qa/client-presence';
 await mkdir(out, { recursive: true });
-const browser = await chromium.launch();
+// Chrome supports production MP4/H.264 playback; bundled headless Chromium may not.
+const browser = await chromium.launch({channel:'chrome'});
 const results = [];
 const paths = ['sav-ecommerce.html','televente.html','crm-reporting.html','e-reputation.html','site-signature.html','automatisation-workflows.html'];
 const ids = ['sav','prospects','crm','avis','web','automation'];
