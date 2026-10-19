@@ -5,7 +5,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 const base = process.env.SITE_URL || 'http://127.0.0.1:8765';
 const out = 'qa/client-presence';
 await mkdir(out, { recursive: true });
-const browser = await chromium.launch();
+// Chrome supports production MP4/H.264 playback; bundled headless Chromium may not.
+const browser = await chromium.launch({channel:'chrome'});
 const results = [];
 const paths = ['sav-ecommerce.html','televente.html','crm-reporting.html','e-reputation.html','site-signature.html','automatisation-workflows.html'];
 const ids = ['sav','prospects','crm','avis','web','automation'];
@@ -18,6 +19,10 @@ try {
     page.on('pageerror', e => { errors.push(e.message); console.error('PAGE ERROR:',e.stack); });
     page.on('response', r => { if (r.url().startsWith(base) && r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
     await page.goto(base + '/', {waitUntil:'networkidle'});
+    const filmAsset = await context.request.head(base + '/assets/moez-signature-teaser-12s.mp4');
+    assert.equal(filmAsset.status(), 200, 'Signature film file is not available');
+    assert.match(filmAsset.headers()['content-type'] || '', /video\/mp4/i, 'Signature film MIME type is incorrect');
+    assert.ok(Number(filmAsset.headers()['content-length']) > 100_000, 'Signature film file is empty or incomplete');
     await page.waitForFunction(() => window.__signatureReady);
     assert.equal(await page.locator('#site').evaluate(el => el.inert), false);
     assert.equal(await page.locator('#intro').isVisible(), false);
@@ -75,6 +80,26 @@ try {
     await page.locator('.film.is-visible').waitFor({timeout:8000}).catch(async error => {
       throw new Error(error.message + '\nSTATE ' + JSON.stringify(await page.evaluate(() => ({body:document.body.className,intro:document.querySelector('#intro').outerHTML.slice(0,1000),film:document.querySelector('#film').className}))) + '\nERRORS '+JSON.stringify(errors));
     });
+    // A visible film overlay alone is not proof that the MP4 is actually playing.
+    await page.waitForFunction(() => {
+      const video=document.querySelector('#signature-video');
+      return video.currentTime>0.15 || document.querySelector('#film-end').classList.contains('is-active');
+    }, null, {timeout:12000});
+    const playback=await page.evaluate(() => {
+      const video=document.querySelector('#signature-video');
+      return {seconds:video.currentTime,paused:video.paused,codec:video.canPlayType('video/mp4'),
+        mediaError:video.error?.code||null,fallback:document.querySelector('#film-end').classList.contains('is-active')};
+    });
+    if(playback.codec && !(playback.seconds>0.15 && !playback.paused)){
+      throw new Error('Browser supports MP4 but signature video did not actually play: '+JSON.stringify(playback));
+    }
+    if(!playback.codec) assert.equal(playback.fallback, true, 'Unsupported codec must show accessible fallback');
+    // Recovery: if a slow video starts after a timeout, the stale failure overlay must disappear.
+    await page.locator('#signature-video').evaluate(video=>video.dispatchEvent(new Event('error')));
+    assert.equal(await page.locator('#film-end').evaluate(el=>el.classList.contains('is-active')),true);
+    await page.locator('#signature-video').evaluate(video=>video.dispatchEvent(new Event('playing')));
+    assert.equal(await page.locator('#film-end').evaluate(el=>el.classList.contains('is-active')),false,
+      'Late video playback must clear the previous loading failure');
     await page.locator('#film-exit').click();
     assert.equal(await page.locator('#site').evaluate(el => el.inert),false);
     await page.locator('#signature-open').click();
@@ -83,7 +108,7 @@ try {
     assert.equal(await page.locator('#intro').isVisible(),false);
     assert.equal(await page.locator('#site').evaluate(el => el.inert),false);
     assert.deepEqual(errors,[]);
-    results.push({viewport,services:6,contact:'passed',signature:'passed',errors});
+    results.push({viewport,services:6,contact:'passed',signature:playback.seconds>0.15?'video-playing':'unsupported-codec-fallback',latePlaybackRecovery:'passed',errors});
     await context.close();
   }
   const nojs = await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
