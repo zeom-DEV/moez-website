@@ -3,30 +3,23 @@
    const $=(s,base=document)=>base.querySelector(s);
   const $$=(s,base=document)=>Array.from(base.querySelectorAll(s));
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-  const services=[
-   {id:'web',name:'Sites internet',tag:'OFFRE PHARE',title:'Une présence qui donne envie.',lede:'Un site internet sur mesure, aussi remarquable que votre activité et pensé pour transformer l’intérêt en prise de contact.',tasks:['Conception de la structure et rédaction des messages essentiels','Design personnalisé et animations cohérentes','Adaptation mobile, optimisation du chargement et référencement technique de base','Mise en ligne et vérification des formulaires et liens de contact'],result:'Un site personnalisé, publié et facile à utiliser.',contact:'Parlons de votre futur site'},
-   {id:'sav',name:'Service client',tag:'RELATION CLIENT',title:'Chaque client compte.',lede:'Une prise en charge humaine et structurée pour répondre à vos clients et suivre leurs demandes.',tasks:['Réponses aux questions et demandes clients','Gestion et suivi des dossiers après-vente','Coordination des escalades et résolutions','Suivi des indicateurs utiles à l’expérience client'],result:'Des demandes mieux suivies et des réponses plus claires.',contact:'Organisons votre service client'},
-   {id:'avis',name:'Avis clients',tag:'E-RÉPUTATION',title:'La confiance se cultive.',lede:'Collecte conforme, suivi et réponses aux avis pour mieux comprendre votre clientèle et renforcer votre réputation.',tasks:['Suivi des retours et avis publiés','Réponses personnalisées aux avis positifs et négatifs','Organisation d’invitations à donner un avis selon les règles applicables','Synthèse des irritants et axes d’amélioration'],result:'Une gestion d’avis régulière, transparente et utile.',contact:'Parlons de votre réputation'},
-   {id:'prospects',name:'Appels et relances',tag:'DÉVELOPPEMENT COMMERCIAL',title:'Des échanges qui avancent.',lede:'Une prospection structurée et des relances personnalisées pour faire progresser vos opportunités commerciales.',tasks:['Qualification des contacts et préparation des échanges','Appels et relances adaptés au contexte','Compte rendu et mise à jour des informations','Suivi des rendez-vous et prochaines actions'],result:'Un pipeline commercial mieux organisé.',contact:'Développons vos opportunités'},
-   {id:'crm',name:'Dossiers clients',tag:'ORGANISATION',title:'Tout est à sa place.',lede:'Une organisation claire des informations et des tâches pour que chaque client bénéficie d’un suivi cohérent.',tasks:['Mise à jour et structuration des informations CRM','Création des étapes de suivi','Classement des demandes et priorités','Tableaux de suivi et processus de travail'],result:'Des informations fiables et des priorités visibles.',contact:'Organisons vos opérations'},
-   {id:'automation',name:'Automatisation',tag:'WORKFLOWS',title:'Laissez les tâches répétitives derrière vous.',lede:'Je connecte vos outils et conçois des automatisations utiles pour réduire les manipulations manuelles.',tasks:['Audit des tâches répétitives','Conception du scénario d’automatisation','Connexion des outils et tests de fonctionnement','Documentation et suivi des résultats'],result:'Des workflows plus simples et du temps dégagé pour l’essentiel.',contact:'Automatisons vos tâches'}
-  ];
-  const motionState={intro:true,flipping:false,film:false,active:0,timer:null,seen:false,hover:false,focused:false,touchStart:null,swiped:false};
+  const services=[{"id": "sav", "path": "sav-ecommerce.html", "name": "Service client & SAV", "tag": "RELATION CLIENT", "title": "Vos clients ont une réponse. Leurs dossiers ont un suivi.", "short": "Un renfort pour votre service client.", "lede": "Je prends en charge les demandes après achat et le suivi des dossiers, dans vos outils et selon vos procédures.", "audience": "Pour les boutiques en ligne et les entreprises de services qui cherchent un interlocuteur francophone pour leurs clients.", "tasks": ["Répondre aux demandes sur les commandes, livraisons et retours", "Vérifier les informations et tenir le client au courant", "Suivre les réclamations et transmettre les décisions à valider", "Mettre à jour les dossiers et leurs prochaines actions"], "result": "Un récapitulatif des demandes traitées, des dossiers ouverts et des décisions attendues.", "contact": "Parlons de votre service client", "example": "Un client attend des nouvelles de sa livraison.", "steps": ["Vérifier la commande et le suivi disponible", "Répondre avec les informations confirmées", "Noter la prochaine action et reprendre le dossier"], "evidence": "Mon parcours comprend la relation client chez Teleperformance, le suivi de prestations chez Movinga, le support chez NETY et une mission actuelle en service client e-commerce.", "tools": "Shopify · Gorgias · Zendesk · Suivi CRM", "question": "Puis-je vous confier seulement une partie du SAV ?", "answer": "Oui. Nous pouvons commencer par un canal, des créneaux et des types de demandes convenus ensemble."}, {"id": "prospects", "path": "televente.html", "name": "Devis & relances", "tag": "SUIVI COMMERCIAL ENTRANT", "title": "Vos demandes entrantes méritent une suite.", "short": "De la demande au prochain échange.", "lede": "Je qualifie les demandes de vos prospects, prépare les éléments du devis et assure les relances convenues.", "audience": "Pour les entreprises qui reçoivent des demandes de devis et manquent de temps pour les qualifier et les suivre.", "tasks": ["Contacter les personnes ayant demandé des informations ou un devis", "Clarifier le besoin, le calendrier et les informations manquantes", "Préparer et suivre les propositions selon votre cadre commercial", "Renseigner le CRM, les objections et la prochaine relance"], "result": "Des opportunités renseignées, des devis suivis et des prochaines actions visibles.", "contact": "Organisons le suivi de vos devis", "example": "Une personne a demandé un devis et attend un échange.", "steps": ["Préciser le besoin et les informations manquantes", "Préparer la proposition avec votre cadre tarifaire", "Relancer au moment convenu et consigner la réponse"], "evidence": "Chez Movinga, mon rôle commercial comprenait la qualification de demandes entrantes, la préparation de devis, la négociation et la conversion. Chez NETY, j’ai aussi exercé en conseil commercial et ventes complémentaires.", "tools": "Demandes entrantes · Devis · Négociation · Salesforce", "question": "S’agit-il de démarchage téléphonique à froid ?", "answer": "Cette prestation porte sur vos demandes entrantes, vos devis et vos contacts déjà engagés. Nous définissons les critères et les relances avant la mission."}, {"id": "crm", "path": "crm-reporting.html", "name": "Suivi des dossiers", "tag": "COORDINATION CLIENTS", "title": "La prochaine étape reste visible.", "short": "Un dossier clair. Une action définie.", "lede": "Je centralise les informations utiles et coordonne le suivi entre le client et les personnes qui interviennent sur son dossier.", "audience": "Pour les entreprises de services, de livraison ou de coordination qui gèrent plusieurs dossiers en parallèle.", "tasks": ["Rassembler les informations, pièces et échanges utiles", "Mettre à jour les étapes et les échéances dans vos outils", "Coordonner les échanges avec les intervenants concernés", "Signaler les blocages et préparer un point de suivi"], "result": "Un suivi de dossiers avec les actions réalisées, les échéances et les points à décider.", "contact": "Parlons de vos dossiers clients", "example": "Un dossier attend une pièce et la réponse d’un intervenant.", "steps": ["Repérer ce qui manque et qui doit intervenir", "Relancer les bonnes personnes et informer le client", "Actualiser le dossier et signaler les blocages"], "evidence": "Mon expérience de chargé de clientèle chez Movinga associait relation client, coordination logistique et gestion des imprévus dans l’exécution des prestations.", "tools": "CRM · Tableaux de suivi · Coordination · Comptes rendus", "question": "Faut-il changer de CRM ?", "answer": "Nous commençons par vos outils existants. L’objectif est d’organiser le suivi ; une migration ou une configuration technique avancée ferait l’objet d’un projet distinct."}, {"id": "avis", "path": "e-reputation.html", "name": "Satisfaction & avis", "tag": "APRÈS-ACHAT", "title": "Écouter vos clients. Faire remonter ce qui compte.", "short": "Des retours clients utiles à votre équipe.", "lede": "Je réalise des contacts après achat, recueille les retours et organise les invitations à partager un avis authentique.", "audience": "Pour les marques qui veulent assurer un suivi régulier après achat et comprendre les difficultés rencontrées par leurs clients.", "tasks": ["Contacter les clients dans le cadre convenu après achat", "Recueillir les retours et les rattacher au bon dossier", "Adresser des invitations neutres à laisser un avis authentique", "Faire remonter les réclamations et les sujets récurrents"], "result": "Un relevé des retours recueillis, des invitations réalisées et des problèmes transmis à votre équipe.", "contact": "Organisons votre suivi après achat", "example": "Un client partage son expérience après réception.", "steps": ["Écouter le retour sans orienter sa réponse", "Transmettre un problème au service concerné", "Proposer une invitation neutre à partager son avis"], "evidence": "Ma mission actuelle via Essentiel-Outsourcing comprend le service client d’une marque e-commerce française et les contacts pour recueillir des avis clients.", "tools": "Contacts post-achat · Retours clients · Suivi de satisfaction", "question": "Pouvez-vous garantir une note ou des avis positifs ?", "answer": "Les avis appartiennent aux clients. La prestation porte sur des invitations neutres, des retours authentiques et leur suivi ; aucune note n’est promise."}, {"id": "web", "path": "site-signature.html", "name": "Sites & prise de contact", "tag": "PROJET COMPLÉMENTAIRE", "title": "Votre offre, facile à comprendre et à contacter.", "short": "Un site au service de votre activité.", "lede": "Je conçois un site de présentation avec des offres lisibles, une adaptation mobile et un parcours de prise de contact.", "audience": "Pour les indépendants et petites entreprises qui souhaitent présenter leurs prestations sur un site personnalisé.", "tasks": ["Organiser les pages autour de vos prestations et de vos visiteurs", "Rédiger les messages essentiels et concevoir une identité cohérente", "Adapter les pages au mobile et prévoir des animations utiles", "Mettre en ligne et vérifier les liens et les parcours de contact"], "result": "Un site de présentation publié, avec un périmètre et des vérifications convenus avant réalisation.", "contact": "Parlons de votre site", "example": "Un visiteur cherche ce que vous proposez et comment vous joindre.", "steps": ["Présenter une offre et son destinataire", "Montrer le déroulement et les éléments vérifiables", "Proposer une prise de contact simple"], "evidence": "Le site que vous consultez est une réalisation personnelle : il permet d’examiner la présentation des prestations, les interactions et le parcours de contact. Il n’est pas présenté comme une mission réalisée pour un client.", "tools": "Structure · Design · Responsive · Mise en ligne", "question": "Que comprend la réalisation ?", "answer": "Le devis précise les pages, les contenus, les interactions, l’hébergement et les vérifications. Les besoins de boutique en ligne, de paiement ou de développement complexe sont étudiés séparément."}, {"id": "automation", "path": "automatisation-workflows.html", "name": "Automatisation du suivi", "tag": "PROJET COMPLÉMENTAIRE", "title": "Moins de ressaisies. Un suivi organisé.", "short": "Des automatismes pour les tâches répétitives.", "lede": "Nous identifions une tâche répétitive, définissons un scénario et testons les échanges entre les outils concernés.", "audience": "Pour les équipes qui ressaisissent les mêmes informations ou suivent leurs demandes dans plusieurs outils.", "tasks": ["Décrire le processus et les informations nécessaires", "Définir les étapes, les autorisations et les exceptions", "Configurer un scénario compatible avec vos outils", "Tester sur des exemples, documenter et prévoir le traitement des erreurs"], "result": "Un scénario documenté et testé sur le périmètre convenu, avec ses limites et ses conditions de fonctionnement.", "contact": "Étudions votre scénario", "example": "Une demande reçue doit être ajoutée au suivi de l’équipe.", "steps": ["Identifier les données nécessaires et la destination", "Tester le scénario sur un exemple défini", "Vérifier le résultat et documenter les cas d’erreur"], "evidence": "Mes projets personnels comprennent ce site et Talent Scanner Pro, un outil de recherche booléenne présenté sur mon profil LinkedIn. Le choix d’un scénario dépend de vos outils et doit être validé par des tests.", "tools": "Processus · Scénarios · Tests · Documentation", "question": "Faut-il souscrire de nouveaux outils ?", "answer": "Nous vérifions d’abord ce qui est possible avec vos outils actuels. Tout abonnement, crédit ou coût récurrent est identifié dans le cadrage et soumis à votre accord."}];
+  const motionState={intro:false,flipping:false,film:false,active:0,timer:null,seen:false,hover:false,focused:false,touchStart:null,swiped:false};
   const root=$('#site'),intro=$('#intro'),turn=$('#intro-turn'),film=$('#film'),video=$('#signature-video'),
     filmLoading=$('#film-loading'),filmEnd=$('#film-end'),filmProgress=$('#film-progress span'),sound=$('#film-sound'),
     filmMessage=$('#film-end-message'),stage=$('#collection-stage'),cards=$('#cards'),count=$('#stage-count'),
     detail=$('#detail'),detailTitle=$('#detail-title'),detailNumber=$('#detail-number'),detailLede=$('#detail-lede'),
     detailList=$('#detail-list'),detailImage=$('#detail-image'),detailResult=$('#detail-result'),
     detailAction=$('#detail-action'),detailTag=$('#detail-tag');
-  root.inert=true; // Trap keyboard focus in the intended opening experience.
+  root.inert=false; // The offer and contact are available on arrival.
   const initialOffer=/^#solution-(web|sav|avis|prospects|crm|automation)$/.test(location.hash)
     ? location.hash.slice(10) : null;
-  const directEntry=Boolean(initialOffer)||['#solutions','#contact'].includes(location.hash);
+  const directEntry=true; // Signature film is an optional, visitor-triggered experience.
   const escape=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const picture=id=>'<picture><source srcset="./assets/orbit-photos/'+id+'-mobile.webp" media="(max-width:680px)"><img src="./assets/orbit-photos/'+id+'-desktop.webp" alt="" width="640" height="860" loading="lazy" decoding="async"></picture>';
   cards.innerHTML=services.map((s,i)=>'<button class="offer-card" type="button" data-index="'+i+'" aria-label="Découvrir l’offre '+escape(s.name)+'">'+
     picture(s.id)+'<span class="offer-card__head"><span>MOEZ / '+String(i+1).padStart(2,'0')+' — 06</span>'+
-    (i===0?'<span class="offer-card__flag">OFFRE PHARE</span>':'')+'</span>'+
+    (i===0?'<span class="offer-card__flag">MISSION PRINCIPALE</span>':'')+'</span>'+
     '<span class="offer-card__foot"><small>'+escape(s.tag)+'</small><strong>'+escape(s.name)+'</strong>'+
     '<span class="offer-card__action">Explorer cette offre <b aria-hidden="true">↗</b></span></span></button>').join('');
   const allCards=$$('.offer-card',cards);
@@ -62,7 +55,8 @@
     detailImage.alt='Illustration de l’offre '+s.name;
     detailResult.textContent=s.result;
     detailAction.textContent=s.contact+' ↗';
-    detailAction.href='https://calendly.com/moez-thabet-881988/30min';
+    detailAction.href='./?mission='+s.id+'#contact';
+    $('#detail-page').href='./'+s.path;
     const hash='#solution-'+s.id;
     if(location.hash!==hash)history.pushState({offer:s.id},'',hash);
     detail.hidden=false;
@@ -73,7 +67,7 @@
   }
   function autoBlocked(){
     return motionState.intro||motionState.flipping||motionState.film||!motionState.seen||
-      motionState.hover||motionState.focused||document.hidden||reduced.matches;
+      motionState.hover||motionState.focused||motionState.paused||document.hidden||reduced.matches;
   }
   function schedule(){
     clearTimeout(motionState.timer);motionState.timer=null;
@@ -141,14 +135,14 @@
     cancelFallback();
     filmLoading.classList.add('is-hidden');
     filmEnd.classList.add('is-active');
-    $('#film-end-head').textContent=failed?'Découvrez mes solutions.':'Votre projet mérite mieux.';
+    $('#film-end-head').textContent=failed?'Découvrez mes solutions.':'Je prends le relais.';
     filmMessage.textContent=failed?'Le film n’a pas pu être chargé. Les six solutions restent accessibles immédiatement.':
-      'Six expertises, un interlocuteur. Découvrez le service qui correspond à votre projet.';
+      'Six prestations, un interlocuteur. Découvrez le périmètre qui correspond à votre besoin.';
     $('#film-discover').focus({preventScroll:true});
   }
   function startFilm(){
     if(motionState.flipping||motionState.film)return;
-    motionState.flipping=true;motionState.film=true;motionState.intro=false;
+    motionState.flipping=true;motionState.film=true;motionState.intro=false;root.inert=true;
     filmReady=false;
     document.body.classList.remove('is-intro');
     document.body.classList.add('is-righting');
@@ -252,7 +246,7 @@
     const match=/^#solution-(web|sav|avis|prospects|crm|automation)$/.exec(location.hash);
     if(match){const idx=services.findIndex(s=>s.id===match[1]);if(idx>=0)choose(idx,false);}
   });
-  // First paint keeps the true homepage upside down. Notification arrives at 1.7s.
+  // The initial page is usable immediately. The signature experience is optional.
   showCard(0);
   if(directEntry){
     revealDirect(location.hash);
@@ -261,5 +255,31 @@
   window.addEventListener('load',()=>{
     if(!directEntry&&location.hash)window.scrollTo({top:0,behavior:'instant'});
   },{once:true});
+
+  $('#signature-open').addEventListener('click',()=>{
+    motionState.intro=true; root.inert=true;
+    intro.classList.remove('is-reversing');
+    intro.hidden=false;intro.inert=false;
+    document.body.classList.add('is-intro');
+    intro.classList.add('is-ready');
+    turn.focus({preventScroll:true});schedule();
+  });
+  $('#stage-pause').addEventListener('click',()=>{
+    motionState.paused=!motionState.paused;
+    $('#stage-pause').setAttribute('aria-pressed',String(motionState.paused));
+    $('#stage-pause').setAttribute('aria-label',motionState.paused?'Reprendre le carrousel':'Mettre le carrousel en pause');
+    $('#stage-pause').textContent=motionState.paused?'▷':'Ⅱ';schedule();
+  });
+  document.addEventListener('keydown',e=>{
+    if(!motionState.intro&&!motionState.film)return;
+    if(e.key==='Escape'){e.preventDefault();revealDirect();$('#signature-open').focus();return;}
+    if(e.key!=='Tab')return;
+    const modal=motionState.film?film:intro;
+    const controls=$$('button,a[href]',modal).filter(el=>el.getClientRects().length&&!el.disabled);
+    if(!controls.length)return;
+    const first=controls[0],last=controls[controls.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  });
   window.__signatureReady=true;
 })();

@@ -18,20 +18,8 @@ on:
       - 'scripts/journey-qa.mjs'
       - 'scripts/browser-qa.mjs'
       - '.github/workflows/journey-qa.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'assets/orbit-island.js'
-      - 'assets/orbit-native.js'
-      - 'assets/orbit-lazy-loader.js'
-      - 'assets/orbit-island.css'
-      - 'assets/orbit-integration.css'
-      - 'integrations/orbit-island-entry.tsx'
-      - 'assets/offer-inline-details.js'
-      - 'assets/journey-orchestration.*'
-      - 'scripts/journey-qa.mjs'
-      - 'scripts/browser-qa.mjs'
+  # Current public journeys are covered by site-qa.yml. This keeps the
+  # historical orbit integration checks available on their original branches.
   workflow_dispatch:
 
 permissions:
