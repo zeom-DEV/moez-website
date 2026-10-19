@@ -258,6 +258,7 @@
 
   $('#signature-open').addEventListener('click',()=>{
     motionState.intro=true; root.inert=true;
+    root.style.removeProperty('transform');
     intro.classList.remove('is-reversing');
     intro.hidden=false;intro.inert=false;
     document.body.classList.add('is-intro');

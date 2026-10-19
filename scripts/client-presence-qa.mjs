@@ -12,7 +12,7 @@ const ids = ['sav','prospects','crm','avis','web','automation'];
 let currentPage;
 try {
   for (const viewport of [{width:1440,height:1000},{width:390,height:844},{width:320,height:740}]) {
-    const context = await browser.newContext({viewport, reducedMotion:'reduce'});
+    const context = await browser.newContext({viewport, reducedMotion:viewport.width===1440?'no-preference':'reduce'});
     const page = currentPage = await context.newPage();
     const errors = [];
     page.on('pageerror', e => { errors.push(e.message); console.error('PAGE ERROR:',e.stack); });

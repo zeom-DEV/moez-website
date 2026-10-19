@@ -61,6 +61,11 @@ for name, page in parsed.items():
 home = (ROOT / 'index.html').read_text()
 assert 'class="is-intro"' not in home
 assert '<video id="signature-video" preload="none"' in home
+import re
+for script in ['assets/signature-clean.js', 'assets/client-presence.js']:
+    source = (ROOT / script).read_text()
+    required_ids = set(re.findall(r"(?:\$\(|querySelector\()[\"']#([\w-]+)", source))
+    assert required_ids <= set(parsed['index.html'].ids), f'{script}: missing DOM targets {required_ids - set(parsed["index.html"].ids)}'
 assert len(offers.SERVICES) == 6
 for service in offers.SERVICES:
     assert (ROOT / 'assets/orbit-photos' / (service['id'] + '-mobile.webp')).is_file()
