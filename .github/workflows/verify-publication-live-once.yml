@@ -1,0 +1,65 @@
+name: Verify published public site - one-shot
+on:
+  push:
+    branches: [refonte-clients-20261019]
+    paths:
+      - '.github/workflows/verify-publication-live-once.yml'
+permissions:
+  contents: read
+jobs:
+  public-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the deployed domain (not a local checkout)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request,urllib.error,json,time,html
+          from pathlib import Path
+          base='https://moezthabet.com'
+          targets=[
+             ('/',('Relation client, SAV','client-presence.js','mailto:contact@moezthabet.com')),
+             ('/sav-ecommerce.html',('Service client &amp; SAV','client-presence.js')),
+             ('/televente.html',('client-presence.js',)),
+             ('/crm-reporting.html',('client-presence.js',)),
+             ('/e-reputation.html',('client-presence.js',)),
+             ('/site-signature.html',('client-presence.js',)),
+             ('/automatisation-workflows.html',('client-presence.js',)),
+             ('/assets/client-presence.js',('mission-brief',)),
+             ('/assets/client-presence.css',('mission-brief',))
+          ]
+          report={"domain":base,"checks":[],"created_on":"2026-10-19","expected_merged_commit":"df897feee295c0a322c328e9eedf216087d25ba3"}
+          for attempt in range(1,8):
+            results=[]
+            for path,expectations in targets:
+              url=base+path+'?after-merge=df897fee'
+              try:
+                req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0 (SitePublicationVerification)","Cache-Control":"no-cache"})
+                with urllib.request.urlopen(req,timeout=15) as res:
+                  body=res.read().decode('utf-8','replace')
+                  status=res.status
+                  finalurl=res.url
+                  ctype=res.headers.get('Content-Type')
+                missing=[v for v in expectations if v not in body]
+                results.append({"path":path,"http":status,"ok":status==200 and not missing,"missing":missing,"size":len(body),"final_url":finalurl,"content_type":ctype})
+              except Exception as exc:
+                results.append({"path":path,"ok":False,"error":type(exc).__name__+': '+str(exc)[:160]})
+            report["checks"]=results
+            report["attempts"]=attempt
+            if all(c["ok"] for c in results):break
+            if attempt<7:time.sleep(9)
+          report["passed"]=all(c["ok"] for c in report["checks"])
+          Path('public-site-verification.json').write_text(json.dumps(report,indent=2,ensure_ascii=False))
+          print(json.dumps(report,indent=2,ensure_ascii=False))
+          if not report["passed"]:raise SystemExit("Public website does not fully match the new version")
+          PY
+      - name: Publish verifiable QA report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-site-verification
+          path: public-site-verification.json
+          if-no-files-found: ignore
+          retention-days: 5
