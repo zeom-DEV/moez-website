@@ -128,11 +128,12 @@
     sound.textContent=video.muted?'Activer le son ♫':'Couper le son ✕';
     sound.setAttribute('aria-label',video.muted?'Activer le son':'Couper le son');
   };
-  let fallbackTimer=null,filmReady=false;
+  let fallbackTimer=null,filmReady=false,filmFailed=false;
   function cancelFallback(){clearTimeout(fallbackTimer);fallbackTimer=null;}
   function showFilmEnd(failed=false){
     if(!motionState.film)return;
     cancelFallback();
+    filmFailed=failed;
     filmLoading.classList.add('is-hidden');
     filmEnd.classList.add('is-active');
     $('#film-end-head').textContent=failed?'Découvrez mes solutions.':'Je prends le relais.';
@@ -143,7 +144,7 @@
   function startFilm(){
     if(motionState.flipping||motionState.film)return;
     motionState.flipping=true;motionState.film=true;motionState.intro=false;root.inert=true;
-    filmReady=false;
+    filmReady=false;filmFailed=false;
     document.body.classList.remove('is-intro');
     document.body.classList.add('is-righting');
     intro.classList.add('is-reversing');
@@ -179,7 +180,12 @@
     schedule();
   }
   turn.addEventListener('click',startFilm);
-  video.addEventListener('playing',()=>{filmReady=true;cancelFallback();filmLoading.classList.add('is-hidden');});
+  video.addEventListener('playing',()=>{
+    if(!motionState.film)return;
+    filmReady=true;cancelFallback();filmLoading.classList.add('is-hidden');
+    // A slow connection can start playing after the startup timeout: hide the stale error overlay.
+    if(filmFailed){filmEnd.classList.remove('is-active');filmFailed=false;}
+  });
   video.addEventListener('timeupdate',()=>{
     const d=video.duration;
     if(d>0)filmProgress.style.width=Math.min(100,(video.currentTime/d)*100)+'%';
