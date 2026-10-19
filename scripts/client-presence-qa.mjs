@@ -24,6 +24,7 @@ try {
     assert.equal(await page.locator('#signature-video').evaluate(el => el.paused), true);
     assert.equal(await page.locator('.quick-services a').count(), 6);
     assert.equal(await page.locator('h1').count(), 1);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),true,`home overflows at ${viewport.width}`);
     await page.screenshot({path:`${out}/home-${viewport.width}.png`});
     await page.getByRole('link',{name:'Découvrir mes solutions',exact:false}).first().click();
     await page.locator('#collection-stage').scrollIntoViewIfNeeded();
@@ -90,6 +91,7 @@ try {
   await page.goto(base+'/');
   assert.equal(await page.locator('.quick-services a').count(),6);
   assert.equal(await page.locator('#collection-stage').isVisible(),false);
+  assert.equal(await page.locator('#mission-brief').isVisible(),false);
   await page.locator('.quick-services a').first().click();
   assert.match(page.url(),/sav-ecommerce.html$/);
   assert.equal(await page.locator('.plain-contact').getAttribute('href'),'mailto:contact@moezthabet.com');
