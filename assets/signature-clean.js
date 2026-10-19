@@ -155,6 +155,8 @@
     filmLoading.classList.remove('is-hidden');
     filmProgress.style.width='0%';
     video.pause();try{video.currentTime=0}catch{}
+    // Start loading only after the user asks for the film, keeping the home page light.
+    video.preload='auto';video.load();
     video.muted=false;setSound();
     // Start playback synchronously inside visitor gesture to permit sound.
     try{
@@ -165,7 +167,7 @@
         video.play().catch(()=>{showFilmEnd(true);});
       });
     }catch{showFilmEnd(true);}
-    fallbackTimer=setTimeout(()=>{if(!filmReady)showFilmEnd(true);},5000);
+    fallbackTimer=setTimeout(()=>{if(!filmReady)showFilmEnd(true);},10000);
     setTimeout(()=>{
       film.classList.add('is-visible');
       document.body.classList.remove('is-righting');
